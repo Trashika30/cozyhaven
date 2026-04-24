@@ -1,5 +1,6 @@
 package com.example.cozyhaven.Entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,13 +18,14 @@ public class Room {
     private int maxOccupy;
     private double baseFare;
     private boolean isAc;
-    private double available;
-    @ManyToOne(cascade = CascadeType.ALL)
+    private boolean available;
+    @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "hotelId")
     Hotel hotel;
 
     public Room(String roomType, int maxOccupy, boolean isAc, double baseFare,
-                double available, Hotel hotel) {
+                boolean available, Hotel hotel) {
         this.roomType = roomType;
         this.maxOccupy = maxOccupy;
         this.isAc = isAc;
