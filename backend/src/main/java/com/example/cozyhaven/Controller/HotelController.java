@@ -10,24 +10,37 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/hotel")
+
+
 public class HotelController {
 
     @Autowired
-    private HotelService service;
+    HotelService service;
 
-    @PostMapping("/add")
-    public Hotel addHotel(@RequestBody Hotel hotel) {
-        return service.addHotel;
+
+    @PostMapping("/addHotel")
+    public Hotel addHotel(@RequestBody Hotel dto){
+        return service.addHotel(dto);
     }
 
     @GetMapping("/showall")
-    public List<Hotel> showAllHotels() {
+    public List<Hotel> showAllHotels(){
         return service.showAllHotels();
     }
 
-    @PutMapping("/update")
-    public Hotel updateHotel(@RequestBody Hotel hotel) {
+    @GetMapping("/searchbyid/{id}")
+    public Hotel searchHotelById(@PathVariable int id){
+        return service.searchHotelById(id);
+    }
 
+    @PutMapping("updatebyid/{id}")
+    public Hotel updateHotelById(@PathVariable int id, @RequestBody Hotel hotel){
+        return service.updateHotelById(id,hotel);
+    }
+
+    @DeleteMapping("/deletebyid/{id}")
+    public void deleteHotelById(@PathVariable int id){
+        return service.deleteHotelById(id);
     }
 
 }
