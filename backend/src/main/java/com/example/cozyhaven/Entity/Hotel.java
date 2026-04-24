@@ -27,8 +27,8 @@ public class Hotel {
     private List<String> amenities; //wifi, parking, roomService, pool, dining, gym
 
     @ManyToOne
-    @JoinColumn(name="ownerId")
-    @JsonBackReference
+    @JoinColumn(name="owner_id")
+    @JsonIgnore
     private Owner owner;
 
     @OneToMany(mappedBy="hotel", cascade = CascadeType.ALL)
