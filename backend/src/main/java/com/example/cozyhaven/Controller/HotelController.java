@@ -2,6 +2,7 @@ package com.example.cozyhaven.Controller;
 
 
 import com.example.cozyhaven.Entity.Hotel;
+import com.example.cozyhaven.Entity.Review;
 import com.example.cozyhaven.Entity.Room;
 import com.example.cozyhaven.Service.HotelService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -102,6 +103,17 @@ public class HotelController {
         }
         Room r=service.addRooms(id,room);
         return ResponseEntity.status(HttpStatus.CREATED).body(r);
+    }
+
+
+    @GetMapping("/getReviews/{hotelId}")
+    public ResponseEntity<?> getReviews(@PathVariable int hotelId){
+
+        if(service.searchHotelById(hotelId)==null){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Hotel not found");
+        }
+        List<Review>reviews=service.getReviews(hotelId);
+        return ResponseEntity.status(HttpStatus.FOUND).body(reviews);
     }
 
 
