@@ -27,7 +27,7 @@ public class Hotel {
     @JoinColumn(name="owner_id")
     @JsonIgnore
     private Owner owner;
-
+  //maps to owner table create ownerid column in hotel
     public Hotel() {}
 
     public Hotel(String hotelName, String description, boolean wifi, boolean parking, String roomService, String location, boolean pool, String contact, String dining, boolean gym,Owner owner) {
@@ -43,6 +43,9 @@ public class Hotel {
         this.gym = gym;
         this.owner = owner;
     }
+
+
+
 
 
 
