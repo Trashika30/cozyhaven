@@ -1,0 +1,38 @@
+package com.example.cozyhaven.Entity;
+
+import com.example.cozyhaven.Enum.Role;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.List;
+
+@Entity
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
+public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int userId;
+    private String firstName;
+    private String lastName;
+    @Column(unique = true)
+    private String email;
+    private String password;
+    private String contact;
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
+    @OneToMany(mappedBy="customer", cascade=CascadeType.ALL)
+    @JsonManagedReference("user_bookings") //Avoids Dependency Loop - Parent -> ManagedReference
+    private List<Booking> bookings;
+
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
+    @JsonManagedReference("owner_hotels") //Avoids Dependency Loop - Parent -> ManagedReference
+    List<Hotel> hotels;
+}

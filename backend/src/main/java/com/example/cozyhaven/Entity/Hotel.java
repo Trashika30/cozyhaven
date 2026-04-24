@@ -1,6 +1,7 @@
 package com.example.cozyhaven.Entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -25,20 +26,19 @@ public class Hotel {
 
     @ManyToOne
     @JoinColumn(name="ownerId")
-    @JsonBackReference
-    private Owner owner;
+    @JsonBackReference("owner_hotels") //Avoids Dependency Loop - Child -> BackReference
+    private User owner;
 
     @OneToMany(mappedBy="hotel", cascade = CascadeType.ALL)
-    @JsonBackReference
+    @JsonManagedReference //Avoids Dependency Loop - Parent -> ManagedReference
     List<Room> rooms;
-    //maps to owner table create ownerId column in hotel
 
     public Hotel(String hotelName,
                  String description,
                  String location,
                  String contact,
                  List<String> amenities,
-                 Owner owner) {
+                 User owner) {
         this.hotelName = hotelName;
         this.description = description;
         this.location = location;

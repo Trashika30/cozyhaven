@@ -22,7 +22,7 @@ public class Room {
 
     @ManyToOne
     @JoinColumn(name = "hotelId")
-    @JsonBackReference
+    @JsonBackReference //Avoids Dependency Loop - Child -> BackReference
     Hotel hotel;
 
     public Room(String roomType, int maxOccupy, boolean isAc, double baseFare,

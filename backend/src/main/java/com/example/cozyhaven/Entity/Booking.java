@@ -30,8 +30,8 @@ public class Booking {
 
     @ManyToOne
     @JoinColumn(name = "customerId")
-    @JsonBackReference
-    private Customer customer;
+    @JsonBackReference("user_bookings") //Avoids Dependency Loop - Child -> BackReference
+    private User customer;
 
     @ManyToOne
     private Room room;
