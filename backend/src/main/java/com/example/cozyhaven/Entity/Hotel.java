@@ -27,10 +27,14 @@ public class Hotel {
     @JoinColumn(name="owner_id")
     @JsonIgnore
     private Owner owner;
+
+    @OneToMany(mappedBy="hotel")
+    @JsonIgnore
+    List<Room>rooms;
   //maps to owner table create ownerid column in hotel
     public Hotel() {}
 
-    public Hotel(String hotelName, String description, boolean wifi, boolean parking, String roomService, String location, boolean pool, String contact, String dining, boolean gym,Owner owner) {
+    public Hotel(String hotelName, String description, boolean wifi, boolean parking, String roomService, String location, boolean pool, String contact, String dining, boolean gym,Owner owner,List<Room>rooms) {
         this.hotelName = hotelName;
         this.description = description;
         this.wifi = wifi;
@@ -42,6 +46,8 @@ public class Hotel {
         this.dining = dining;
         this.gym = gym;
         this.owner = owner;
+        this.rooms = rooms;
+
     }
 
 
