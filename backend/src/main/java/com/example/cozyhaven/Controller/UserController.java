@@ -67,3 +67,17 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.FOUND).body("Owner deleted!!!");
     }
 }
+
+// POST /user/registerUser
+//
+// GET /user/showAllCustomers
+//
+// GET /user/showAllOwners
+//
+// GET /user/searchCustomer/{id}
+//
+// GET /user/searchOwner/{id}
+//
+// DELETE /user/deleteCustomer/{id}
+//
+// DELETE /user/deleteOwner/{id}
