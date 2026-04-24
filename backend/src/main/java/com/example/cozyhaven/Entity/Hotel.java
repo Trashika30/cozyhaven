@@ -5,6 +5,9 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.util.List;
+
+
 @Data
 @Entity
 @AllArgsConstructor
@@ -30,7 +33,7 @@ public class Hotel {
 
     @OneToMany(mappedBy="hotel")
     @JsonIgnore
-    List<Room>rooms;
+    List<Room> rooms;
   //maps to owner table create ownerid column in hotel
     public Hotel() {}
 
