@@ -6,9 +6,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import java.util.List;
-
 
 @Data
 @Entity
@@ -27,14 +25,14 @@ public class Hotel {
     private List<String> amenities; //wifi, parking, roomService, pool, dining, gym
 
     @ManyToOne
-    @JoinColumn(name="owner_id")
-    @JsonIgnore
+    @JoinColumn(name="ownerId")
+    @JsonBackReference
     private Owner owner;
 
     @OneToMany(mappedBy="hotel", cascade = CascadeType.ALL)
     @JsonBackReference
     List<Room> rooms;
-  //maps to owner table create ownerId column in hotel
+    //maps to owner table create ownerId column in hotel
 
     public Hotel(String hotelName,
                  String description,
