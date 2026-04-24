@@ -20,7 +20,6 @@ public class Room {
     private boolean isAc;
     private boolean available;
     @ManyToOne
-    @JsonBackReference
     @JoinColumn(name = "hotelId")
     Hotel hotel;
 
