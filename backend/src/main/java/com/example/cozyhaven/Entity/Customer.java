@@ -1,10 +1,10 @@
 package com.example.cozyhaven.Entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import jakarta.persistence.*;
 import lombok.Data;
+
+import java.util.List;
 
 @Entity
 @Data
@@ -18,5 +18,7 @@ public class Customer {
     private String password;
     private String contact;
 
-    //booking need to be mapped
+    @OneToMany(mappedBy="customer", cascade=CascadeType.ALL)
+    @JsonBackReference
+    private List<Booking> bookings;
 }

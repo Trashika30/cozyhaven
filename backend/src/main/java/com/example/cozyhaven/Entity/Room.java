@@ -19,8 +19,10 @@ public class Room {
     private double baseFare;
     private boolean isAc;
     private boolean available;
+
     @ManyToOne
     @JoinColumn(name = "hotelId")
+    @JsonBackReference
     Hotel hotel;
 
     public Room(String roomType, int maxOccupy, boolean isAc, double baseFare,
