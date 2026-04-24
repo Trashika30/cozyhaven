@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class CozyhavenApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(CozyhavenApplication.class, args);
-	}
 
+        SpringApplication.run(CozyhavenApplication.class, args);
+	}
 }
