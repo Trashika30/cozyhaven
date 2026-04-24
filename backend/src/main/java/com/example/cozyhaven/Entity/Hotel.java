@@ -36,14 +36,18 @@ public class Hotel {
     List<Room> rooms;
   //maps to owner table create ownerId column in hotel
 
-    public Hotel(String hotelName, String description, boolean wifi, boolean parking, String roomService, String location, boolean pool, String contact, String dining, boolean gym,Owner owner,List<Room>rooms) {
+    public Hotel(String hotelName,
+                 String description,
+                 String location,
+                 String contact,
+                 List<String> amenities,
+                 Owner owner) {
         this.hotelName = hotelName;
         this.description = description;
         this.location = location;
         this.contact = contact;
+        this.amenities = amenities;
         this.owner = owner;
-        this.rooms = rooms;
-
     }
 
 
