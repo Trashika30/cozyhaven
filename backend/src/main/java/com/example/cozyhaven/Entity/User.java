@@ -4,9 +4,11 @@ import com.example.cozyhaven.Enum.Role;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.Range;
 
 import java.util.List;
 
@@ -20,10 +22,15 @@ public class User {
     private int userId;
     private String firstName;
     private String lastName;
+    @Range(min = 1, max = 120)
+    private int age;
+    private String gender;
     @Column(unique = true)
+    @Email
     private String email;
     private String password;
     private String contact;
+    private String address;
 
     @Enumerated(EnumType.STRING)
     private Role role;
