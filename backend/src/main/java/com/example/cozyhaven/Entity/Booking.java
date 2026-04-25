@@ -28,6 +28,9 @@ public class Booking {
     @Enumerated(EnumType.STRING)
     private BookingStatus status;
 
+    private String cancellationReason;
+
+
     @ManyToOne
     @JoinColumn(name = "customerId")
     @JsonBackReference("user_bookings") //Avoids Dependency Loop - Child -> BackReference

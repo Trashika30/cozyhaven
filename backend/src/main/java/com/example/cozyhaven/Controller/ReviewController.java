@@ -1,4 +1,5 @@
 package com.example.cozyhaven.Controller;
+import com.example.cozyhaven.DTO.ReviewDTO;
 import org.springframework.web.bind.annotation.RestController;
 import com.example.cozyhaven.Entity.Review;
 import com.example.cozyhaven.Service.ReviewService;
@@ -17,13 +18,13 @@ public class ReviewController {
     ReviewService service;
 
     @PostMapping("/addReview")
-    public ResponseEntity<Review> addReview(@RequestBody Review review){
+    public ResponseEntity<ReviewDTO> addReview(@RequestBody ReviewDTO review){
         return ResponseEntity.ok(service.addReview(review));
     }
 
     @GetMapping("/showAll")
     public ResponseEntity<?> showAllReviews(){
-        List<Review> reviews = service.showAllReviews();
+        List<ReviewDTO> reviews = service.showAllReviews();
         if(reviews.isEmpty()){
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Reviews not found");
         }
@@ -32,7 +33,7 @@ public class ReviewController {
 
     @GetMapping("/searchById/{id}")
     public ResponseEntity<?> searchReviewById(@PathVariable int id){
-        Review r = service.searchReviewById(id);
+        ReviewDTO r = service.searchReviewById(id);
         if(r == null){
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Review not found");
         }
@@ -41,7 +42,7 @@ public class ReviewController {
 
     @GetMapping("/searchByHotelId/{hotelid}")
     public ResponseEntity<?> searchReviewByHotelId(@PathVariable int hotelid){
-        List<Review> reviews = service.searchReviewByHotelId(hotelid);
+        List<ReviewDTO> reviews = service.searchReviewByHotelId(hotelid);
         if(reviews.isEmpty()){
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Reviews not found");
         }
@@ -50,7 +51,7 @@ public class ReviewController {
 
     @GetMapping("/searchByUserId/{userid}")
     public ResponseEntity<?> searchReviewByUserId(@PathVariable int userid){
-        List<Review> reviews = service.searchReviewByUserId(userid);
+        List<ReviewDTO> reviews = service.searchReviewByUserId(userid);
         if(reviews.isEmpty()){
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Reviews not found");
         }
@@ -58,8 +59,8 @@ public class ReviewController {
     }
 
     @PutMapping("/editById/{id}")
-    public ResponseEntity<?> editReviewById(@PathVariable int id, @RequestBody Review review){
-        Review r = service.searchReviewById(id);
+    public ResponseEntity<?> editReviewById(@PathVariable int id, @RequestBody ReviewDTO review){
+        ReviewDTO r = service.searchReviewById(id);
         if(r == null){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Review not found");
         }
@@ -71,7 +72,7 @@ public class ReviewController {
 
     @DeleteMapping("/deleteById/{id}")
     public ResponseEntity<String> deleteReviewById(@PathVariable int id){
-        Review r = service.searchReviewById(id);
+        ReviewDTO r = service.searchReviewById(id);
         if(r == null){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Review not found");
         }

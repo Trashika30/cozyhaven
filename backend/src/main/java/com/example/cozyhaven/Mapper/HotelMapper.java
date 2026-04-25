@@ -8,7 +8,6 @@ import com.example.cozyhaven.Entity.User;
 public class HotelMapper {
     public static Hotel toEntity(HotelDTO hoteldto) {
         Hotel h=new Hotel();
-        h.setHotelId(hoteldto.getHotelId());
         h.setHotelName(hoteldto.getHotelName());
         h.setDescription(hoteldto.getDescription());
         h.setLocation(hoteldto.getLocation());
@@ -24,7 +23,8 @@ public class HotelMapper {
     }
 
 
-    public static HotelDTO toDto(Hotel hotel) {
+    public static HotelDTO toDto(Hotel hotel)
+    {
         HotelDTO dto=new HotelDTO();
         dto.setHotelId(hotel.getHotelId());
         dto.setHotelName(hotel.getHotelName());

@@ -2,6 +2,7 @@ package com.example.cozyhaven.Controller;
 
 
 import com.example.cozyhaven.DTO.HotelDTO;
+import com.example.cozyhaven.DTO.RoomDTO;
 import com.example.cozyhaven.Entity.Hotel;
 import com.example.cozyhaven.Entity.Review;
 import com.example.cozyhaven.Entity.Room;
@@ -23,12 +24,12 @@ public class HotelController {
 
     @PostMapping("/addHotel")
     public ResponseEntity<HotelDTO> addHotel(@RequestBody HotelDTO dto){
-        return  ResponseEntity.ok(service.addHotel(HotelMapper.toEntity(dto)));
+        return  ResponseEntity.ok(service.addHotel(dto));
     }
 
     @GetMapping("/showAll")
     public ResponseEntity<?> showAllHotels(){
-       List<Hotel> hotels = service.showAllHotels();
+       List<HotelDTO> hotels = service.showAllHotels();
        if(hotels.isEmpty()){
            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Hotels not found");
        }
@@ -37,7 +38,7 @@ public class HotelController {
 
     @GetMapping("/searchById/{id}")
     public ResponseEntity<?> searchHotelById(@PathVariable int id){
-        Hotel h= service.searchHotelById(id);
+        HotelDTO h= service.searchHotelById(id);
         if(h==null){
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Hotel not found");
         }
@@ -46,7 +47,7 @@ public class HotelController {
 
     @GetMapping("/searchByLocation/{location}")
     public ResponseEntity<?> searchHotelByLocation(@PathVariable String location){
-        List<Hotel> h= service.searchHotelByLocation(location);
+        List<HotelDTO> h= service.searchHotelByLocation(location);
         if(h.isEmpty()){
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Hotel not found");
         }
@@ -55,7 +56,7 @@ public class HotelController {
 
     @GetMapping("/searchByOwnerId/{id}")
     public ResponseEntity<?> searchHotelByOwnerId(@PathVariable int id){
-        List<Hotel>h= service.searchHotelByOwnerId(id);
+        List<HotelDTO>h= service.searchHotelByOwnerId(id);
         if(h.isEmpty()){
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Hotel not found");
         }
@@ -65,7 +66,7 @@ public class HotelController {
 
     @PutMapping("updateById/{id}")
     public ResponseEntity<?> updateHotelById(@PathVariable int id, @RequestBody Hotel hotel){
-        Hotel h= service.searchHotelById(id);
+        HotelDTO h= service.searchHotelById(id);
         if(h==null){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Hotel not found");
         }
@@ -78,7 +79,7 @@ public class HotelController {
 
     @DeleteMapping("/deleteById/{id}")
     public ResponseEntity<String> deleteHotelById(@PathVariable int id){
-        Hotel h= service.searchHotelById(id);
+        HotelDTO h= service.searchHotelById(id);
         if(h==null){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Hotel not found");
         }
@@ -86,36 +87,6 @@ public class HotelController {
              String r=service.deleteHotelById(id);
             return ResponseEntity.status(HttpStatus.OK).body(r);
         }
-    }
-
-    @GetMapping("/getRooms/{hotelid}")
-    public ResponseEntity<?> getRooms(@PathVariable int hotelid){
-        List<Room>rooms=service.getRooms(hotelid);
-        if(rooms.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Rooms not found");
-        }
-        return ResponseEntity.status(HttpStatus.OK).body(rooms);
-    }
-
-    @PostMapping("/addRooms/{id}")
-    public ResponseEntity<?> addRooms(@PathVariable int id,@RequestBody Room room){
-        Hotel h= service.searchHotelById(id);
-        if(h==null){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Hotel not found");
-        }
-        Room r=service.addRooms(id,room);
-        return ResponseEntity.status(HttpStatus.CREATED).body(r);
-    }
-
-
-    @GetMapping("/getReviews/{hotelId}")
-    public ResponseEntity<?> getReviews(@PathVariable int hotelId){
-
-        if(service.searchHotelById(hotelId)==null){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Hotel not found");
-        }
-        List<Review>reviews=service.getReviews(hotelId);
-        return ResponseEntity.status(HttpStatus.FOUND).body(reviews);
     }
 
 

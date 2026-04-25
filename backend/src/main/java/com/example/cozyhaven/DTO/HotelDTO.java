@@ -18,5 +18,6 @@ public class HotelDTO {
 
     private List<String> amenities;
 
+
     private int ownerId;
 }

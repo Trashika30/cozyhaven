@@ -1,12 +1,15 @@
 package com.example.cozyhaven.Service;
 
 
+import com.example.cozyhaven.DTO.ReviewDTO;
 import com.example.cozyhaven.Entity.Review;
+import com.example.cozyhaven.Mapper.ReviewMapper;
 import com.example.cozyhaven.Repository.ReviewRepo;
 import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -16,32 +19,45 @@ public class ReviewService {
     private ReviewRepo repo;
 
 
-    public Review addReview(Review review) {
-        return repo.save(review);
+    public ReviewDTO addReview(ReviewDTO review) {
+        Review rev = ReviewMapper.toEntity(review);
+        rev = repo.save(rev);
+        return ReviewMapper.toDto(rev);
     }
 
-    public List<Review> showAllReviews() {
-        return repo.findAll();
+    public List<ReviewDTO> showAllReviews() {
+        List<Review> reviews = repo.findAll();
+        return reviews.stream().map(ReviewMapper::toDto).toList();
     }
 
-    public Review searchReviewById(int id) {
-        return repo.findById(id).orElse(null);
-    }
-
-
-    public List<Review> searchReviewByHotelId(int hotelid) {
-        return repo.findByHotel_HotelId(hotelid);
-    }
-
-
-    public List<Review> searchReviewByUserId(int userid) {
-        return repo.findByCustomer_UserId(userid);
+    public ReviewDTO searchReviewById(int id) {
+        Review r=repo.findById(id).orElse(null);
+        if(r==null) return null;
+        return ReviewMapper.toDto(r);
     }
 
 
-    public Review updateReviewById(int id, Review review) {
+    public List<ReviewDTO> searchReviewByHotelId(int hotelid) {
+        List<Review>list =repo.findByHotel_HotelId(hotelid);
+        return list.stream().map(ReviewMapper::toDto).toList();
+    }
+
+
+    public List<ReviewDTO> searchReviewByUserId(int userid) {
+        List<Review>list = repo.findByCustomer_UserId(userid);
+        return list.stream().map(ReviewMapper::toDto).toList();
+    }
+
+
+    public ReviewDTO updateReviewById(int id, ReviewDTO review) {
+
             Review r=repo.findById(id).orElse(null);
-            if(r!=null) return repo.save(review);
+
+            if(r!=null) {
+                Review review1=ReviewMapper.toEntity(review);
+                r= repo.save(review1);
+                return ReviewMapper.toDto(r);
+            }
 
             return null;
 

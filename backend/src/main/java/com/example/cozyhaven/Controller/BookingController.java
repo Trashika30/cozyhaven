@@ -18,18 +18,18 @@ public class BookingController {
     BookingService bookingService;
 
     @PostMapping("/addBooking")
-    public ResponseEntity<Booking> addBooking(@RequestBody Booking booking){
+    public ResponseEntity<BookingDTO> addBooking(@RequestBody BookingDTO booking){
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(bookingService.addBooking(booking));
     }
 
     @GetMapping("/showAll")
-    public ResponseEntity<List<Booking>> showAll(){
+    public ResponseEntity<List<BookingDTO>> showAll(){
         return ResponseEntity.status(HttpStatus.FOUND).body(bookingService.showAll());
     }
 
     @GetMapping("/searchById/{id}")
     public ResponseEntity<?> searchBookingById(@PathVariable int id){
-        Booking booking = bookingService.searchBookingById(id);
+        BookingDTO booking = bookingService.searchBookingById(id);
         if(booking == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Booking not found!!!");
         return ResponseEntity.status(HttpStatus.FOUND).body(booking);
     }
@@ -57,14 +57,23 @@ public class BookingController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No completed bookings found!!!");
         return ResponseEntity.status(HttpStatus.FOUND).body(bookingList);       }
 
-    @PutMapping("/updateBookingStatus/{userId}/{status}")
-    public ResponseEntity<?> updateBookingStatus(@PathVariable int userId, @PathVariable BookingStatus status){
-        Booking booking = bookingService.updateBookingStatus(userId, status);
+    @PutMapping("/updateBookingStatus/{bookingId}/{status}")
+    public ResponseEntity<?> updateBookingStatus(@PathVariable int bookingId, @PathVariable BookingStatus status){
+        BookingDTO booking = bookingService.updateBookingStatus(bookingId, status);
         if(booking == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No bookings found!!!");
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(booking);
     }
 
-    //refund methods needed
+    @PutMapping("/cancelBooking/{bookingId}/{reason}")
+    public ResponseEntity<?> cancelBooking(@PathVariable int bookingId,@PathVariable String reason){
+        Booking b = bookingService.cancelBooking(bookingId,reason);
+        if(b==null){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Booking not found");
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(b);
+    }
+
+
 
 }
 
