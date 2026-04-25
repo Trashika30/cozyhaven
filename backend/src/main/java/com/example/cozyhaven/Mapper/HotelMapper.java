@@ -1,6 +1,6 @@
 package com.example.cozyhaven.Mapper;
 
-import com.example.cozyhaven.Dto.HotelDTO;
+import com.example.cozyhaven.DTO.HotelDTO;
 import com.example.cozyhaven.Entity.Hotel;
 import com.example.cozyhaven.Entity.User;
 

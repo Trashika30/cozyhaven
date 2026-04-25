@@ -1,7 +1,7 @@
 package com.example.cozyhaven.Controller;
 
 
-import com.example.cozyhaven.Dto.HotelDTO;
+import com.example.cozyhaven.DTO.HotelDTO;
 import com.example.cozyhaven.Entity.Hotel;
 import com.example.cozyhaven.Entity.Review;
 import com.example.cozyhaven.Entity.Room;

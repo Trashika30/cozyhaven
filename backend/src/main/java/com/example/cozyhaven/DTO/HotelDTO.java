@@ -1,4 +1,4 @@
-package com.example.cozyhaven.Dto;
+package com.example.cozyhaven.DTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

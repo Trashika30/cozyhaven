@@ -1,5 +1,5 @@
 package com.example.cozyhaven.Service;
-import com.example.cozyhaven.Dto.HotelDTO;
+import com.example.cozyhaven.DTO.HotelDTO;
 import com.example.cozyhaven.Entity.Hotel;
 import com.example.cozyhaven.Entity.Review;
 import com.example.cozyhaven.Entity.Room;
@@ -7,7 +7,6 @@ import com.example.cozyhaven.Mapper.HotelMapper;
 import com.example.cozyhaven.Repository.HotelRepo;
 import com.example.cozyhaven.Repository.ReviewRepo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
