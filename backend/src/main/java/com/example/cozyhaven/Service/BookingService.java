@@ -1,13 +1,12 @@
 package com.example.cozyhaven.Service;
 
-import com.example.cozyhaven.Dto.BookingResponse;
+import com.example.cozyhaven.DTO.BookingDTO;
 import com.example.cozyhaven.Entity.Booking;
 import com.example.cozyhaven.Entity.User;
 import com.example.cozyhaven.Enum.BookingStatus;
 import com.example.cozyhaven.Enum.Role;
 import com.example.cozyhaven.Repository.BookingRepo;
 import com.example.cozyhaven.Repository.UserRepo;
-import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
@@ -33,12 +32,12 @@ public class BookingService {
         return bookingRepo.findById(id).orElse(null);
     }
 
-    public List<BookingResponse> getUserBookings(int userId) {
+    public List<BookingDTO> getUserBookings(int userId) {
         User customer = userRepo.findByUserIdAndRole(userId, Role.CUSTOMER);
         if(customer == null) return new ArrayList<>();
         return customer.getBookings()
                 .stream()
-                .map(b -> new BookingResponse(
+                .map(b -> new BookingDTO(
                         b.getBookingId(),
                         b.getRoom()
                                 .getHotel()
@@ -55,13 +54,13 @@ public class BookingService {
                 .toList();
     }
 
-    public List<BookingResponse> upcomingStay(int userId) {
+    public List<BookingDTO> upcomingStay(int userId) {
         User customer = userRepo.findByUserIdAndRole(userId, Role.CUSTOMER);
         if(customer == null) return new ArrayList<>();
         return customer.getBookings()
                 .stream()
                 .filter(b -> b.getCheckInDate().isAfter(LocalDate.now()))
-                .map(b -> new BookingResponse(
+                .map(b -> new BookingDTO(
                         b.getBookingId(),
                         b.getRoom()
                                 .getHotel()
@@ -78,13 +77,13 @@ public class BookingService {
                 .toList();
     }
 
-    public List<BookingResponse> completedStay(int userId) {
+    public List<BookingDTO> completedStay(int userId) {
         User customer = userRepo.findByUserIdAndRole(userId, Role.CUSTOMER);
         if(customer == null) return new ArrayList<>();
         return customer.getBookings()
                 .stream()
                 .filter(b -> b.getCheckOutDate().isBefore(LocalDate.now()))
-                .map(b -> new BookingResponse(
+                .map(b -> new BookingDTO(
                         b.getBookingId(),
                         b.getRoom()
                                 .getHotel()
