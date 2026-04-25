@@ -1,7 +1,9 @@
 package com.example.cozyhaven.Service;
+import com.example.cozyhaven.Dto.HotelDTO;
 import com.example.cozyhaven.Entity.Hotel;
 import com.example.cozyhaven.Entity.Review;
 import com.example.cozyhaven.Entity.Room;
+import com.example.cozyhaven.Mapper.HotelMapper;
 import com.example.cozyhaven.Repository.HotelRepo;
 import com.example.cozyhaven.Repository.ReviewRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +20,12 @@ public class HotelService {
     @Autowired
     private ReviewRepo reviewRepo;
 
-    public Hotel addHotel(Hotel hotel) {
-        return repo.save(hotel);
+    public HotelDTO addHotel(Hotel hotel) {
+
+        Hotel h= repo.save(hotel);
+        return HotelMapper.toDto(h);
+
+
     }
 
     public List<Hotel> showAllHotels() {

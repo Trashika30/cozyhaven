@@ -1,9 +1,11 @@
 package com.example.cozyhaven.Controller;
 
 
+import com.example.cozyhaven.Dto.HotelDTO;
 import com.example.cozyhaven.Entity.Hotel;
 import com.example.cozyhaven.Entity.Review;
 import com.example.cozyhaven.Entity.Room;
+import com.example.cozyhaven.Mapper.HotelMapper;
 import com.example.cozyhaven.Service.HotelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,8 +22,8 @@ public class HotelController {
     HotelService service;
 
     @PostMapping("/addHotel")
-    public ResponseEntity<Hotel> addHotel(@RequestBody Hotel hotel){
-        return  ResponseEntity.ok(service.addHotel(hotel));
+    public ResponseEntity<HotelDTO> addHotel(@RequestBody HotelDTO dto){
+        return  ResponseEntity.ok(service.addHotel(HotelMapper.toEntity(dto)));
     }
 
     @GetMapping("/showAll")
