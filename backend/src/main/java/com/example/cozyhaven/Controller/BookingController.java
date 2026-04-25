@@ -67,8 +67,8 @@ public class BookingController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(booking);
     }
 
-    //requestRefund--should ask hotel owner and refund
-    //updateBookingStatus --to refunded
+    //refund methods needed
+
 }
 
 // POST /booking/createBooking

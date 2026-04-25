@@ -63,8 +63,11 @@ public class BookingService {
                 .filter(b -> b.getCheckInDate().isAfter(LocalDate.now()))
                 .map(b -> new BookingResponse(
                         b.getBookingId(),
-                        b.getRoom().getHotel().getHotelName(),
-                        b.getRoom().getRoomType(),
+                        b.getRoom()
+                                .getHotel()
+                                .getHotelName(),
+                        b.getRoom()
+                                .getRoomType(),
                         b.getCheckInDate(),
                         b.getCheckOutDate(),
                         b.getChildCount(),
@@ -83,8 +86,11 @@ public class BookingService {
                 .filter(b -> b.getCheckOutDate().isBefore(LocalDate.now()))
                 .map(b -> new BookingResponse(
                         b.getBookingId(),
-                        b.getRoom().getHotel().getHotelName(),
-                        b.getRoom().getRoomType(),
+                        b.getRoom()
+                                .getHotel()
+                                .getHotelName(),
+                        b.getRoom()
+                                .getRoomType(),
                         b.getCheckInDate(),
                         b.getCheckOutDate(),
                         b.getChildCount(),
