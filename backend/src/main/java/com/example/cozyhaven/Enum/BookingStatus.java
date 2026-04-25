@@ -1,5 +1,5 @@
 package com.example.cozyhaven.Enum;
 
 public enum BookingStatus {
-    CONFIRMED, CANCELLED, REFUNDED
+    CONFIRMED, CANCELLED, REFUNDED ,REFUND_REQUESTED
 }
