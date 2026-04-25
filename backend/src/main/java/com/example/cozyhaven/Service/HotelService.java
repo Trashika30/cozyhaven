@@ -56,7 +56,6 @@ public class HotelService {
         room.setHotel(hotel);
         repo.save(hotel);
         return room;
-
     }
 
     public List<Hotel> searchHotelByLocation(String location) {

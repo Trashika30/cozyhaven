@@ -1,12 +1,9 @@
 package com.example.cozyhaven.Controller;
 
-import com.example.cozyhaven.Dto.BookingResponse;
+import com.example.cozyhaven.DTO.BookingDTO;
 import com.example.cozyhaven.Entity.Booking;
-import com.example.cozyhaven.Entity.User;
 import com.example.cozyhaven.Enum.BookingStatus;
-import com.example.cozyhaven.Enum.Role;
 import com.example.cozyhaven.Service.BookingService;
-import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,7 +36,7 @@ public class BookingController {
 
     @GetMapping("/getUserBookings/{userId}")
     public ResponseEntity<?> getUserBookings(@PathVariable int userId){
-        List<BookingResponse> bookingList = bookingService.getUserBookings(userId);
+        List<BookingDTO> bookingList = bookingService.getUserBookings(userId);
         if(bookingList.isEmpty())
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No bookings made!!!");
         return ResponseEntity.status(HttpStatus.FOUND).body(bookingList);
@@ -47,7 +44,7 @@ public class BookingController {
 
     @GetMapping("/upcomingStay/{userId}")
     public ResponseEntity<?> upcomingStay(@PathVariable int userId){
-        List<BookingResponse> bookingList = bookingService.upcomingStay(userId);
+        List<BookingDTO> bookingList = bookingService.upcomingStay(userId);
         if(bookingList.isEmpty())
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No upcoming bookings found!!!");
         return ResponseEntity.status(HttpStatus.FOUND).body(bookingList);
@@ -55,7 +52,7 @@ public class BookingController {
 
     @GetMapping("/completedStay/{userId}")
     public ResponseEntity<?> completedStay(@PathVariable int userId){
-        List<BookingResponse> bookingList = bookingService.completedStay(userId);
+        List<BookingDTO> bookingList = bookingService.completedStay(userId);
         if(bookingList.isEmpty())
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No completed bookings found!!!");
         return ResponseEntity.status(HttpStatus.FOUND).body(bookingList);       }
