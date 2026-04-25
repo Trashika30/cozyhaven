@@ -9,11 +9,13 @@ import com.example.cozyhaven.Mapper.BookingMapper;
 import com.example.cozyhaven.Repository.BookingRepo;
 import com.example.cozyhaven.Repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+@Service
 public class BookingService {
     @Autowired
     BookingRepo bookingRepo;
@@ -29,11 +31,27 @@ public class BookingService {
         double baseFare = booking.getRoom().getBaseFare();
         double total = baseFare;
 
-        int extraPeople = (booking.getAdultCount() + booking.getChildCount())
-                - booking.getRoom().getMaxOccupy();
+        int allowed = booking.getRoom().getMaxOccupy();
+              //4
+        int adults = booking.getAdultCount();
+        int children = booking.getChildCount();
 
-        if(extraPeople > 0){
-            total += extraPeople * (baseFare * 0.4);
+        int totalPeople = adults + children;
+                 //7         //4       //3
+        if(totalPeople > allowed){
+              //7           4
+            int extraPeople = totalPeople - allowed;
+                 //3            7  - 4
+            int extraAdults = Math.min(adults, extraPeople);
+               //3                         //4       3
+            extraPeople -= extraAdults;
+               //3-3=0
+            int extraChildren = extraPeople;
+                              //0
+            total += extraAdults * (baseFare * 0.4);
+                      //3
+            total += extraChildren * (baseFare * 0.2);
+                     //4
         }
 
         booking.setTotalAmount(total);

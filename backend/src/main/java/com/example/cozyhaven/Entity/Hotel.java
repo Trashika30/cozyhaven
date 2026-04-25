@@ -3,6 +3,7 @@ package com.example.cozyhaven.Entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,8 +17,10 @@ public class Hotel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int hotelId;
+    @NotBlank(message = "Hotel name cannot be empty")
     private String hotelName;
     private String description;
+    @NotBlank(message = "Location cannot be empty")
     private String location;
     private String contact;
 
@@ -42,7 +45,8 @@ public class Hotel {
                  String location,
                  String contact,
                  List<String> amenities,
-                 User owner) {
+                 User owner)
+    {
         this.hotelName = hotelName;
         this.description = description;
         this.location = location;
