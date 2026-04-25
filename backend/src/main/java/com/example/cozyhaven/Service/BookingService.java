@@ -5,6 +5,7 @@ import com.example.cozyhaven.Entity.Booking;
 import com.example.cozyhaven.Entity.User;
 import com.example.cozyhaven.Enum.BookingStatus;
 import com.example.cozyhaven.Enum.Role;
+import com.example.cozyhaven.Mapper.BookingMapper;
 import com.example.cozyhaven.Repository.BookingRepo;
 import com.example.cozyhaven.Repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,12 +25,14 @@ public class BookingService {
         return bookingRepo.save(booking);
     }
 
-    public List<Booking> showAll() {
-        return bookingRepo.findAll();
+    public List<BookingDTO> showAll() {
+        List<Booking> bookingList = bookingRepo.findAll();
+        return bookingList.stream().map(BookingMapper::toDTO).toList();
     }
 
-    public Booking searchBookingById(int id) {
-        return bookingRepo.findById(id).orElse(null);
+    public BookingDTO searchBookingById(int id) {
+        Booking booking = bookingRepo.findById(id).orElse(null);
+        return BookingMapper.toDTO(booking);
     }
 
     public List<BookingDTO> getUserBookings(int userId) {
@@ -49,7 +52,8 @@ public class BookingService {
                         b.getChildCount(),
                         b.getAdultCount(),
                         b.getTotalAmount(),
-                        b.getStatus().name()
+                        b.getStatus(),
+                        b.getRoom().getRoomId()
                 ))
                 .toList();
     }
@@ -60,20 +64,7 @@ public class BookingService {
         return customer.getBookings()
                 .stream()
                 .filter(b -> b.getCheckInDate().isAfter(LocalDate.now()))
-                .map(b -> new BookingDTO(
-                        b.getBookingId(),
-                        b.getRoom()
-                                .getHotel()
-                                .getHotelName(),
-                        b.getRoom()
-                                .getRoomType(),
-                        b.getCheckInDate(),
-                        b.getCheckOutDate(),
-                        b.getChildCount(),
-                        b.getAdultCount(),
-                        b.getTotalAmount(),
-                        b.getStatus().name()
-                ))
+                .map(BookingMapper::toDTO)
                 .toList();
     }
 
@@ -83,20 +74,7 @@ public class BookingService {
         return customer.getBookings()
                 .stream()
                 .filter(b -> b.getCheckOutDate().isBefore(LocalDate.now()))
-                .map(b -> new BookingDTO(
-                        b.getBookingId(),
-                        b.getRoom()
-                                .getHotel()
-                                .getHotelName(),
-                        b.getRoom()
-                                .getRoomType(),
-                        b.getCheckInDate(),
-                        b.getCheckOutDate(),
-                        b.getChildCount(),
-                        b.getAdultCount(),
-                        b.getTotalAmount(),
-                        b.getStatus().name()
-                ))
+                .map(BookingMapper::toDTO)
                 .toList();
     }
 

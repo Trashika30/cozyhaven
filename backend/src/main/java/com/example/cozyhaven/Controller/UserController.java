@@ -1,5 +1,6 @@
 package com.example.cozyhaven.Controller;
 
+import com.example.cozyhaven.DTO.UserDTO;
 import com.example.cozyhaven.Entity.User;
 import com.example.cozyhaven.Enum.Role;
 import com.example.cozyhaven.Service.UserService;
@@ -17,25 +18,25 @@ public class UserController {
     UserService userService;
 
     @PostMapping("/registerUser")
-    public ResponseEntity<?> registerUser(@RequestBody User user){
-        User u = userService.searchCustomerByEmail(user.getEmail());
+    public ResponseEntity<?> registerUser(@RequestBody UserDTO user){
+        UserDTO u = userService.searchUserByEmail(user.getEmail());
         if(u != null) return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Email already exists!!");
         return ResponseEntity.status(HttpStatus.OK).body(userService.registerUser(user));
     }
 
     @GetMapping("/showAllCustomers")
-    public ResponseEntity<List<User>> showAllCustomers(){
+    public ResponseEntity<List<UserDTO>> showAllCustomers(){
         return ResponseEntity.status(HttpStatus.FOUND).body(userService.showAllCustomers());
     }
 
     @GetMapping("/showAllOwners")
-    public ResponseEntity<List<User>> showAllOwners(){
+    public ResponseEntity<List<UserDTO>> showAllOwners(){
         return ResponseEntity.status(HttpStatus.FOUND).body(userService.showAllOwners());
     }
 
     @GetMapping("searchCustomer/{id}")
     public ResponseEntity<?> searchCustomer(@PathVariable int id){
-        User customer = userService.searchCustomer(id);
+        UserDTO customer = userService.searchCustomer(id);
         if(customer != null)
             return ResponseEntity.status(HttpStatus.FOUND).body(customer);
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Customer not found!!!");
@@ -43,7 +44,7 @@ public class UserController {
 
     @GetMapping("searchOwner/{id}")
     public ResponseEntity<?> searchOwner(@PathVariable int id){
-        User owner = userService.searchOwner(id);
+        UserDTO owner = userService.searchOwner(id);
         if(owner != null)
             return ResponseEntity.status(HttpStatus.FOUND).body(owner);
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Owner not found!!!");
@@ -51,7 +52,7 @@ public class UserController {
 
     @DeleteMapping("/deleteCustomer/{id}")
     public ResponseEntity<?> deleteCustomer(@PathVariable int id){
-        User customer = userService.searchCustomer(id);
+        UserDTO customer = userService.searchCustomer(id);
         if(customer == null)
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Customer not found!!!");
         userService.deleteCustomer(id);
@@ -60,7 +61,7 @@ public class UserController {
 
     @DeleteMapping("/deleteOwner/{id}")
     public ResponseEntity<?> deleteOwner(@PathVariable int id){
-        User owner = userService.searchOwner(id);
+        UserDTO owner = userService.searchOwner(id);
         if(owner == null)
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Owner not found!!!");
         userService.deleteOwner(id);

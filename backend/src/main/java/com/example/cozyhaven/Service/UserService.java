@@ -1,7 +1,9 @@
 package com.example.cozyhaven.Service;
 
+import com.example.cozyhaven.DTO.UserDTO;
 import com.example.cozyhaven.Entity.User;
 import com.example.cozyhaven.Enum.Role;
+import com.example.cozyhaven.Mapper.UserMapper;
 import com.example.cozyhaven.Repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,28 +17,34 @@ public class UserService {
     @Autowired
     UserRepo userRepo;
 
-    public User searchCustomerByEmail(String email) {
-        return userRepo.findByEmail(email);
+    public UserDTO searchUserByEmail(String email) {
+        User user = userRepo.findByEmail(email);
+        return UserMapper.toDTO(user);
     }
 
-    public User registerUser(User user) {
-       return userRepo.save(user);
+    public UserDTO registerUser(UserDTO user) {
+       User u = userRepo.save(UserMapper.toEntity(user));
+       return UserMapper.toDTO(u);
     }
 
-    public List<User> showAllCustomers() {
-       return userRepo.findAllByRole(Role.CUSTOMER);
+    public List<UserDTO> showAllCustomers() {
+        List<User> customerList = userRepo.findAllByRole(Role.CUSTOMER);
+        return customerList.stream().map(UserMapper::toDTO).toList();
     }
 
-    public List<User> showAllOwners() {
-        return userRepo.findAllByRole(Role.OWNER);
+    public List<UserDTO> showAllOwners() {
+        List<User> ownerList = userRepo.findAllByRole(Role.OWNER);
+        return ownerList.stream().map(UserMapper::toDTO).toList();
     }
 
-    public User searchCustomer(int id) {
-        return userRepo.findByUserIdAndRole(id, Role.CUSTOMER);
+    public UserDTO searchCustomer(int id) {
+        User customer = userRepo.findByUserIdAndRole(id, Role.CUSTOMER);
+        return UserMapper.toDTO(customer);
     }
 
-    public User searchOwner(int id) {
-        return userRepo.findByUserIdAndRole(id, Role.OWNER);
+    public UserDTO searchOwner(int id) {
+        User owner = userRepo.findByUserIdAndRole(id, Role.OWNER);
+        return UserMapper.toDTO(owner);
     }
 
     public void deleteCustomer(int id) {
@@ -46,6 +54,4 @@ public class UserService {
     public void deleteOwner(int id) {
         userRepo.deleteById(id);
     }
-
-
 }
