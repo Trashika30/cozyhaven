@@ -3,18 +3,18 @@ package com.example.cozyhaven.Exception;
 
 import com.example.cozyhaven.ApiResponse.ApiResponse;
 import jakarta.validation.ConstraintViolationException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.time.LocalDate;
+
 import java.util.HashMap;
 import java.util.Map;
 
 @RestControllerAdvice
-
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(ResourceNotFoundException.class)
@@ -25,7 +25,7 @@ public class GlobalExceptionHandler {
                 .body(new ApiResponse<>(ex.getMessage(), HttpStatus.NOT_FOUND, null));
     }
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ExceptionHandler(MethodArgumentNotValidException.class) //For adding methods
     public ResponseEntity<ApiResponse<Map<String, String>>>
     handleValidationExceptions(MethodArgumentNotValidException e){
         Map<String, String> errors = new HashMap<>();
@@ -36,7 +36,7 @@ public class GlobalExceptionHandler {
                 .body(new ApiResponse<>("Invalid Input", HttpStatus.BAD_REQUEST, errors));
     }
 
-    @ExceptionHandler(ConstraintViolationException.class)
+    @ExceptionHandler(ConstraintViolationException.class) //For update methods
     public ResponseEntity<Map<String, String>>
     handleValidationException(ConstraintViolationException e){
         Map<String, String> errors = new HashMap<>();
@@ -47,6 +47,14 @@ public class GlobalExceptionHandler {
         });
 
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class) //For Email Uniqueness
+    public ResponseEntity<ApiResponse<Object>> handleDuplicate(
+            DataIntegrityViolationException ex){
+
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(new ApiResponse<>("Email already exists", HttpStatus.CONFLICT, null));
     }
 
     @ExceptionHandler(Exception.class)

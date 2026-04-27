@@ -22,6 +22,7 @@ public class Hotel {
     private String description;
     @NotBlank(message = "Location cannot be empty")
     private String location;
+    @NotBlank(message = "Contact cannot be empty")
     private String contact;
 
     @ElementCollection

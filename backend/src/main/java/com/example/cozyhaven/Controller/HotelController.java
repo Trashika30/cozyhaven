@@ -8,22 +8,26 @@ import com.example.cozyhaven.Entity.Review;
 import com.example.cozyhaven.Entity.Room;
 import com.example.cozyhaven.Mapper.HotelMapper;
 import com.example.cozyhaven.Service.HotelService;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/hotel")
+@Validated //validate parameters in methods.
 public class HotelController {
 
     @Autowired
     HotelService service;
 
     @PostMapping("/addHotel")
-    public ResponseEntity<HotelDTO> addHotel(@RequestBody HotelDTO dto){
+    public ResponseEntity<HotelDTO> addHotel(@Valid @RequestBody HotelDTO dto){
         return  ResponseEntity.ok(service.addHotel(dto));
     }
 
@@ -46,7 +50,7 @@ public class HotelController {
     }
 
     @GetMapping("/searchByLocation/{location}")
-    public ResponseEntity<?> searchHotelByLocation(@PathVariable String location){
+    public ResponseEntity<?> searchHotelByLocation(@NotNull(message = "Location cannot be empty") @PathVariable String location){
         List<HotelDTO> h= service.searchHotelByLocation(location);
         if(h.isEmpty()){
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Hotel not found");

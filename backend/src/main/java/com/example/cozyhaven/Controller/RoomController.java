@@ -2,15 +2,19 @@ package com.example.cozyhaven.Controller;
 
 import com.example.cozyhaven.DTO.RoomDTO;
 import com.example.cozyhaven.Service.RoomService;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/room")
+@Validated //validate parameters in methods.
 public class RoomController {
 
     @Autowired
@@ -28,7 +32,7 @@ public class RoomController {
     }
 
     @PostMapping("/addRoom/{hotelId}")
-    public ResponseEntity<?> addRoom(@PathVariable int hotelId, @RequestBody RoomDTO room){
+    public ResponseEntity<?> addRoom(@PathVariable int hotelId, @Valid @RequestBody RoomDTO room){
         RoomDTO r = service.addRoom(hotelId, room);
 
         if(r == null){
@@ -72,7 +76,7 @@ public class RoomController {
     }
 
     @GetMapping("/searchRoomByFare/{fare}")
-    public ResponseEntity<?> searchRoomByFare(@PathVariable double fare){
+    public ResponseEntity<?> searchRoomByFare( @Positive(message = "Base fare cannot be 0 or less") @PathVariable double fare){
         List<RoomDTO> rooms = service.searchRoomByFare(fare);
 
         if(rooms.isEmpty()){
@@ -94,7 +98,7 @@ public class RoomController {
     }
 
     @PutMapping("/updateRoomById/{id}")
-    public ResponseEntity<?> updateRoomById(@PathVariable int id, @RequestBody RoomDTO room){
+    public ResponseEntity<?> updateRoomById(@PathVariable int id, @Valid @RequestBody RoomDTO room){
         RoomDTO r = service.updateRoomById(id, room);
 
         if(r == null){

@@ -1,32 +1,40 @@
 package com.example.cozyhaven.Controller;
 
+import com.example.cozyhaven.ApiResponse.ApiResponse;
 import com.example.cozyhaven.DTO.UserDTO;
 import com.example.cozyhaven.Entity.User;
 import com.example.cozyhaven.Enum.Role;
 import com.example.cozyhaven.Service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.AutoPopulatingList;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/user")
+@Validated //validate parameters in methods.
 public class UserController {
     @Autowired
     UserService userService;
 
     @PostMapping("/registerUser")
-    public ResponseEntity<?> registerUser(@RequestBody UserDTO user){
+    public ResponseEntity<ApiResponse<?>> registerUser(@Valid @RequestBody UserDTO user){
         UserDTO u = userService.searchUserByEmail(user.getEmail());
-        if(u != null) return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Email already exists!!");
-        return ResponseEntity.status(HttpStatus.OK).body(userService.registerUser(user));
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ApiResponse<>("User Registered Successfully!!!", HttpStatus.OK, u)
+        );
     }
 
     @GetMapping("/showAllCustomers")
-    public ResponseEntity<List<UserDTO>> showAllCustomers(){
-        return ResponseEntity.status(HttpStatus.FOUND).body(userService.showAllCustomers());
+    public ResponseEntity<ApiResponse<List<UserDTO>>> showAllCustomers(){
+        return ResponseEntity.status(HttpStatus.FOUND).body(
+                new ApiResponse<>("All customers fetched successfully", HttpStatus.FOUND, userService.showAllCustomers())
+        );
     }
 
     @GetMapping("/showAllOwners")

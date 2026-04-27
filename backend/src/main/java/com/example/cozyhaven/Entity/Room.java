@@ -2,7 +2,9 @@ package com.example.cozyhaven.Entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,7 +19,9 @@ public class Room {
     private int roomId;
     @NotBlank(message = "Room type cannot be empty")
     private String roomType;
+    @Min(value = 1)
     private int maxOccupy;
+    @Positive(message = "Base fare cannot be 0 or less")
     private double baseFare;
     private boolean isAc;
     private boolean available;
