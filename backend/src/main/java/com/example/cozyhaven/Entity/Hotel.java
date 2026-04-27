@@ -46,6 +46,7 @@ public class Hotel {
                  String contact,
                  List<String> amenities,
                  User owner)
+
     {
         this.hotelName = hotelName;
         this.description = description;
@@ -54,10 +55,4 @@ public class Hotel {
         this.amenities = amenities;
         this.owner = owner;
     }
-
-
-
-
-
-
 }

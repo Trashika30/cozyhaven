@@ -3,12 +3,14 @@ package com.example.cozyhaven.Controller;
 import com.example.cozyhaven.DTO.BookingDTO;
 import com.example.cozyhaven.Entity.Booking;
 import com.example.cozyhaven.Enum.BookingStatus;
+import com.example.cozyhaven.Exception.ResourceNotFoundException;
 import com.example.cozyhaven.Service.BookingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.lang.module.ResolutionException;
 import java.util.List;
 
 @RestController
@@ -23,14 +25,16 @@ public class BookingController {
     }
 
     @GetMapping("/showAll")
-    public ResponseEntity<List<BookingDTO>> showAll(){
+    public ResponseEntity<List<BookingDTO>> showAll()  {
+        List<BookingDTO> list = bookingService.showAll();
+        if(list.isEmpty()) throw new ResourceNotFoundException("No Bookings found");
         return ResponseEntity.status(HttpStatus.FOUND).body(bookingService.showAll());
     }
 
     @GetMapping("/searchById/{id}")
-    public ResponseEntity<?> searchBookingById(@PathVariable int id){
+    public ResponseEntity<?> searchBookingById(@PathVariable int id) {
         BookingDTO booking = bookingService.searchBookingById(id);
-        if(booking == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Booking not found!!!");
+        if(booking == null) throw new ResourceNotFoundException("Booking not found");
         return ResponseEntity.status(HttpStatus.FOUND).body(booking);
     }
 

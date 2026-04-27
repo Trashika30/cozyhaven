@@ -27,35 +27,6 @@ public class BookingService {
         Booking booking =BookingMapper.toEntity(booking1);
         booking.setBookingDate(LocalDate.now());
         booking.setStatus(BookingStatus.CONFIRMED);
-
-        double baseFare = booking.getRoom().getBaseFare();
-        double total = baseFare;
-
-        int allowed = booking.getRoom().getMaxOccupy();
-              //4
-        int adults = booking.getAdultCount();
-        int children = booking.getChildCount();
-
-        int totalPeople = adults + children;
-                 //7         //4       //3
-        if(totalPeople > allowed){
-              //7           4
-            int extraPeople = totalPeople - allowed;
-                 //3            7  - 4
-            int extraAdults = Math.min(adults, extraPeople);
-               //3                         //4       3
-            extraPeople -= extraAdults;
-               //3-3=0
-            int extraChildren = extraPeople;
-                              //0
-            total += extraAdults * (baseFare * 0.4);
-                      //3
-            total += extraChildren * (baseFare * 0.2);
-                     //4
-        }
-
-        booking.setTotalAmount(total);
-
         booking= bookingRepo.save(booking);
         return BookingMapper.toDTO(booking);
     }
