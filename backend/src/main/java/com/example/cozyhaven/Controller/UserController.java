@@ -4,6 +4,7 @@ import com.example.cozyhaven.ApiResponse.ApiResponse;
 import com.example.cozyhaven.DTO.UserDTO;
 import com.example.cozyhaven.Entity.User;
 import com.example.cozyhaven.Enum.Role;
+import com.example.cozyhaven.Exception.ResourceNotFoundException;
 import com.example.cozyhaven.Service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,56 +25,70 @@ public class UserController {
 
     @PostMapping("/registerUser")
     public ResponseEntity<ApiResponse<?>> registerUser(@Valid @RequestBody UserDTO user){
-        UserDTO u = userService.searchUserByEmail(user.getEmail());
         return ResponseEntity.status(HttpStatus.OK).body(
-                new ApiResponse<>("User Registered Successfully!!!", HttpStatus.OK, u)
+                new ApiResponse<>("User Registered Successfully!!!", HttpStatus.OK, userService.registerUser(user))
         );
     }
 
     @GetMapping("/showAllCustomers")
     public ResponseEntity<ApiResponse<List<UserDTO>>> showAllCustomers(){
+        List<UserDTO> userList = userService.showAllCustomers();
+        if(userList.isEmpty()) throw new ResourceNotFoundException("No customer available!!!");
         return ResponseEntity.status(HttpStatus.FOUND).body(
-                new ApiResponse<>("All customers fetched successfully", HttpStatus.FOUND, userService.showAllCustomers())
+                new ApiResponse<>("All customers fetched successfully", HttpStatus.FOUND, userList)
         );
     }
 
     @GetMapping("/showAllOwners")
-    public ResponseEntity<List<UserDTO>> showAllOwners(){
-        return ResponseEntity.status(HttpStatus.FOUND).body(userService.showAllOwners());
+    public ResponseEntity<ApiResponse<List<UserDTO>>> showAllOwners(){
+        List<UserDTO> userList = userService.showAllOwners();
+        if(userList.isEmpty()) throw new ResourceNotFoundException("No owner available!!!");
+        return ResponseEntity.status(HttpStatus.FOUND).body(
+                new ApiResponse<>("All owner fetched successfully", HttpStatus.FOUND, userList)
+        );
     }
 
     @GetMapping("searchCustomer/{id}")
-    public ResponseEntity<?> searchCustomer(@PathVariable int id){
+    public ResponseEntity<ApiResponse<?>> searchCustomer(@PathVariable int id){
         UserDTO customer = userService.searchCustomer(id);
-        if(customer != null)
-            return ResponseEntity.status(HttpStatus.FOUND).body(customer);
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Customer not found!!!");
+        if(customer == null)
+            throw new ResourceNotFoundException("Customer not found");
+        return ResponseEntity.status(HttpStatus.FOUND).body(
+                    new ApiResponse<>("Customer found", HttpStatus.FOUND, customer)
+            );
+
     }
 
     @GetMapping("searchOwner/{id}")
-    public ResponseEntity<?> searchOwner(@PathVariable int id){
+    public ResponseEntity<ApiResponse<?>> searchOwner(@PathVariable int id){
         UserDTO owner = userService.searchOwner(id);
-        if(owner != null)
-            return ResponseEntity.status(HttpStatus.FOUND).body(owner);
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Owner not found!!!");
+        if(owner == null)
+            throw new ResourceNotFoundException("Owner not found");
+        return ResponseEntity.status(HttpStatus.FOUND).body(
+                    new ApiResponse<>("Owner found", HttpStatus.FOUND, HttpStatus.NOT_FOUND)
+            );
     }
 
     @DeleteMapping("/deleteCustomer/{id}")
-    public ResponseEntity<?> deleteCustomer(@PathVariable int id){
+    public ResponseEntity<ApiResponse<?>> deleteCustomer(@PathVariable int id){
         UserDTO customer = userService.searchCustomer(id);
         if(customer == null)
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Customer not found!!!");
+            throw new ResourceNotFoundException("Customer not found");
         userService.deleteCustomer(id);
-        return ResponseEntity.status(HttpStatus.FOUND).body("Customer deleted!!!");
+        return ResponseEntity.status(HttpStatus.FOUND).body(
+                new ApiResponse<>("Customer deleted", HttpStatus.FOUND, customer)
+        );
     }
 
     @DeleteMapping("/deleteOwner/{id}")
-    public ResponseEntity<?> deleteOwner(@PathVariable int id){
+    public ResponseEntity<ApiResponse<?>> deleteOwner(@PathVariable int id){
         UserDTO owner = userService.searchOwner(id);
         if(owner == null)
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Owner not found!!!");
+            throw new ResourceNotFoundException("Owner not found");
         userService.deleteOwner(id);
-        return ResponseEntity.status(HttpStatus.FOUND).body("Owner deleted!!!");
+        return ResponseEntity.status(HttpStatus.GONE).body(
+              new ApiResponse<>("Owner deleted", HttpStatus.GONE, owner)
+        );
     }
 }
 
