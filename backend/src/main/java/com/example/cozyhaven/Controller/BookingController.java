@@ -1,5 +1,6 @@
 package com.example.cozyhaven.Controller;
 
+import com.example.cozyhaven.ApiResponse.ApiResponse;
 import com.example.cozyhaven.DTO.BookingDTO;
 import com.example.cozyhaven.Entity.Booking;
 import com.example.cozyhaven.Enum.BookingStatus;
@@ -20,22 +21,22 @@ public class BookingController {
     BookingService bookingService;
 
     @PostMapping("/addBooking")
-    public ResponseEntity<BookingDTO> addBooking(@RequestBody BookingDTO booking){
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(bookingService.addBooking(booking));
+    public ResponseEntity<ApiResponse<BookingDTO>> addBooking(@RequestBody BookingDTO booking){
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(new ApiResponse<>("Booking added!",HttpStatus.FOUND,bookingService.addBooking(booking)));
     }
 
     @GetMapping("/showAll")
-    public ResponseEntity<List<BookingDTO>> showAll()  {
+    public ResponseEntity<ApiResponse<List<BookingDTO>>> showAll()  {
         List<BookingDTO> list = bookingService.showAll();
         if(list.isEmpty()) throw new ResourceNotFoundException("No Bookings found");
-        return ResponseEntity.status(HttpStatus.FOUND).body(bookingService.showAll());
+        return ResponseEntity.status(HttpStatus.FOUND).body(new ApiResponse<>("Bookings found!",HttpStatus.OK,list));
     }
 
     @GetMapping("/searchById/{id}")
     public ResponseEntity<?> searchBookingById(@PathVariable int id) {
         BookingDTO booking = bookingService.searchBookingById(id);
         if(booking == null) throw new ResourceNotFoundException("Booking not found");
-        return ResponseEntity.status(HttpStatus.FOUND).body(booking);
+        return ResponseEntity.status(HttpStatus.FOUND).body(new ApiResponse<>("Booking detail for id:"+id,HttpStatus.FOUND,booking));
     }
 
     @GetMapping("/getUserBookings/{userId}")
@@ -43,7 +44,7 @@ public class BookingController {
         List<BookingDTO> bookingList = bookingService.getUserBookings(userId);
         if(bookingList.isEmpty())
             throw new ResourceNotFoundException("Booking not found");
-        return ResponseEntity.status(HttpStatus.FOUND).body(bookingList);
+        return ResponseEntity.status(HttpStatus.FOUND).body(new ApiResponse<>("Bookings detail for user id:"+userId,HttpStatus.FOUND,bookingList));
     }
 
     @GetMapping("/upcomingStay/{userId}")
@@ -51,7 +52,7 @@ public class BookingController {
         List<BookingDTO> bookingList = bookingService.upcomingStay(userId);
         if(bookingList.isEmpty())
             throw new ResourceNotFoundException("Booking not found");
-        return ResponseEntity.status(HttpStatus.FOUND).body(bookingList);
+        return ResponseEntity.status(HttpStatus.FOUND).body(new ApiResponse<>("Upcoming plans: ",HttpStatus.FOUND,bookingList));
     }
 
     @GetMapping("/completedStay/{userId}")
@@ -59,14 +60,15 @@ public class BookingController {
         List<BookingDTO> bookingList = bookingService.completedStay(userId);
         if(bookingList.isEmpty())
             throw new ResourceNotFoundException("No completed bookings found!!!");
-        return ResponseEntity.status(HttpStatus.FOUND).body(bookingList);       }
+        return ResponseEntity.status(HttpStatus.FOUND).body(new ApiResponse<>("Completed stays : ",HttpStatus.FOUND,bookingList));
+    }
 
     @PutMapping("/updateBookingStatus/{bookingId}/{status}")
     public ResponseEntity<?> updateBookingStatus(@PathVariable int bookingId, @PathVariable BookingStatus status){
         BookingDTO booking = bookingService.updateBookingStatus(bookingId, status);
         if(booking == null)
             throw new ResourceNotFoundException("Booking not found!!!");
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(booking);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse<>("Updated Booking !",HttpStatus.NOT_FOUND,booking));
     }
 
     @PutMapping("/cancelBooking/{bookingId}/{reason}")
@@ -75,7 +77,7 @@ public class BookingController {
         if(b==null){
             throw new ResourceNotFoundException("Booking not found!!!");
         }
-        return ResponseEntity.status(HttpStatus.OK).body(b);
+        return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse<>("Cancelled Booking !",HttpStatus.OK,b));
     }
 
 

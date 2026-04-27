@@ -105,8 +105,12 @@ public class RoomService {
         return RoomMapper.toDto(updated);
     }
 
-    public String deleteRoomById(int id){
+    public int deleteRoomById(int id){
+        Room room = roomRepo.findById(id).orElse(null);
+        if(room == null){
+            return 0;
+        }
         roomRepo.deleteById(id);
-        return "Room deleted successfully";
+        return 1;
     }
 }

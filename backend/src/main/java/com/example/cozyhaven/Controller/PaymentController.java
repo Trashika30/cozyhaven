@@ -1,7 +1,9 @@
 
 package com.example.cozyhaven.Controller;
 
+import com.example.cozyhaven.ApiResponse.ApiResponse;
 import com.example.cozyhaven.DTO.PaymentDTO;
+import com.example.cozyhaven.Exception.ResourceNotFoundException;
 import com.example.cozyhaven.Service.PaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,83 +20,100 @@ public class PaymentController {
     PaymentService service;
 
     @PostMapping("/makePayment/{bookingId}")
-    public ResponseEntity<?> makePayment(@PathVariable int bookingId, @RequestBody PaymentDTO dto){
+    public ResponseEntity<ApiResponse<?>> makePayment(@PathVariable int bookingId, @RequestBody PaymentDTO dto){
         PaymentDTO p = service.makePayment(bookingId,dto);
         if(p==null){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Booking not found");
+            throw new ResourceNotFoundException("Booking not found");
         }
-        return ResponseEntity.status(HttpStatus.CREATED).body(p);
+        return ResponseEntity.status(HttpStatus.CREATED).body(
+                new ApiResponse<>("Payment Success", HttpStatus.CREATED, p)
+        );
     }
 
     @GetMapping("/showAll")
-    public ResponseEntity<?> showAll(){
+    public ResponseEntity<ApiResponse<?>> showAll(){
         List<PaymentDTO> list = service.getAllPayments();
-        if(list.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Payments not found");
-        }
-        return ResponseEntity.status(HttpStatus.OK).body(list);
+        if(list.isEmpty())
+            throw new ResourceNotFoundException("No payment made");
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ApiResponse<>("All payment fetched", HttpStatus.OK, list)
+        );
     }
 
     @GetMapping("/searchById/{id}")
-    public ResponseEntity<?> searchPaymentById(@PathVariable int id){
+    public ResponseEntity<ApiResponse<?>> searchPaymentById(@PathVariable int id){
         PaymentDTO p = service.searchPaymentById(id);
         if(p==null){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Payment not found");
+            throw new ResourceNotFoundException("Payment not found!!");
         }
-        return ResponseEntity.status(HttpStatus.OK).body(p);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ApiResponse<>("Payment found", HttpStatus.OK, p)
+        );
     }
 
     @GetMapping("/searchByBookingId/{bookingId}")
-    public ResponseEntity<?> searchPaymentByBookingId(@PathVariable int bookingId){
+    public ResponseEntity<ApiResponse<?>> searchPaymentByBookingId(@PathVariable int bookingId){
         List<PaymentDTO> list = service.searchPaymentByBookingId(bookingId);
         if(list.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Payment not found");
+            throw new ResourceNotFoundException("Payment not found");
         }
-        return ResponseEntity.status(HttpStatus.OK).body(list);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ApiResponse<>("Payment found", HttpStatus.OK, list)
+        );
     }
 
     @PutMapping("/updatePaymentStatus/{id}/{status}")
-    public ResponseEntity<?> updatePaymentStatus(@PathVariable int id,@PathVariable String status){
+    public ResponseEntity<ApiResponse<?>> updatePaymentStatus(@PathVariable int id,@PathVariable String status){
         PaymentDTO p = service.updatePaymentStatus(id,status);
         if(p==null){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Payment not found");
+            throw new ResourceNotFoundException("Payment not found");
         }
-        return ResponseEntity.status(HttpStatus.OK).body(p);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ApiResponse<>("Payment updated", HttpStatus.OK, p)
+        );
     }
 
     @PutMapping("/requestRefund/{id}")
-    public ResponseEntity<?> requestRefund(@PathVariable int id){
+    public ResponseEntity<ApiResponse<?>> requestRefund(@PathVariable int id){
         PaymentDTO p = service.requestRefund(id);
         if(p==null){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Payment not found");
+            throw new ResourceNotFoundException("Payment not found");
         }
-        return ResponseEntity.status(HttpStatus.OK).body(p);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ApiResponse<>("Request submitted", HttpStatus.OK, p)
+        );
     }
 
     @PutMapping("/approveRefund/{id}")
     public ResponseEntity<?> approveRefund(@PathVariable int id){
         PaymentDTO p = service.approveRefund(id);
         if(p==null){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Payment not found");
+            throw new ResourceNotFoundException("Payment not found");
         }
-        return ResponseEntity.status(HttpStatus.OK).body(p);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ApiResponse<>("Refund approved", HttpStatus.OK, p)
+        );
     }
 
     @PutMapping("/rejectRefund/{id}")
     public ResponseEntity<?> rejectRefund(@PathVariable int id){
         PaymentDTO p = service.rejectRefund(id);
         if(p==null){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Payment not found");
+            throw new ResourceNotFoundException("Payment not found");
         }
-        return ResponseEntity.status(HttpStatus.OK).body(p);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ApiResponse<>("Refund rejected", HttpStatus.OK, p)
+        );
     }
 
     @PutMapping("/refundPayment/{id}")
     public ResponseEntity<?> refundPayment(@PathVariable int id){
         PaymentDTO p = service.refundPayment(id);
         if(p==null){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Payment not found");
+            throw new ResourceNotFoundException("Payment not found");
         }
-        return ResponseEntity.status(HttpStatus.OK).body(p);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ApiResponse<>("Refund success", HttpStatus.OK, p)
+        );
     }
 }

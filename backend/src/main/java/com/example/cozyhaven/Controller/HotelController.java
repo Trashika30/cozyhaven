@@ -1,12 +1,10 @@
 package com.example.cozyhaven.Controller;
 
 
+import com.example.cozyhaven.ApiResponse.ApiResponse;
 import com.example.cozyhaven.DTO.HotelDTO;
-import com.example.cozyhaven.DTO.RoomDTO;
 import com.example.cozyhaven.Entity.Hotel;
-import com.example.cozyhaven.Entity.Review;
-import com.example.cozyhaven.Entity.Room;
-import com.example.cozyhaven.Mapper.HotelMapper;
+import com.example.cozyhaven.Exception.ResourceNotFoundException;
 import com.example.cozyhaven.Service.HotelService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -27,44 +25,45 @@ public class HotelController {
     HotelService service;
 
     @PostMapping("/addHotel")
-    public ResponseEntity<HotelDTO> addHotel(@Valid @RequestBody HotelDTO dto){
-        return  ResponseEntity.ok(service.addHotel(dto));
+    public ResponseEntity<?> addHotel(@Valid @RequestBody HotelDTO dto){
+
+        return  ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse<>("Hotel added ! ",HttpStatus.CREATED,service.addHotel(dto)));
     }
 
     @GetMapping("/showAll")
     public ResponseEntity<?> showAllHotels(){
        List<HotelDTO> hotels = service.showAllHotels();
        if(hotels.isEmpty()){
-           return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Hotels not found");
+          throw  new ResourceNotFoundException("No Hotels found");
        }
-       return ResponseEntity.status(HttpStatus.OK).body(hotels);
+       return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse<>("Hotels found ",HttpStatus.OK,hotels));
     }
 
     @GetMapping("/searchById/{id}")
     public ResponseEntity<?> searchHotelById(@PathVariable int id){
         HotelDTO h= service.searchHotelById(id);
         if(h==null){
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Hotel not found");
+            throw new ResourceNotFoundException("Hotel not found");
         }
-        return ResponseEntity.status(HttpStatus.OK).body(h);
+        return ResponseEntity.status(HttpStatus.OK).body(new  ApiResponse<>("Hotel found ",HttpStatus.OK,h));
     }
 
     @GetMapping("/searchByLocation/{location}")
     public ResponseEntity<?> searchHotelByLocation(@NotNull(message = "Location cannot be empty") @PathVariable String location){
         List<HotelDTO> h= service.searchHotelByLocation(location);
         if(h.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Hotel not found");
+          throw  new ResourceNotFoundException("Hotel not found");
         }
-        return ResponseEntity.status(HttpStatus.OK).body(h);
+        return ResponseEntity.status(HttpStatus.OK).body(new  ApiResponse<>("Hotel found ",HttpStatus.OK,h));
     }
 
     @GetMapping("/searchByOwnerId/{id}")
     public ResponseEntity<?> searchHotelByOwnerId(@PathVariable int id){
         List<HotelDTO>h= service.searchHotelByOwnerId(id);
         if(h.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Hotel not found");
+            throw  new ResourceNotFoundException("Hotel not found");
         }
-        return ResponseEntity.status(HttpStatus.OK).body(h);
+        return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse<>("Hotel found: ",HttpStatus.OK,h));
     }
 
 
@@ -72,24 +71,24 @@ public class HotelController {
     public ResponseEntity<?> updateHotelById(@PathVariable int id, @RequestBody Hotel hotel){
         HotelDTO h= service.searchHotelById(id);
         if(h==null){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Hotel not found");
+           throw  new ResourceNotFoundException("Hotel not found");
         }
         else{
            h= service.updateHotelById(id,hotel);
-           return ResponseEntity.status(HttpStatus.OK).body(h);
+           return ResponseEntity.status(HttpStatus.OK).body(new  ApiResponse<>("Hotel updated ",HttpStatus.OK,h));
         }
 
     }
 
     @DeleteMapping("/deleteById/{id}")
-    public ResponseEntity<String> deleteHotelById(@PathVariable int id){
+    public ResponseEntity<?> deleteHotelById(@PathVariable int id){
         HotelDTO h= service.searchHotelById(id);
         if(h==null){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Hotel not found");
+            throw new ResourceNotFoundException("Hotel not found");
         }
         else{
              String r=service.deleteHotelById(id);
-            return ResponseEntity.status(HttpStatus.OK).body(r);
+            return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse<>("Hotel deleted",HttpStatus.GONE,r));
         }
     }
 
