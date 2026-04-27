@@ -13,5 +13,5 @@ public interface HotelRepo extends JpaRepository<Hotel, Integer> {
     List<Room> getRooms(int hotelId);
 
    List<Hotel>findAllByLocation(String location);
-    List<Hotel> findAllByOwner_OwnerId(int id);
+    List<Hotel> findAllByOwner_UserId(int id);
 }

@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RoomDTO {
-    private int roomId;
+    private Integer roomId;
     private String roomType;
     private int maxOccupy;
     private double baseFare;

@@ -10,7 +10,7 @@ import java.util.List;
 @NoArgsConstructor
 public class HotelDTO {
 
-    private int hotelId;
+    private Integer hotelId;//becoz when entity is autoincrement user wont sent id then this is null in dto int cant be null prbm
     private String hotelName;
     private String description;
     private String location;

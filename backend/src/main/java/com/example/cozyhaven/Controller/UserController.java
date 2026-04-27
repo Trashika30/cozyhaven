@@ -23,6 +23,7 @@ public class UserController {
     @Autowired
     UserService userService;
 
+    //there is no separate register method for diff roles
     @PostMapping("/registerUser")
     public ResponseEntity<ApiResponse<?>> registerUser(@Valid @RequestBody UserDTO user){
         return ResponseEntity.status(HttpStatus.OK).body(
@@ -65,8 +66,8 @@ public class UserController {
         if(owner == null)
             throw new ResourceNotFoundException("Owner not found");
         return ResponseEntity.status(HttpStatus.FOUND).body(
-                    new ApiResponse<>("Owner found", HttpStatus.FOUND, HttpStatus.NOT_FOUND)
-            );
+                    new ApiResponse<>("Owner found", HttpStatus.FOUND, owner)
+            );//instead of owner there was Http.sTATUS.noTfOUND
     }
 
     @DeleteMapping("/deleteCustomer/{id}")
@@ -76,7 +77,7 @@ public class UserController {
             throw new ResourceNotFoundException("Customer not found");
         userService.deleteCustomer(id);
         return ResponseEntity.status(HttpStatus.GONE).body(
-                new ApiResponse<>("Customer deleted", HttpStatus.FOUND, customer)
+                new ApiResponse<>("Customer deleted", HttpStatus.GONE, customer)
         );
     }
 

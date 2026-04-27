@@ -29,7 +29,7 @@ public class Hotel {
     private List<String> amenities; //wifi, parking, roomService, pool, dining, gym
 
     @ManyToOne
-    @JoinColumn(name="ownerId")
+    @JoinColumn(name="owner_id") //not ownerId becoz the column created will be owner_id
     @JsonBackReference("owner_hotels") //Avoids Dependency Loop - Child -> BackReference
     private User owner;
 

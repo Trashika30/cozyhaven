@@ -3,6 +3,7 @@ package com.example.cozyhaven.Controller;
 
 import com.example.cozyhaven.ApiResponse.ApiResponse;
 import com.example.cozyhaven.DTO.HotelDTO;
+import com.example.cozyhaven.DTO.UserDTO;
 import com.example.cozyhaven.Entity.Hotel;
 import com.example.cozyhaven.Exception.ResourceNotFoundException;
 import com.example.cozyhaven.Service.HotelService;
@@ -24,10 +25,16 @@ public class HotelController {
     @Autowired
     HotelService service;
 
+
+
     @PostMapping("/addHotel")
     public ResponseEntity<?> addHotel(@Valid @RequestBody HotelDTO dto){
+        HotelDTO hotelDTO = service.addHotel(dto);
+        if(hotelDTO == null){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
 
-        return  ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse<>("Hotel added ! ",HttpStatus.CREATED,service.addHotel(dto)));
+        return  ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse<>("Hotel added ! ",HttpStatus.CREATED,hotelDTO));
     }
 
     @GetMapping("/showAll")
@@ -68,7 +75,7 @@ public class HotelController {
 
 
     @PutMapping("updateById/{id}")
-    public ResponseEntity<?> updateHotelById(@PathVariable int id, @RequestBody Hotel hotel){
+    public ResponseEntity<?> updateHotelById(@PathVariable int id, @RequestBody HotelDTO hotel){
         HotelDTO h= service.searchHotelById(id);
         if(h==null){
            throw  new ResourceNotFoundException("Hotel not found");
@@ -79,7 +86,8 @@ public class HotelController {
         }
 
     }
-
+  //can't delete without deleting in amenties tables usually but using this method possible
+    //if all hotel delete amenties table also deleted automatically
     @DeleteMapping("/deleteById/{id}")
     public ResponseEntity<?> deleteHotelById(@PathVariable int id){
         HotelDTO h= service.searchHotelById(id);

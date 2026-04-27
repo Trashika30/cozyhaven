@@ -13,12 +13,8 @@ public class HotelMapper {
         h.setLocation(hoteldto.getLocation());
         h.setContact(hoteldto.getContact());
         h.setAmenities(hoteldto.getAmenities());
+        //dont set owner object here it is detaching
 
-        if(hoteldto.getOwnerId()!=0){
-            User owner= new User();
-            owner.setUserId(hoteldto.getOwnerId());
-            h.setOwner(owner);
-        }
         return h;
     }
 

@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class BookingDTO {
-    private int bookingId;
+    private Integer bookingId;
     private String hotelName;
     private String roomType;
     private LocalDate checkInDate;
