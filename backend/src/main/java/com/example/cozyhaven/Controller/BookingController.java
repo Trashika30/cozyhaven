@@ -42,7 +42,7 @@ public class BookingController {
     public ResponseEntity<?> getUserBookings(@PathVariable int userId){
         List<BookingDTO> bookingList = bookingService.getUserBookings(userId);
         if(bookingList.isEmpty())
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No bookings made!!!");
+            throw new ResourceNotFoundException("Booking not found");
         return ResponseEntity.status(HttpStatus.FOUND).body(bookingList);
     }
 
@@ -50,7 +50,7 @@ public class BookingController {
     public ResponseEntity<?> upcomingStay(@PathVariable int userId){
         List<BookingDTO> bookingList = bookingService.upcomingStay(userId);
         if(bookingList.isEmpty())
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No upcoming bookings found!!!");
+            throw new ResourceNotFoundException("Booking not found");
         return ResponseEntity.status(HttpStatus.FOUND).body(bookingList);
     }
 
@@ -58,13 +58,14 @@ public class BookingController {
     public ResponseEntity<?> completedStay(@PathVariable int userId){
         List<BookingDTO> bookingList = bookingService.completedStay(userId);
         if(bookingList.isEmpty())
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No completed bookings found!!!");
+            throw new ResourceNotFoundException("No completed bookings found!!!");
         return ResponseEntity.status(HttpStatus.FOUND).body(bookingList);       }
 
     @PutMapping("/updateBookingStatus/{bookingId}/{status}")
     public ResponseEntity<?> updateBookingStatus(@PathVariable int bookingId, @PathVariable BookingStatus status){
         BookingDTO booking = bookingService.updateBookingStatus(bookingId, status);
-        if(booking == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No bookings found!!!");
+        if(booking == null)
+            throw new ResourceNotFoundException("Booking not found!!!");
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(booking);
     }
 
@@ -72,7 +73,7 @@ public class BookingController {
     public ResponseEntity<?> cancelBooking(@PathVariable int bookingId,@PathVariable String reason){
         Booking b = bookingService.cancelBooking(bookingId,reason);
         if(b==null){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Booking not found");
+            throw new ResourceNotFoundException("Booking not found!!!");
         }
         return ResponseEntity.status(HttpStatus.OK).body(b);
     }

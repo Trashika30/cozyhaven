@@ -37,7 +37,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(ConstraintViolationException.class) //For update methods
-    public ResponseEntity<Map<String, String>>
+    public ResponseEntity<ApiResponse<Map<String, String>>>
     handleValidationException(ConstraintViolationException e){
         Map<String, String> errors = new HashMap<>();
         e.getConstraintViolations().forEach(error -> {
@@ -46,7 +46,7 @@ public class GlobalExceptionHandler {
             errors.put(field, message);
         });
 
-        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+        return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new ApiResponse<>("Invalid input",HttpStatus.NOT_ACCEPTABLE,errors));
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class) //For Email Uniqueness
@@ -62,4 +62,5 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(new ApiResponse<>("Something went wrong", HttpStatus.INTERNAL_SERVER_ERROR, null));
     }
+
 }
