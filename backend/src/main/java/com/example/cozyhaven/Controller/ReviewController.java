@@ -82,7 +82,7 @@ public class ReviewController {
         }
         else{
             String res = service.deleteReviewById(id);
-            return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse<>("Review deleted",HttpStatus.GONE,res));
+            return ResponseEntity.status(HttpStatus.GONE).body(new ApiResponse<>("Review deleted",HttpStatus.GONE,res));
         }
     }
 

@@ -77,7 +77,7 @@ public class BookingController {
         if(b==null){
             throw new ResourceNotFoundException("Booking not found!!!");
         }
-        return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse<>("Cancelled Booking !",HttpStatus.OK,b));
+        return ResponseEntity.status(HttpStatus.GONE).body(new ApiResponse<>("Cancelled Booking !",HttpStatus.GONE,b));
     }
 
 

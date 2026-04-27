@@ -116,6 +116,6 @@ public class RoomController {
         if(result == 0){
             throw new ResourceNotFoundException("Room Not Found");
         }
-        return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse<>("Room deleted !",HttpStatus.OK,result));
+        return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse<>("Room deleted !",HttpStatus.GONE,result));
     }
 }

@@ -75,7 +75,7 @@ public class UserController {
         if(customer == null)
             throw new ResourceNotFoundException("Customer not found");
         userService.deleteCustomer(id);
-        return ResponseEntity.status(HttpStatus.FOUND).body(
+        return ResponseEntity.status(HttpStatus.GONE).body(
                 new ApiResponse<>("Customer deleted", HttpStatus.FOUND, customer)
         );
     }

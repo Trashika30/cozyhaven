@@ -88,7 +88,7 @@ public class HotelController {
         }
         else{
              String r=service.deleteHotelById(id);
-            return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse<>("Hotel deleted",HttpStatus.GONE,r));
+            return ResponseEntity.status(HttpStatus.GONE).body(new ApiResponse<>("Hotel deleted",HttpStatus.GONE,r));
         }
     }
 
