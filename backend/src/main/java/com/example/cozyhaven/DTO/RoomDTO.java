@@ -13,16 +13,16 @@ public class RoomDTO {
     private String roomType;
     private int maxOccupy;
     private double baseFare;
-    private boolean isAc;
+    private boolean ac;
     private boolean available;
     private int hotelId;
 
-    public RoomDTO(String roomType, int maxOccupy, double baseFare, boolean isAc,
+    public RoomDTO(String roomType, int maxOccupy, double baseFare, boolean ac,
                    boolean available, int hotelId) {
         this.roomType = roomType;
         this.maxOccupy = maxOccupy;
         this.baseFare = baseFare;
-        this.isAc = isAc;
+        this.ac = ac;
         this.available = available;
         this.hotelId = hotelId;
     }

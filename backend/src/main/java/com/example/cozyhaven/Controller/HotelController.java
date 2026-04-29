@@ -34,7 +34,7 @@ public class HotelController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        return  ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse<>("Hotel added ! ",HttpStatus.CREATED,hotelDTO));
+        return  ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse<>("Hotel added!! ",HttpStatus.CREATED,hotelDTO));
     }
 
     @GetMapping("/showAll")

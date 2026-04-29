@@ -23,7 +23,7 @@ public class Room {
     private int maxOccupy;
     @Positive(message = "Base fare cannot be 0 or less")
     private double baseFare;
-    private boolean isAc;
+    private boolean ac;
     private boolean available;
 
     @ManyToOne
@@ -31,11 +31,11 @@ public class Room {
     @JsonBackReference //Avoids Dependency Loop - Child -> BackReference
     Hotel hotel;
 
-    public Room(String roomType, int maxOccupy, boolean isAc, double baseFare,
+    public Room(String roomType, int maxOccupy, boolean ac, double baseFare,
                 boolean available, Hotel hotel) {
         this.roomType = roomType;
         this.maxOccupy = maxOccupy;
-        this.isAc = isAc;
+        this.ac = ac;
         this.baseFare = baseFare;
         this.available = available;
         this.hotel = hotel;

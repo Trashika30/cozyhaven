@@ -33,9 +33,9 @@ public class RoomController {
         return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse<>("Rooms",HttpStatus.OK,rooms));
     }
 
-    @PostMapping("/addRoom/{hotelId}")
-    public ResponseEntity<?> addRoom(@PathVariable int hotelId, @Valid @RequestBody RoomDTO room){
-        RoomDTO r = service.addRoom(hotelId, room);
+    @PostMapping("/addRoom")
+    public ResponseEntity<?> addRoom(@Valid @RequestBody RoomDTO room){
+        RoomDTO r = service.addRoom(room);
 
         if(r == null){
             throw new ResourceNotFoundException("No such hotel");
@@ -88,9 +88,9 @@ public class RoomController {
         return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse<>("Rooms",HttpStatus.OK,rooms));
     }
 
-    @GetMapping("/searchRoomByAc/{isAc}")
-    public ResponseEntity<?> searchRoomByAc(@PathVariable boolean isAc){
-        List<RoomDTO> rooms = service.searchRoomByAc(isAc);
+    @GetMapping("/searchRoomByAc/{ac}")
+    public ResponseEntity<?> searchRoomByAc(@PathVariable boolean ac){
+        List<RoomDTO> rooms = service.searchRoomByAc(ac);
 
         if(rooms.isEmpty()){
             throw new  ResourceNotFoundException("Rooms Not Found");
@@ -116,6 +116,6 @@ public class RoomController {
         if(result == 0){
             throw new ResourceNotFoundException("Room Not Found");
         }
-        return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse<>("Room deleted !",HttpStatus.GONE,result));
+        return ResponseEntity.status(HttpStatus.GONE).body(new ApiResponse<>("Room deleted !",HttpStatus.GONE,result));
     }
 }

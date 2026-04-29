@@ -49,18 +49,18 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new ApiResponse<>("Invalid input",HttpStatus.NOT_ACCEPTABLE,errors));
     }
 
-    @ExceptionHandler(DataIntegrityViolationException.class) //For Email Uniqueness
-    public ResponseEntity<ApiResponse<Object>> handleDuplicate(
-            DataIntegrityViolationException ex){
+//    @ExceptionHandler(DataIntegrityViolationException.class) //For Email Uniqueness
+//    public ResponseEntity<ApiResponse<Object>> handleDuplicate(
+//            DataIntegrityViolationException ex){
+//
+//        return ResponseEntity.status(HttpStatus.CONFLICT)
+//                .body(new ApiResponse<>("Email already exists", HttpStatus.CONFLICT, null));
+//    }
 
-        return ResponseEntity.status(HttpStatus.CONFLICT)
-                .body(new ApiResponse<>("Email already exists", HttpStatus.CONFLICT, null));
-    }
-
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ApiResponse<Object>> handleGeneral(Exception ex) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(new ApiResponse<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR, null));
-    }
+//    @ExceptionHandler(Exception.class)
+//    public ResponseEntity<ApiResponse<Object>> handleGeneral(Exception ex) {
+//        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+//                .body(new ApiResponse<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR, null));
+//    }
 
 }

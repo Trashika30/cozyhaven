@@ -31,8 +31,8 @@ public class RoomService {
         return dtoList;
     }
 
-    public RoomDTO addRoom(int hotelId, RoomDTO roomDTO){
-        Hotel hotel = hotelRepo.findById(hotelId).orElse(null);
+    public RoomDTO addRoom(RoomDTO roomDTO){
+        Hotel hotel = hotelRepo.findById(roomDTO.getHotelId()).orElse(null);
 
         if(hotel == null){
             return null;
@@ -86,8 +86,8 @@ public class RoomService {
         return dtoList;
     }
 
-    public List<RoomDTO> searchRoomByAc(boolean isAc){
-        List<Room> list = roomRepo.findByIsAc(isAc);
+    public List<RoomDTO> searchRoomByAc(boolean ac){
+        List<Room> list = roomRepo.findByAc(ac);
 
         List<RoomDTO> dtoList = new ArrayList<>();
         for(Room r : list){

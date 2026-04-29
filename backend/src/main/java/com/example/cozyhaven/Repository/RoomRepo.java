@@ -17,5 +17,5 @@ public interface RoomRepo extends JpaRepository<Room, Integer> {
 
     List<Room> findByBaseFareLessThanEqual(double fare);
 
-    List<Room> findByIsAc(boolean isAc);
+    List<Room> findByAc(boolean ac);
 }
