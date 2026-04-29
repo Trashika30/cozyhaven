@@ -49,18 +49,29 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new ApiResponse<>("Invalid input",HttpStatus.NOT_ACCEPTABLE,errors));
     }
 
-//    @ExceptionHandler(DataIntegrityViolationException.class) //For Email Uniqueness
-//    public ResponseEntity<ApiResponse<Object>> handleDuplicate(
-//            DataIntegrityViolationException ex){
-//
-//        return ResponseEntity.status(HttpStatus.CONFLICT)
-//                .body(new ApiResponse<>("Email already exists", HttpStatus.CONFLICT, null));
-//    }
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ApiResponse<Object>> handleDuplicate(DataIntegrityViolationException ex) {
 
-//    @ExceptionHandler(Exception.class)
-//    public ResponseEntity<ApiResponse<Object>> handleGeneral(Exception ex) {
-//        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-//                .body(new ApiResponse<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR, null));
-//    }
+        String msg = ex.getRootCause().getMessage();
+
+        if (msg.contains("Duplicate") || msg.contains("email")) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(new ApiResponse<>("Email already exists", HttpStatus.CONFLICT, null));
+        }
+
+        if (msg.contains("foreign key") || msg.contains("hotel_id")) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ApiResponse<>("Hotel ID does not exist", HttpStatus.BAD_REQUEST, null));
+        }
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new ApiResponse<>("Database constraint violation", HttpStatus.BAD_REQUEST, null));
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ApiResponse<Object>> handleGeneral(Exception ex) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new ApiResponse<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR, null));
+    }
 
 }

@@ -5,15 +5,16 @@ import com.example.cozyhaven.Entity.Hotel;
 import com.example.cozyhaven.Entity.Review;
 import com.example.cozyhaven.Entity.User;
 
+import java.time.LocalDateTime;
+
 public class ReviewMapper {
 
     public static Review toEntity(ReviewDTO dto) {
         Review review = new Review();
 
-        review.setId(dto.getId());
         review.setRating(dto.getRating());
         review.setComment(dto.getComment());
-        review.setReviewDate(dto.getReviewDate());
+        review.setReviewDate(LocalDateTime.now());
 
         if(dto.getCustomerId() != 0){
             User user = new User();
