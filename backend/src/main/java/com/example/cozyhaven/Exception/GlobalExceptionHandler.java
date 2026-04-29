@@ -61,7 +61,7 @@ public class GlobalExceptionHandler {
 
         if (msg.contains("foreign key") || msg.contains("hotel_id")) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new ApiResponse<>("Hotel ID does not exist", HttpStatus.BAD_REQUEST, null));
+                    .body(new ApiResponse<>("Foreign key Id doesn't exists", HttpStatus.BAD_REQUEST, null));
         }
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
