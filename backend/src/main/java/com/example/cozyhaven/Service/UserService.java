@@ -32,19 +32,39 @@ public class UserService {
 
     public UserDTO searchCustomer(int id) {
         User customer = userRepo.findByUserIdAndRole(id, Role.CUSTOMER);
+        if (customer == null) {
+            return null;
+        }
         return UserMapper.toDTO(customer);
     }
 
     public UserDTO searchOwner(int id) {
         User owner = userRepo.findByUserIdAndRole(id, Role.OWNER);
+        if (owner == null) {
+            return null;
+        }
         return UserMapper.toDTO(owner);
     }
 
-    public void deleteCustomer(int id) {
-        userRepo.deleteById(id);
+    public boolean deleteCustomer(int id) {
+        User customer = userRepo.findByUserIdAndRole(id, Role.CUSTOMER);
+
+
+        if(customer == null){
+            return false;
+        }
+
+        userRepo.delete(customer);
+        return true;
     }
 
-    public void deleteOwner(int id) {
-        userRepo.deleteById(id);
+    public boolean deleteOwner(int id) {
+        User owner = userRepo.findByUserIdAndRole(id, Role.OWNER);
+        if(owner== null){
+            return false;
+        }
+
+        userRepo.delete(owner);
+        return true;
     }
 }

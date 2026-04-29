@@ -19,9 +19,9 @@ public class PaymentController {
     @Autowired
     PaymentService service;
 
-    @PostMapping("/makePayment/{bookingId}")
-    public ResponseEntity<ApiResponse<?>> makePayment(@PathVariable int bookingId, @RequestBody PaymentDTO dto){
-        PaymentDTO p = service.makePayment(bookingId,dto);
+    @PostMapping("/makePayment")
+    public ResponseEntity<ApiResponse<?>> makePayment( @RequestBody PaymentDTO dto){
+        PaymentDTO p = service.makePayment(dto);
         if(p==null){
             throw new ResourceNotFoundException("Booking not found");
         }

@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -21,8 +22,8 @@ public class PaymentService {
     @Autowired
     BookingRepo bookingRepo;
 
-    public PaymentDTO makePayment(int bookingId, PaymentDTO dto){
-        Booking b = bookingRepo.findById(bookingId).orElse(null);
+    public PaymentDTO makePayment( PaymentDTO dto){
+        Booking b = bookingRepo.findById(dto.getBookingId()).orElse(null);
         if(b==null){
             return null;
         }
@@ -30,7 +31,7 @@ public class PaymentService {
         Payment p = PaymentMapper.toEntity(dto);
         p.setBooking(b);
         p.setAmount(b.getTotalAmount());
-        p.setPaymentDate(LocalDate.now());
+        p.setPaymentDate(LocalDateTime.now());
         p.setPaymentStatus("SUCCESS");
         p.setRefundStatus("NOT_REQUESTED");
 
@@ -98,7 +99,7 @@ public class PaymentService {
             return null;
         }
         p.setRefundAmount(p.getAmount());
-        p.setRefundDate(LocalDate.now());
+        p.setRefundDate(LocalDateTime.now());
         p.setRefundStatus("COMPLETED");
         p.setPaymentStatus("REFUNDED");
 

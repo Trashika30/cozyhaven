@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @Entity
@@ -16,7 +17,7 @@ public class Review {
     private int id;
     private double rating;
     private String comment;
-    private LocalDate reviewDate;
+    private LocalDateTime reviewDate;
 
     @ManyToOne
     @JoinColumn(name = "customer_id")

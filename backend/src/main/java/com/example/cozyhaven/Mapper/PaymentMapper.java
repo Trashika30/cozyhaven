@@ -4,19 +4,20 @@ import com.example.cozyhaven.DTO.PaymentDTO;
 import com.example.cozyhaven.Entity.Booking;
 import com.example.cozyhaven.Entity.Payment;
 
+import java.time.LocalDateTime;
+
 public class PaymentMapper {
 
     public static Payment toEntity(PaymentDTO dto){
         Payment p = new Payment();
 
-        p.setPaymentId(dto.getPaymentId());
         p.setAmount(dto.getAmount());
-        p.setPaymentDate(dto.getPaymentDate());
+        p.setPaymentDate(LocalDateTime.now());
         p.setPaymentMethod(dto.getPaymentMethod());
         p.setTransactionId(dto.getTransactionId());
         p.setPaymentStatus(dto.getPaymentStatus());
         p.setRefundAmount(dto.getRefundAmount());
-        p.setRefundDate(dto.getRefundDate());
+        p.setRefundDate(LocalDateTime.now());
         p.setRefundStatus(dto.getRefundStatus());
 
         if(dto.getBookingId()!=0){
