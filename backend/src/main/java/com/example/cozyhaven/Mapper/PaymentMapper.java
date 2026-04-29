@@ -17,7 +17,7 @@ public class PaymentMapper {
         p.setTransactionId(dto.getTransactionId());
         p.setPaymentStatus(dto.getPaymentStatus());
         p.setRefundAmount(dto.getRefundAmount());
-        p.setRefundDate(LocalDateTime.now());
+        p.setRefundDate(dto.getRefundDate());
         p.setRefundStatus(dto.getRefundStatus());
 
         if(dto.getBookingId()!=0){
