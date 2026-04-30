@@ -1,8 +1,6 @@
 package com.example.cozyhaven.ApiResponse;
-
 import lombok.Data;
 import org.springframework.http.HttpStatus;
-
 import java.time.LocalDateTime;
 
 @Data

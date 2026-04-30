@@ -19,7 +19,7 @@ public class PaymentController {
     @Autowired
     PaymentService service;
 
-    @PostMapping("/makePayment")
+    @PostMapping("/customer/makePayment")
     public ResponseEntity<ApiResponse<?>> makePayment( @RequestBody PaymentDTO dto){
         PaymentDTO p = service.makePayment(dto);
         if(p==null){
@@ -30,7 +30,7 @@ public class PaymentController {
         );
     }
 
-    @GetMapping("/showAll")
+    @GetMapping("/admin/showAll")
     public ResponseEntity<ApiResponse<?>> showAll(){
         List<PaymentDTO> list = service.getAllPayments();
         if(list.isEmpty())
@@ -39,8 +39,8 @@ public class PaymentController {
                 new ApiResponse<>("All payment fetched", HttpStatus.OK, list)
         );
     }
-
-    @GetMapping("/searchById/{id}")
+//both admin and customer
+    @GetMapping("/customer/searchById/{id}")
     public ResponseEntity<ApiResponse<?>> searchPaymentById(@PathVariable int id){
         PaymentDTO p = service.searchPaymentById(id);
         if(p==null){
@@ -50,8 +50,8 @@ public class PaymentController {
                 new ApiResponse<>("Payment found", HttpStatus.OK, p)
         );
     }
-
-    @GetMapping("/searchByBookingId/{bookingId}")
+//all
+    @GetMapping("/all/searchByBookingId/{bookingId}")
     public ResponseEntity<ApiResponse<?>> searchPaymentByBookingId(@PathVariable int bookingId){
         List<PaymentDTO> list = service.searchPaymentByBookingId(bookingId);
         if(list.isEmpty()){
@@ -61,8 +61,8 @@ public class PaymentController {
                 new ApiResponse<>("Payment found", HttpStatus.OK, list)
         );
     }
-
-    @PutMapping("/updatePaymentStatus/{id}/{status}")
+//
+    @PutMapping("/admin/updatePaymentStatus/{id}/{status}")
     public ResponseEntity<ApiResponse<?>> updatePaymentStatus(@PathVariable int id,@PathVariable String status){
         PaymentDTO p = service.updatePaymentStatus(id,status);
         if(p==null){
@@ -73,7 +73,8 @@ public class PaymentController {
         );
     }
 
-    @PutMapping("/requestRefund/{id}")
+
+    @PutMapping("/customer/requestRefund/{id}")
     public ResponseEntity<ApiResponse<?>> requestRefund(@PathVariable int id){
         PaymentDTO p = service.requestRefund(id);
         if(p==null){
@@ -84,7 +85,7 @@ public class PaymentController {
         );
     }
 
-    @PutMapping("/approveRefund/{id}")
+    @PutMapping("/owner/approveRefund/{id}")
     public ResponseEntity<?> approveRefund(@PathVariable int id){
         PaymentDTO p = service.approveRefund(id);
         if(p==null){
@@ -95,7 +96,7 @@ public class PaymentController {
         );
     }
 
-    @PutMapping("/rejectRefund/{id}")
+    @PutMapping("/owner/rejectRefund/{id}")
     public ResponseEntity<?> rejectRefund(@PathVariable int id){
         PaymentDTO p = service.rejectRefund(id);
         if(p==null){
@@ -106,7 +107,7 @@ public class PaymentController {
         );
     }
 
-    @PutMapping("/refundPayment/{id}")
+    @PutMapping("/owner/refundPayment/{id}")
     public ResponseEntity<?> refundPayment(@PathVariable int id){
         PaymentDTO p = service.refundPayment(id);
         if(p==null){

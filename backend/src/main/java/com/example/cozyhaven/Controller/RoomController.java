@@ -22,7 +22,7 @@ public class RoomController {
     @Autowired
     RoomService service;
 
-    @GetMapping("/getRooms/{hotelId}")
+    @GetMapping("/all/getRooms/{hotelId}")
     public ResponseEntity<?> getRooms(@PathVariable int hotelId){
         List<RoomDTO> rooms = service.getRooms(hotelId);
 
@@ -33,7 +33,7 @@ public class RoomController {
         return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse<>("Rooms",HttpStatus.OK,rooms));
     }
 
-    @PostMapping("/addRoom")
+    @PostMapping("/owner/addRoom")
     public ResponseEntity<?> addRoom(@Valid @RequestBody RoomDTO room){
         RoomDTO r = service.addRoom(room);
 
@@ -44,7 +44,7 @@ public class RoomController {
         return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse<>("Room added ! ",HttpStatus.OK,r));
     }
 
-    @GetMapping("/searchRoomByType/{type}")
+    @GetMapping("/all/searchRoomByType/{type}")
     public ResponseEntity<?> searchRoomByType(@PathVariable String type){
         List<RoomDTO> rooms = service.searchRoomByType(type);
 
@@ -55,7 +55,7 @@ public class RoomController {
         return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse<>("Rooms",HttpStatus.OK,rooms));
     }
 
-    @GetMapping("/searchRoomById/{id}")
+    @GetMapping("/all/searchRoomById/{id}")
     public ResponseEntity<?> searchRoomById(@PathVariable int id) {
         RoomDTO room = service.searchRoomById(id);
 
@@ -66,7 +66,7 @@ public class RoomController {
         return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse<>("Room found",HttpStatus.OK,room));
     }
 
-    @GetMapping("/searchAvailableRooms/{hotelId}")
+    @GetMapping("/all/searchAvailableRooms/{hotelId}")
     public ResponseEntity<?> searchAvailableRooms(@PathVariable int hotelId){
         List<RoomDTO> rooms = service.searchAvailableRooms(hotelId);
 
@@ -77,7 +77,7 @@ public class RoomController {
         return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse<>("Rooms",HttpStatus.OK,rooms));
     }
 
-    @GetMapping("/searchRoomByFare/{fare}")
+    @GetMapping("/all/searchRoomByFare/{fare}")
     public ResponseEntity<?> searchRoomByFare( @Positive(message = "Base fare cannot be 0 or less") @PathVariable double fare){
         List<RoomDTO> rooms = service.searchRoomByFare(fare);
 
@@ -88,7 +88,7 @@ public class RoomController {
         return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse<>("Rooms",HttpStatus.OK,rooms));
     }
 
-    @GetMapping("/searchRoomByAc/{ac}")
+    @GetMapping("/all/searchRoomByAc/{ac}")
     public ResponseEntity<?> searchRoomByAc(@PathVariable boolean ac){
         List<RoomDTO> rooms = service.searchRoomByAc(ac);
 
@@ -99,7 +99,7 @@ public class RoomController {
         return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse<>("Rooms",HttpStatus.OK,rooms));
     }
 
-    @PutMapping("/updateRoomById/{id}")
+    @PutMapping("/owner/updateRoomById/{id}")
     public ResponseEntity<?> updateRoomById(@PathVariable int id, @Valid @RequestBody RoomDTO room){
         RoomDTO r = service.updateRoomById(id, room);
 
@@ -110,7 +110,7 @@ public class RoomController {
         return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse<>("Room updated !",HttpStatus.OK,r));
     }
 
-    @DeleteMapping("/deleteRoomById/{id}")
+    @DeleteMapping("/owner/deleteRoomById/{id}")
     public ResponseEntity<?> deleteRoomById(@PathVariable int id){
         int  result = service.deleteRoomById(id);
         if(result == 0){

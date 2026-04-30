@@ -20,12 +20,12 @@ public class ReviewController {
     @Autowired
     ReviewService service;
 
-    @PostMapping("/addReview")
+    @PostMapping("/customer/addReview")
     public ResponseEntity<?> addReview(@RequestBody ReviewDTO review){
         return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse("Review added",HttpStatus.CREATED,service.addReview(review)));
     }
 
-    @GetMapping("/showAll")
+    @GetMapping("/all/showAll")
     public ResponseEntity<?> showAllReviews(){
         List<ReviewDTO> reviews = service.showAllReviews();
         if(reviews.isEmpty()){
@@ -34,7 +34,7 @@ public class ReviewController {
         return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse<>("Reviews found",HttpStatus.OK,reviews));
     }
 
-    @GetMapping("/searchById/{id}")
+    @GetMapping("/all/searchById/{id}")
     public ResponseEntity<?> searchReviewById(@PathVariable int id){
         ReviewDTO r = service.searchReviewById(id);
         if(r == null){
@@ -44,7 +44,7 @@ public class ReviewController {
     }
 
 
-    @GetMapping("/searchByHotelId/{hotelid}")
+    @GetMapping("/all/searchByHotelId/{hotelid}")
     public ResponseEntity<?> searchReviewByHotelId(@PathVariable int hotelid){
         List<ReviewDTO> reviews = service.searchReviewByHotelId(hotelid);
         if(reviews.isEmpty()){
@@ -53,7 +53,7 @@ public class ReviewController {
         return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse<>("Review found",HttpStatus.OK,reviews));
     }
 
-    @GetMapping("/searchByUserId/{userid}")
+    @GetMapping("/customer/searchByUserId/{userid}")
     public ResponseEntity<?> searchReviewByUserId(@PathVariable int userid){
         List<ReviewDTO> reviews = service.searchReviewByUserId(userid);
         if(reviews.isEmpty()){
@@ -62,7 +62,7 @@ public class ReviewController {
         return ResponseEntity.status(HttpStatus.OK).body(new  ApiResponse<>("Review found",HttpStatus.OK,reviews));
     }
 
-    @PutMapping("/editById/{id}")
+    @PutMapping("/customer/editById/{id}")
     public ResponseEntity<?> editReviewById(@PathVariable int id, @RequestBody ReviewDTO review){
         ReviewDTO r = service.searchReviewById(id);
         if(r == null){
@@ -74,7 +74,7 @@ public class ReviewController {
         }
     }
 
-    @DeleteMapping("/deleteById/{id}")
+    @DeleteMapping("/all/deleteById/{id}")
     public ResponseEntity<?> deleteReviewById(@PathVariable int id){
         ReviewDTO r = service.searchReviewById(id);
         if(r == null){

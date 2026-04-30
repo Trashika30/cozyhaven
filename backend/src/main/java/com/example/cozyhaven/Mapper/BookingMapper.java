@@ -8,7 +8,7 @@ import com.example.cozyhaven.Entity.User;
 public class BookingMapper {
     public static BookingDTO toDTO(Booking booking){
         BookingDTO dto = new BookingDTO();
-       dto.setBookingId(booking.getBookingId());
+        dto.setBookingId(booking.getBookingId());
         dto.setAdultCount(booking.getAdultCount());
         dto.setChildCount(booking.getChildCount());
         dto.setCheckInDate(booking.getCheckInDate());
@@ -19,6 +19,7 @@ public class BookingMapper {
 
         if(booking.getRoom()!=null){
             dto.setRoomType(booking.getRoom().getRoomType());
+
             if(booking.getRoom().getHotel()!=null)
                 dto.setHotelName(
                         booking.getRoom().getHotel().getHotelName()

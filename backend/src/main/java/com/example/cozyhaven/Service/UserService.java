@@ -67,4 +67,10 @@ public class UserService {
         userRepo.delete(owner);
         return true;
     }
+
+    public UserDTO findUserByEmail(String email) {
+        return UserMapper.toDTO(userRepo.findByEmail(email));
+
+    }
+
 }

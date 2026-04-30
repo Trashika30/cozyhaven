@@ -24,14 +24,14 @@ public class UserController {
     UserService userService;
 
     //there is no separate register method for diff roles
-    @PostMapping("/registerUser")
+    @PostMapping("/all/registerUser")
     public ResponseEntity<ApiResponse<?>> registerUser(@Valid @RequestBody UserDTO user){
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ApiResponse<>("User Registered Successfully!!!", HttpStatus.OK, userService.registerUser(user))
         );
     }
 
-    @GetMapping("/showAllCustomers")
+    @GetMapping("/admin/showAllCustomers")
     public ResponseEntity<ApiResponse<List<UserDTO>>> showAllCustomers(){
         List<UserDTO> userList = userService.showAllCustomers();
         if(userList.isEmpty()) throw new ResourceNotFoundException("No customer available!!!");
@@ -40,7 +40,7 @@ public class UserController {
         );
     }
 
-    @GetMapping("/showAllOwners")
+    @GetMapping("/admin/showAllOwners")
     public ResponseEntity<ApiResponse<List<UserDTO>>> showAllOwners(){
         List<UserDTO> userList = userService.showAllOwners();
         if(userList.isEmpty()) throw new ResourceNotFoundException("No owner available!!!");
@@ -49,7 +49,7 @@ public class UserController {
         );
     }
 
-    @GetMapping("searchCustomer/{id}")
+    @GetMapping("/admin/searchCustomer/{id}")
     public ResponseEntity<ApiResponse<?>> searchCustomer(@PathVariable int id){
         UserDTO customer = userService.searchCustomer(id);
         if(customer == null)
@@ -60,7 +60,7 @@ public class UserController {
 
     }
 
-    @GetMapping("searchOwner/{id}")
+    @GetMapping("/admin/searchOwner/{id}")
     public ResponseEntity<ApiResponse<?>> searchOwner(@PathVariable int id){
         UserDTO owner = userService.searchOwner(id);
         if(owner == null)
@@ -70,7 +70,7 @@ public class UserController {
             );//instead of owner there was Http.sTATUS.noTfOUND
     }
 
-    @DeleteMapping("/deleteCustomer/{id}")
+    @DeleteMapping("/admin/deleteCustomer/{id}")
     public ResponseEntity<ApiResponse<?>> deleteCustomer(@PathVariable int id){
         UserDTO customer = userService.searchCustomer(id);
         if(customer == null)
@@ -81,7 +81,7 @@ public class UserController {
         );
     }
 
-    @DeleteMapping("/deleteOwner/{id}")
+    @DeleteMapping("/admin/deleteOwner/{id}")
     public ResponseEntity<ApiResponse<?>> deleteOwner(@PathVariable int id){
         UserDTO owner = userService.searchOwner(id);
         if(owner == null)

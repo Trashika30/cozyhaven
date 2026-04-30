@@ -27,7 +27,7 @@ public class HotelController {
 
 
 
-    @PostMapping("/addHotel")
+    @PostMapping("/owner/addHotel")
     public ResponseEntity<?> addHotel(@Valid @RequestBody HotelDTO dto){
         HotelDTO hotelDTO = service.addHotel(dto);
         if(hotelDTO == null){
@@ -37,16 +37,16 @@ public class HotelController {
         return  ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse<>("Hotel added!! ",HttpStatus.CREATED,hotelDTO));
     }
 
-    @GetMapping("/showAll")
+    @GetMapping("/all/showAll")
     public ResponseEntity<?> showAllHotels(){
-       List<HotelDTO> hotels = service.showAllHotels();
-       if(hotels.isEmpty()){
-          throw  new ResourceNotFoundException("No Hotels found");
-       }
-       return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse<>("Hotels found ",HttpStatus.OK,hotels));
+        List<HotelDTO> hotels = service.showAllHotels();
+        if(hotels.isEmpty()){
+            throw  new ResourceNotFoundException("No Hotels found");
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse<>("Hotels found ",HttpStatus.OK,hotels));
     }
 
-    @GetMapping("/searchById/{id}")
+    @GetMapping("/all/searchById/{id}")
     public ResponseEntity<?> searchHotelById(@PathVariable int id){
         HotelDTO h= service.searchHotelById(id);
         if(h==null){
@@ -55,16 +55,16 @@ public class HotelController {
         return ResponseEntity.status(HttpStatus.OK).body(new  ApiResponse<>("Hotel found ",HttpStatus.OK,h));
     }
 
-    @GetMapping("/searchByLocation/{location}")
+    @GetMapping("/all/searchByLocation/{location}")
     public ResponseEntity<?> searchHotelByLocation(@NotNull(message = "Location cannot be empty") @PathVariable String location){
         List<HotelDTO> h= service.searchHotelByLocation(location);
         if(h.isEmpty()){
-          throw  new ResourceNotFoundException("Hotel not found");
+            throw  new ResourceNotFoundException("Hotel not found");
         }
         return ResponseEntity.status(HttpStatus.OK).body(new  ApiResponse<>("Hotel found ",HttpStatus.OK,h));
     }
 
-    @GetMapping("/searchByOwnerId/{id}")
+    @GetMapping("/owner/searchByOwnerId/{id}")
     public ResponseEntity<?> searchHotelByOwnerId(@PathVariable int id){
         List<HotelDTO>h= service.searchHotelByOwnerId(id);
         if(h.isEmpty()){
@@ -74,28 +74,28 @@ public class HotelController {
     }
 
 
-    @PutMapping("updateById/{id}")
+    @PutMapping("/owner/updateById/{id}")
     public ResponseEntity<?> updateHotelById(@PathVariable int id, @RequestBody HotelDTO hotel){
         HotelDTO h= service.searchHotelById(id);
         if(h==null){
-           throw  new ResourceNotFoundException("Hotel not found");
+            throw  new ResourceNotFoundException("Hotel not found");
         }
         else{
-           h= service.updateHotelById(id,hotel);
-           return ResponseEntity.status(HttpStatus.OK).body(new  ApiResponse<>("Hotel updated ",HttpStatus.OK,h));
+            h= service.updateHotelById(id,hotel);
+            return ResponseEntity.status(HttpStatus.OK).body(new  ApiResponse<>("Hotel updated ",HttpStatus.OK,h));
         }
 
     }
-  //can't delete without deleting in amenties tables usually but using this method possible
+    //can't delete without deleting in amenties tables usually but using this method possible
     //if all hotel delete amenties table also deleted automatically
-    @DeleteMapping("/deleteById/{id}")
+    @DeleteMapping("/admin/deleteById/{id}")
     public ResponseEntity<?> deleteHotelById(@PathVariable int id){
         HotelDTO h= service.searchHotelById(id);
         if(h==null){
             throw new ResourceNotFoundException("Hotel not found");
         }
         else{
-             String r=service.deleteHotelById(id);
+            String r=service.deleteHotelById(id);
             return ResponseEntity.status(HttpStatus.GONE).body(new ApiResponse<>("Hotel deleted",HttpStatus.GONE,r));
         }
     }
