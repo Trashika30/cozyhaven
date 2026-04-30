@@ -41,7 +41,7 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @OneToMany(mappedBy="customer", cascade=CascadeType.ALL)
+    @OneToMany(mappedBy="user", cascade=CascadeType.ALL)
     @JsonManagedReference("user_bookings") //Avoids Dependency Loop - Parent -> ManagedReference
     private List<Booking> bookings;
 

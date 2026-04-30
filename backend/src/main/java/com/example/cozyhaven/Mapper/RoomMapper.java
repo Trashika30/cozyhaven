@@ -24,6 +24,7 @@ public class RoomMapper {
     }
 
     public static RoomDTO toDto(Room room) {
+        if(room == null) return null;
         RoomDTO dto = new RoomDTO();
         dto.setRoomId(room.getRoomId());
         dto.setRoomType(room.getRoomType());
