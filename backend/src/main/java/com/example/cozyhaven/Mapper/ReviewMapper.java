@@ -32,6 +32,7 @@ public class ReviewMapper {
     }
 
     public static ReviewDTO toDto(Review review) {
+        if(review == null) return null;
         ReviewDTO dto = new ReviewDTO();
 
         dto.setId(review.getId());

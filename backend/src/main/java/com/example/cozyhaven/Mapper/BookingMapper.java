@@ -7,6 +7,7 @@ import com.example.cozyhaven.Entity.User;
 
 public class BookingMapper {
     public static BookingDTO toDTO(Booking booking){
+        if(booking == null) return null;
         BookingDTO dto = new BookingDTO();
         dto.setBookingId(booking.getBookingId());
         dto.setAdultCount(booking.getAdultCount());
@@ -16,8 +17,8 @@ public class BookingMapper {
         dto.setTotalAmount(booking.getTotalAmount());
         dto.setStatus(booking.getStatus());
         dto.setCancellationReason(booking.getCancellationReason());
-
         if(booking.getRoom()!=null){
+            dto.setRoomId(booking.getRoom().getRoomId());
             dto.setRoomType(booking.getRoom().getRoomType());
 
             if(booking.getRoom().getHotel()!=null)
@@ -25,6 +26,9 @@ public class BookingMapper {
                         booking.getRoom().getHotel().getHotelName()
                 );
 
+        }
+        if(booking.getUser() != null){
+            dto.setUserId(booking.getUser().getUserId());
         }
         return dto;
     }
@@ -43,6 +47,11 @@ public class BookingMapper {
             Room room = new Room();
             room.setRoomId(dto.getRoomId());
             booking.setRoom(room);
+        }
+        if(dto.getUserId() != 0) {
+            User user = new User();
+            user.setUserId(dto.getUserId());
+            booking.setUser(user);
         }
 
         return booking;
