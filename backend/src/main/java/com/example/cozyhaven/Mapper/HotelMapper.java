@@ -21,6 +21,7 @@ public class HotelMapper {
 
     public static HotelDTO toDto(Hotel hotel)
     {
+        if(hotel == null) return  null;
         HotelDTO dto=new HotelDTO();
         dto.setHotelId(hotel.getHotelId());
         dto.setHotelName(hotel.getHotelName());

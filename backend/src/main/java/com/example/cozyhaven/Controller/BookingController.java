@@ -73,7 +73,7 @@ public class BookingController {
 
     @PutMapping("/customer/cancelBooking/{bookingId}/{reason}")
     public ResponseEntity<?> cancelBooking(@PathVariable int bookingId,@PathVariable String reason){
-        Booking b = bookingService.cancelBooking(bookingId,reason);
+        BookingDTO b = bookingService.cancelBooking(bookingId,reason);
         if(b==null){
             throw new ResourceNotFoundException("Booking not found!!!");
         }

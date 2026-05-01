@@ -21,7 +21,7 @@ public class BookingDTO {
     private double totalAmount;
     private BookingStatus status;
     private int roomId;
-
+    private int userId;
     private String cancellationReason;
 
 

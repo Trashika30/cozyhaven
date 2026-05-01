@@ -78,7 +78,7 @@ public class BookingService {
         return BookingMapper.toDTO(bookingRepo.save(booking));
     }
 
-    public Booking cancelBooking(int bookingId, String reason){
+    public BookingDTO cancelBooking(int bookingId, String reason){
         Booking b = bookingRepo.findById(bookingId).orElse(null);
         if(b==null){
             return null;
@@ -87,7 +87,7 @@ public class BookingService {
         b.setStatus(BookingStatus.CANCELLED);
         b.setCancellationReason(reason);
 
-        return bookingRepo.save(b);
+        return BookingMapper.toDTO(bookingRepo.save(b));
     }
 
 }

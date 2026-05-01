@@ -8,7 +8,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @Entity
 @Data
@@ -34,7 +33,7 @@ public class Booking {
     @ManyToOne
     @JoinColumn(name = "customerId")
     @JsonBackReference("user_bookings") //Avoids Dependency Loop - Child -> BackReference
-    private User customer;
+    private User user;
 
     @ManyToOne
     @JoinColumn(name = "roomId")
