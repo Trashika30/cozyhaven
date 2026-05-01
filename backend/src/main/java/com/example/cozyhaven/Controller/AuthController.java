@@ -51,16 +51,11 @@ public class AuthController {
     public ResponseEntity<?> login(@PathVariable String email, @PathVariable String password) {
 
         UserDTO user = userService.findUserByEmail(email);
-        if (user == null) {
+        if (user == null)
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ApiResponse<>("User not registered", HttpStatus.UNAUTHORIZED, null));
-        }
-
         if (!passwordEncoder.matches(password, user.getPassword()))
             return new ResponseEntity<>("Invalid member", HttpStatus.UNAUTHORIZED);
-
-
-            String token = jwtUtil.generateToken(email, user.getRole());//token assigned to frontend
-
+        String token = jwtUtil.generateToken(email, user.getRole());//token assigned to frontend
         return new ResponseEntity<>(Map.of("token", token), HttpStatus.OK);// token to postman
     }
     

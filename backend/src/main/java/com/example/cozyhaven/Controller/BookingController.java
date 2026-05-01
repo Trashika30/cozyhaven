@@ -39,7 +39,7 @@ public class BookingController {
         return ResponseEntity.status(HttpStatus.FOUND).body(new ApiResponse<>("Booking detail for id:"+id,HttpStatus.FOUND,booking));
     }
 
-    @GetMapping("/customer/getUserBookings/{userId}")
+    @GetMapping("/customer/searchUserBookings/{userId}")
     public ResponseEntity<?> getUserBookings(@PathVariable int userId){
         List<BookingDTO> bookingList = bookingService.getUserBookings(userId);
         if(bookingList.isEmpty())
@@ -80,7 +80,13 @@ public class BookingController {
         return ResponseEntity.status(HttpStatus.GONE).body(new ApiResponse<>("Cancelled Booking !",HttpStatus.GONE,b));
     }
 
-
+    @GetMapping("/owner/searchBookingByHotelId/{hotelId}")
+    public ResponseEntity<?> searchBookingByHotelId(@PathVariable int hotelId){
+        List<BookingDTO> bookingList = bookingService.searchBookingByHotelId(hotelId);
+        if(bookingList.isEmpty())
+            throw new ResourceNotFoundException("Booking not found for this hotel");
+        return ResponseEntity.status(HttpStatus.FOUND).body(new ApiResponse<>("Bookings of this hotelId: "+ hotelId,HttpStatus.FOUND,bookingList));
+    }
 
 }
 

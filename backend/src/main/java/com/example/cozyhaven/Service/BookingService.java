@@ -2,11 +2,13 @@ package com.example.cozyhaven.Service;
 
 import com.example.cozyhaven.DTO.BookingDTO;
 import com.example.cozyhaven.Entity.Booking;
+import com.example.cozyhaven.Entity.Hotel;
 import com.example.cozyhaven.Entity.User;
 import com.example.cozyhaven.Enum.BookingStatus;
 import com.example.cozyhaven.Enum.Role;
 import com.example.cozyhaven.Mapper.BookingMapper;
 import com.example.cozyhaven.Repository.BookingRepo;
+import com.example.cozyhaven.Repository.HotelRepo;
 import com.example.cozyhaven.Repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,6 +24,10 @@ public class BookingService {
 
     @Autowired
     UserRepo userRepo;
+
+    @Autowired
+    HotelRepo hotelRepo;
+
 
     public BookingDTO addBooking(BookingDTO booking1) {
         Booking booking =BookingMapper.toEntity(booking1);
@@ -90,4 +96,10 @@ public class BookingService {
         return BookingMapper.toDTO(bookingRepo.save(b));
     }
 
+    public List<BookingDTO> searchBookingByHotelId(int hotelId) {
+        Hotel hotel = hotelRepo.findById(hotelId).orElse(null);
+        if(hotel == null) return new ArrayList<>();
+        List<Booking> bookingList = bookingRepo.findByRoom_Hotel_HotelId(hotelId);
+        return bookingList.stream().map(BookingMapper::toDTO).toList();
+    }
 }

@@ -33,7 +33,7 @@ public class User {
     @Column(unique = true)
     @Email
     private String email;
-    @Size(min = 6  , max=16 ,message = "Password not satisfied")
+    //@Size(min = 6  , max=16 ,message = "Password not satisfied")
     private String password;
     private String contact;
     private String address;
