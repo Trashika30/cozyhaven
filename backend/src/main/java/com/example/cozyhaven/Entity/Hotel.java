@@ -1,19 +1,30 @@
 package com.example.cozyhaven.Entity;
 
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import jakarta.persistence.*;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import java.util.List;
 
 @Data
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
 public class Hotel {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int hotelId;
@@ -24,12 +35,13 @@ public class Hotel {
     private String location;
     @NotBlank(message = "Contact cannot be empty")
     private String contact;
+    private String imageUrl;
 
     @ElementCollection
     private List<String> amenities; //wifi, parking, roomService, pool, dining, gym
 
     @ManyToOne
-    @JoinColumn(name="owner_id") //not ownerId becoz the column created will be owner_id
+    @JoinColumn(name = "owner_id") //not ownerId becoz the column created will be owner_id
     @JsonBackReference("owner_hotels") //Avoids Dependency Loop - Child -> BackReference
     private User owner;
 
@@ -37,19 +49,16 @@ public class Hotel {
     @JsonManagedReference
     private List<Review> reviews;
 
-    @OneToMany(mappedBy="hotel", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL)
     @JsonManagedReference //Avoids Dependency Loop - Parent -> ManagedReference
     List<Room> rooms;
 
-
     public Hotel(String hotelName,
-                 String description,
-                 String location,
-                 String contact,
-                 List<String> amenities,
-                 User owner)
-
-    {
+            String description,
+            String location,
+            String contact,
+            List<String> amenities,
+            User owner) {
         this.hotelName = hotelName;
         this.description = description;
         this.location = location;
@@ -57,4 +66,5 @@ public class Hotel {
         this.amenities = amenities;
         this.owner = owner;
     }
+
 }

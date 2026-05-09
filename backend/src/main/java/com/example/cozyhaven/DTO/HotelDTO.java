@@ -1,9 +1,10 @@
 package com.example.cozyhaven.DTO;
+
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import java.util.List;
-
 
 @Data
 @AllArgsConstructor
@@ -15,9 +16,9 @@ public class HotelDTO {
     private String description;
     private String location;
     private String contact;
+    private String imageUrl;
 
     private List<String> amenities;
-
 
     private int ownerId;
 }
