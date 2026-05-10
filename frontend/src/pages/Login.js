@@ -1,11 +1,36 @@
 import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import "../css/login.css";
 const Login = () => {
 
-    let [userName, setUserName] = useState();
-    let [password, setPassword] = useState();
+    let [email, setEmail] = useState("");
+    let [password, setPassword] = useState("");
 
+    let [storedEmail, setStoredEmail] = useState("");
+    let [storedPassword, setStoredPassword] = useState("");
 
+    let [invalidFlag, setInvalidFlag] = useState(false);
+
+    let nav = useNavigate();
+
+    useState(
+        ()=>{
+            let user = JSON.parse(localStorage.getItem("cozyUser"));
+            if(user){
+                setStoredEmail(user.email);
+                setStoredPassword(user.password);
+            }
+        }, []
+    )
+
+    const validate = () => {
+        if(email === storedEmail && password === storedPassword){
+            alert("Login success!!");
+            nav("/");
+        }
+        else
+            setInvalidFlag(true);            
+    }
 
     return (
         <>
@@ -14,45 +39,32 @@ const Login = () => {
                     CozyHaven
                 </div>
                 <div className="nav-links">
-                    <a href="/">Home</a>
+                    <Link to="/">Home</Link>
                 </div>
             </div>
             <div className="container">
                 <div className="left">
                     <div className="left-content">
                         <h1>Welcome Back to CozyHaven</h1>
-                        <p>
-                            Book your perfect stay with comfort and ease.
-                        </p>
+                        <p>Book your perfect stay with comfort and ease.</p>
                     </div>
                 </div>
                 <div className="right">
                     <div className="card">
                         <h2>Sign In</h2>
-                        <p>
-                            Enter your credentials to continue
-                        </p>
-                        <input
-                            type="email"
-                            id="email"
-                            placeholder="Email Address"
-                        />
-                        <input
-                            type="password"
-                            id="password"
-                            placeholder="Password"
-                        />
+                        {
+                            !invalidFlag ? <p>Enter your credentials to continue</p>
+                            : <p>Invalid credentials!!</p>
+                        }
+                        <input type="email" placeholder="Email Address" onChange={e=>setEmail(e.target.value)}/>
+                        <input type="password" placeholder="Password" onChange={e => setPassword(e.target.value)} />
                         <div className="forgot-password">
-                            Forgot password?
+                            <Link to={"/forgotPassword"}>Forgot password?</Link>
                         </div>
-                        <button>
-                            Sign In
-                        </button>
+                        <button onClick={validate}>Sign In</button>
                         <div className="link">
                             New user?{" "}
-                            <span>
-                                Create account
-                            </span>
+                            <Link to={"/signUp"}>Create account</Link>
                         </div>
                     </div>
                 </div>
