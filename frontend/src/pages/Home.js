@@ -1,20 +1,23 @@
+import { useState } from "react";
 import "../css/Home.css";
 
 const Home = () => {
 
+    const [guestOpen, setGuestOpen] = useState(false);
+
     const offers = [
         {
-            image: "https://images.unsplash.com/photo-1573843981267-be1999ff37cd",
+            image: "https://images.unsplash.com/photo-1566073771259-6a8506099945",
             title: "25% OFF",
             subtitle: "Early Bird Special"
         },
         {
-            image: "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85",
+            image: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267",
             title: "15% OFF",
             subtitle: "Weekend Getaway"
         },
         {
-            image: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4",
+            image: "https://images.unsplash.com/photo-1552566626-52f8b828add9",
             title: "FREE",
             subtitle: "Breakfast Included"
         },
@@ -24,7 +27,7 @@ const Home = () => {
             subtitle: "Luxury Room Deal"
         },
         {
-            image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e",
+            image: "https://images.unsplash.com/photo-1445019980597-93fa8acb246c",
             title: "20% OFF",
             subtitle: "Family Package"
         }
@@ -32,15 +35,15 @@ const Home = () => {
 
     const destinations = [
         {
-            image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e",
+            image: "https://images.unsplash.com/photo-1501785888041-af3ef285b470",
             name: "Chennai"
         },
         {
-            image: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee",
+            image: "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1",
             name: "Delhi"
         },
         {
-            image: "https://images.unsplash.com/photo-1506744038136-46273834b3fb",
+            image: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee",
             name: "Kolkata"
         },
         {
@@ -48,157 +51,226 @@ const Home = () => {
             name: "Goa"
         },
         {
-            image: "https://images.unsplash.com/photo-1519046904884-53103b34b206",
+            image: "https://images.unsplash.com/photo-1537996194471-e657df975ab4",
             name: "Mumbai"
         }
     ];
 
     return (
 
-        <div className="home">
+        <div>
 
-            <nav className="navbar">
+            {/* NAVBAR */}
 
-                <h1 className="logo">
+            <div className="navbar">
+
+                <div className="logo">
                     CozyHaven
-                </h1>
+                </div>
 
                 <div className="nav-links">
 
                     <a href="/">Home</a>
+
                     <a href="/">Hotels</a>
 
-                    <button className="signin-btn">
+                    <a href="/" className="signin">
                         Sign In
+                    </a>
+
+                </div>
+
+            </div>
+
+            {/* HERO */}
+
+            <div className="hero">
+
+                <h1>Find your perfect stay anywhere</h1>
+
+                <p>Discover amazing hotels at the best prices</p>
+
+                <div className="search-box">
+
+                    <div className="search-field">
+
+                        <label>Location</label>
+
+                        <input
+                            type="text"
+                            placeholder="Where are you going?"
+                            list="cities"
+                            className="city-input"
+                        />
+
+                        <datalist id="cities">
+                            <option value="Chennai" />
+                            <option value="Delhi" />
+                            <option value="Kolkata" />
+                            <option value="Mumbai" />
+                        </datalist>
+
+                    </div>
+
+                    <div className="date-group">
+
+                        <div className="search-field">
+
+                            <label>Check-In</label>
+
+                            <input type="date" />
+
+                        </div>
+
+                        <div className="search-field">
+
+                            <label>Check-Out</label>
+
+                            <input type="date" />
+
+                        </div>
+
+                    </div>
+
+                    {/* GUEST */}
+
+                    <div className="guest-container">
+
+                        <button
+                            className="guest-btn"
+                            onClick={() => setGuestOpen(!guestOpen)}
+                        >
+                            Guests & Rooms
+                        </button>
+
+                        {
+                            guestOpen &&
+
+                            <div className="guest-dropdown">
+
+                                <div className="row">
+
+                                    <label>Adults</label>
+
+                                    <select>
+                                        <option>1</option>
+                                        <option>2</option>
+                                        <option>3</option>
+                                        <option>4</option>
+                                    </select>
+
+                                </div>
+
+                                <div className="row">
+
+                                    <label>Children</label>
+
+                                    <select>
+                                        <option>0</option>
+                                        <option>1</option>
+                                        <option>2</option>
+                                        <option>3</option>
+                                    </select>
+
+                                </div>
+
+                                <div className="row">
+
+                                    <label>Rooms</label>
+
+                                    <select>
+                                        <option>1</option>
+                                        <option>2</option>
+                                        <option>3</option>
+                                    </select>
+
+                                </div>
+
+                            </div>
+
+                        }
+
+                    </div>
+
+                    <button className="search-btn">
+                        Search
                     </button>
 
                 </div>
 
-            </nav>
+            </div>
 
-            <section className="hero-section">
+            {/* SPECIAL OFFERS */}
 
-                <div className="overlay">
+            <div className="section">
 
-                    <h1>
-                        Find your perfect stay anywhere
-                    </h1>
+                <h2>Special Offers</h2>
 
-                    <p>
-                        Discover amazing hotels at the best prices
-                    </p>
-
-                    <div className="search-box">
-
-                        <div className="input-group">
-                            <label>Location</label>
-                            <input
-                                type="text"
-                                placeholder="Where are you going?"
-                            />
-                        </div>
-
-                        <div className="input-group">
-                            <label>Check-In</label>
-                            <input type="date" />
-                        </div>
-
-                        <div className="input-group">
-                            <label>Check-Out</label>
-                            <input type="date" />
-                        </div>
-
-                        <div className="input-group">
-                            <label>Guests</label>
-                            <input
-                                type="text"
-                                placeholder="Guests & Rooms"
-                            />
-                        </div>
-
-                        <button className="search-btn">
-                            Search
-                        </button>
-
-                    </div>
-
-                </div>
-
-            </section>
-
-            <section className="offers-section">
-
-                <h1>
-                    Special Offers
-                </h1>
-
-                <div className="offers-container">
+                <div className="cards">
 
                     {
+
                         offers.map((offer, index) => (
 
-                            <div
-                                className="offer-card"
-                                key={index}
-                            >
+                            <div className="card" key={index}>
 
                                 <img
-                                    src={offer.image}
+                                    src={`${offer.image}?auto=format&fit=crop&w=800&q=80`}
                                     alt=""
                                 />
 
-                                <div className="offer-overlay">
+                                <div className="card-text">
 
-                                    <h2>{offer.title}</h2>
+                                    {offer.title}
 
-                                    <p>{offer.subtitle}</p>
+                                    <br />
+
+                                    {offer.subtitle}
 
                                 </div>
 
                             </div>
 
                         ))
+
                     }
 
                 </div>
 
-            </section>
+            </div>
 
-            <section className="destination-section">
+            {/* DESTINATIONS */}
 
-                <h1>
-                    Popular Destinations
-                </h1>
+            <div className="section">
 
-                <div className="destination-container">
+                <h2>Popular Destinations</h2>
+
+                <div className="cards">
 
                     {
+
                         destinations.map((place, index) => (
 
-                            <div
-                                className="destination-card"
-                                key={index}
-                            >
+                            <div className="card" key={index}>
 
                                 <img
-                                    src={place.image}
+                                    src={`${place.image}?auto=format&fit=crop&w=800&q=80`}
                                     alt=""
                                 />
 
-                                <div className="destination-overlay">
-
-                                    <h2>{place.name}</h2>
-
+                                <div className="card-text">
+                                    {place.name}
                                 </div>
 
                             </div>
 
                         ))
+
                     }
 
                 </div>
 
-            </section>
+            </div>
 
         </div>
 
