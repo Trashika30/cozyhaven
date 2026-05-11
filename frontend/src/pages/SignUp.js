@@ -94,8 +94,7 @@ const SignUp = () => {
                                 type="text"
                                 name="lastName"
                                 placeholder="Last Name"
-                                onChange={handleChange}
-                            />
+                                onChange={handleChange}/>
 
                         </div>
 
