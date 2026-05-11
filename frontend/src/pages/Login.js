@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import "../css/login.module.css";
+import style from "../css/login.module.css";
 const Login = () => {
 
     let [email, setEmail] = useState("");
@@ -34,23 +34,23 @@ const Login = () => {
 
     return (
         <>
-            <div className="navbar">
-                <div className="logo">
+            <div className={style.navbar}>
+                <div className={style.logo}>
                     CozyHaven
                 </div>
-                <div className="nav-links">
+                <div className={style["nav-links"]}>
                     <Link to="/">Home</Link>
                 </div>
             </div>
-            <div className="container">
-                <div className="left">
-                    <div className="left-content">
+            <div className={style.container}>
+                <div className={style.left}>
+                    <div className={style["left-content"]}>
                         <h1>Welcome Back to CozyHaven</h1>
                         <p>Book your perfect stay with comfort and ease.</p>
                     </div>
                 </div>
-                <div className="right">
-                    <div className="card">
+                <div className={style.right}>
+                    <div className={style.card}>
                         <h2>Sign In</h2>
                         {
                             !invalidFlag ? <p>Enter your credentials to continue</p>
@@ -58,11 +58,11 @@ const Login = () => {
                         }
                         <input type="email" placeholder="Email Address" onChange={e=>setEmail(e.target.value)}/>
                         <input type="password" placeholder="Password" onChange={e => setPassword(e.target.value)} />
-                        <div className="forgot-password">
+                        <div className={style["forgot-password"]}>
                             <Link to={"/forgotPassword"}>Forgot password?</Link>
                         </div>
                         <button onClick={validate}>Sign In</button>
-                        <div className="link">
+                        <div className={style.link}>
                             New user?{" "}
                             <Link to={"/signUp"}>Create account</Link>
                         </div>
