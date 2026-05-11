@@ -1,5 +1,5 @@
 import { useState } from "react";
-import styles from  "../css/Home.module.css";
+import styles from "../css/Home.module.css";
 
 const Home = () => {
 
@@ -60,43 +60,60 @@ const Home = () => {
 
         <div>
             <div className={styles.navbar}>
-                <div className="logo">
+                <div className={styles.logo}>
                     CozyHaven
                 </div>
-                <div className="nav-links">
+
+                <div className={styles["nav-links"]}>
                     <a href="/">Home</a>
                     <a href="/">Hotels</a>
-                    <a href="/" className="signin"> Sign In</a>
+                    <a href="/" className={styles.signin}> Sign In</a>
                 </div>
             </div>
 
-            <div className="hero">
+            <div className={styles.hero}>
                 <h1>Find your perfect stay anywhere</h1>
                 <p>Discover amazing hotels at the best prices</p>
-                <div className="search-box">
-                    <div className="search-field">
+
+                <div className={styles["search-box"]}>
+
+                    <div className={styles["search-field"]}>
                         <label>Location</label>
-                        <input type="text" placeholder="Where are you going?"  list="cities" className="city-input" />
+
+                        <input
+                            type="text"
+                            placeholder="Where are you going?"
+                            list="cities"
+                            className={styles["city-input"]}
+                        />
+
                         <datalist id="cities">
                             <option value="Chennai" />
                             <option value="Delhi" />
                             <option value="Kolkata" />
                             <option value="Mumbai" />
                         </datalist>
+
                     </div>
-                    <div className="date-group">
-                        <div className="search-field">
+
+                    <div className={styles["date-group"]}>
+
+                        <div className={styles["search-field"]}>
                             <label>Check-In</label>
                             <input type="date" />
                         </div>
-                        <div className="search-field">
+
+                        <div className={styles["search-field"]}>
                             <label>Check-Out</label>
                             <input type="date" />
                         </div>
+
                     </div>
-                    <div className="guest-container">
+
+                    <div className={styles["guest-container"]}>
+
                         <button
-                            className="guest-btn"
+                            className={styles["guest-btn"]}
                             onClick={() => setGuestOpen(!guestOpen)}
                         >
                             Guests & Rooms
@@ -105,9 +122,9 @@ const Home = () => {
                         {
                             guestOpen &&
 
-                            <div className="guest-dropdown">
+                            <div className={styles["guest-dropdown"]}>
 
-                                <div className="row">
+                                <div className={styles.row}>
 
                                     <label>Adults</label>
 
@@ -120,7 +137,7 @@ const Home = () => {
 
                                 </div>
 
-                                <div className="row">
+                                <div className={styles.row}>
 
                                     <label>Children</label>
 
@@ -133,7 +150,7 @@ const Home = () => {
 
                                 </div>
 
-                                <div className="row">
+                                <div className={styles.row}>
 
                                     <label>Rooms</label>
 
@@ -151,7 +168,7 @@ const Home = () => {
 
                     </div>
 
-                    <button className="search-btn">
+                    <button className={styles["search-btn"]}>
                         Search
                     </button>
 
@@ -159,37 +176,60 @@ const Home = () => {
 
             </div>
 
-            <div className="section">
+            <div className={styles.section}>
+
                 <h2>Special Offers</h2>
-                <div className="cards">
+
+                <div className={styles.cards}>
+
                     {
                         offers.map((offer, index) => (
-                            <div className="card" key={index}>
-                         <img  src={`${offer.image}?auto=format&fit=crop&w=800&q=80`}  alt=""/>
-                          <div className="card-text">
+
+                            <div className={styles.card} key={index}>
+
+                                <img
+                                    src={`${offer.image}?auto=format&fit=crop&w=800&q=80`}
+                                    alt=""
+                                />
+
+                                <div className={styles["card-text"]}>
                                     {offer.title}
                                     <br />
                                     {offer.subtitle}
                                 </div>
+
                             </div>
 
                         ))
-
                     }
 
                 </div>
 
             </div>
 
-            <div className="section">
+            <div className={styles.section}>
+
                 <h2>Popular Destinations</h2>
-                <div className="cards">
+
+                <div className={styles.cards}>
+
                     {
                         destinations.map((place, index) => (
-                            <div className="card" key={index}>
-                     <img src={`${place.image}?auto=format&fit=crop&w=800&q=80`} alt="" />
-                    <div className="card-text"> {place.name}  </div>
-                     </div> ))
+
+                            <div className={styles.card} key={index}>
+
+                                <img
+                                    src={`${place.image}?auto=format&fit=crop&w=800&q=80`}
+                                    alt=""
+                                />
+
+                                <div className={styles["card-text"]}>
+                                    {place.name}
+                                </div>
+
+                            </div>
+
+                        ))
                     }
 
                 </div>

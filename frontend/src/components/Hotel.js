@@ -1,38 +1,56 @@
 import { Link } from "react-router-dom";
-import "../css/Hotel.module.css";
+import styles from "../css/Hotel.module.css";
 
 const Hotel = ({ hotel }) => {
 
   return (
 
-    <div className="hotel-card">
-      <img src={hotel.image} className="hotel-image"/>
-    
-     <div className="hotel-content">
-        <div className="hotel-top">
+    <div className={styles["hotel-card"]}>
+
+      <img
+        src={hotel.image}
+        className={styles["hotel-image"]}
+      />
+
+      <div className={styles["hotel-content"]}>
+
+        <div className={styles["hotel-top"]}>
+
           <div>
             <h1>{hotel.hotelName}</h1>
             <p>{hotel.location}</p>
           </div>
-          <h3 className="rating">5.0</h3>
+
+          <h3 className={styles.rating}>5.0</h3>
+
         </div>
 
-        <div className="amenities">
+        <div className={styles.amenities}>
+
           {
             hotel.amenities?.map((item, index) => (
 
               <span key={index}>
                 {item}
               </span>
+
             ))
           }
+
         </div>
 
-        <div className="hotel-bottom">
+        <div className={styles["hotel-bottom"]}>
+
           <h2>₹6000/night</h2>
-          <Link to={`/hotel/${hotel.hotelId}`}> <button>  View Details </button> </Link>
+
+          <Link to={`/hotel/${hotel.hotelId}`}>
+            <button>View Details</button>
+          </Link>
+
         </div>
+
       </div>
+
     </div>
 
   );
