@@ -1,6 +1,6 @@
 
 import Hotel from '../components/Hotel'
-import "../css/Hotel.css"
+import "../css/Hotel.module.css"
 import {useState,useEffect} from "react"
 
 

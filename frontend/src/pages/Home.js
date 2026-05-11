@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "../css/Home.css";
+import styles from  "../css/Home.module.css";
 
 const Home = () => {
 
@@ -59,7 +59,7 @@ const Home = () => {
     return (
 
         <div>
-            <div className="navbar">
+            <div className={styles.navbar}>
                 <div className="logo">
                     CozyHaven
                 </div>

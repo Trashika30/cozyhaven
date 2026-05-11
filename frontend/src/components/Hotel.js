@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import "../css/Hotel.css";
+import "../css/Hotel.module.css";
 
 const Hotel = ({ hotel }) => {
 
