@@ -38,10 +38,8 @@ const SearchHotel=()=>{
 
     return(<>
    <div className="hotels-container">
- 
     {
     hotels.map((hotel)=>(<Hotel hotel={hotel}/>))
-
    }
 
 </div>

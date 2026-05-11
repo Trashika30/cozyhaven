@@ -59,83 +59,42 @@ const Home = () => {
     return (
 
         <div>
-
-            {/* NAVBAR */}
-
             <div className="navbar">
-
                 <div className="logo">
                     CozyHaven
                 </div>
-
                 <div className="nav-links">
-
                     <a href="/">Home</a>
-
                     <a href="/">Hotels</a>
-
-                    <a href="/" className="signin">
-                        Sign In
-                    </a>
-
+                    <a href="/" className="signin"> Sign In</a>
                 </div>
-
             </div>
 
-            {/* HERO */}
-
             <div className="hero">
-
                 <h1>Find your perfect stay anywhere</h1>
-
                 <p>Discover amazing hotels at the best prices</p>
-
                 <div className="search-box">
-
                     <div className="search-field">
-
                         <label>Location</label>
-
-                        <input
-                            type="text"
-                            placeholder="Where are you going?"
-                            list="cities"
-                            className="city-input"
-                        />
-
+                        <input type="text" placeholder="Where are you going?"  list="cities" className="city-input" />
                         <datalist id="cities">
                             <option value="Chennai" />
                             <option value="Delhi" />
                             <option value="Kolkata" />
                             <option value="Mumbai" />
                         </datalist>
-
                     </div>
-
                     <div className="date-group">
-
                         <div className="search-field">
-
                             <label>Check-In</label>
-
                             <input type="date" />
-
                         </div>
-
                         <div className="search-field">
-
                             <label>Check-Out</label>
-
                             <input type="date" />
-
                         </div>
-
                     </div>
-
-                    {/* GUEST */}
-
                     <div className="guest-container">
-
                         <button
                             className="guest-btn"
                             onClick={() => setGuestOpen(!guestOpen)}
@@ -200,35 +159,18 @@ const Home = () => {
 
             </div>
 
-            {/* SPECIAL OFFERS */}
-
             <div className="section">
-
                 <h2>Special Offers</h2>
-
                 <div className="cards">
-
                     {
-
                         offers.map((offer, index) => (
-
                             <div className="card" key={index}>
-
-                                <img
-                                    src={`${offer.image}?auto=format&fit=crop&w=800&q=80`}
-                                    alt=""
-                                />
-
-                                <div className="card-text">
-
+                         <img  src={`${offer.image}?auto=format&fit=crop&w=800&q=80`}  alt=""/>
+                          <div className="card-text">
                                     {offer.title}
-
                                     <br />
-
                                     {offer.subtitle}
-
                                 </div>
-
                             </div>
 
                         ))
@@ -239,33 +181,15 @@ const Home = () => {
 
             </div>
 
-            {/* DESTINATIONS */}
-
             <div className="section">
-
                 <h2>Popular Destinations</h2>
-
                 <div className="cards">
-
                     {
-
                         destinations.map((place, index) => (
-
                             <div className="card" key={index}>
-
-                                <img
-                                    src={`${place.image}?auto=format&fit=crop&w=800&q=80`}
-                                    alt=""
-                                />
-
-                                <div className="card-text">
-                                    {place.name}
-                                </div>
-
-                            </div>
-
-                        ))
-
+                     <img src={`${place.image}?auto=format&fit=crop&w=800&q=80`} alt="" />
+                    <div className="card-text"> {place.name}  </div>
+                     </div> ))
                     }
 
                 </div>
