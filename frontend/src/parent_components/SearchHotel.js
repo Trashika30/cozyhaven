@@ -1,4 +1,4 @@
-import Hotel from '../components/Hotel'
+import Hotel from '../child_components/Hotel'
 import styles from "../css/Hotel.module.css"
 import { useState, useEffect } from "react"
 

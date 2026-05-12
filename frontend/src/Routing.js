@@ -1,9 +1,10 @@
 import { Route, Routes } from "react-router-dom";
-import Home from "./pages/Home";
-import Login from "./pages/Login";
-import SearchHotel from "./pages/SearchHotel";
-import SignUp from "./pages/SignUp";
-import ViewHotel from "./pages/ViewHotel";
+import Home from "./parent_components/Home";
+import Login from "./parent_components/Login";
+import SearchHotel from "./parent_components/SearchHotel";
+import SignUp from "./parent_components/SignUp";
+import ViewHotel from "./parent_components/ViewHotel";
+import OwnerDash from "./parent_components/OwnerDash";
 
 const Routing = () => {
 
@@ -14,6 +15,7 @@ const Routing = () => {
       <Route path="/login" element={<Login />} />
       <Route path="/search" element={<SearchHotel />} />
       <Route path="/viewHotel" element={<ViewHotel/>}/>
+      <Route path="/ownerdash" element={<OwnerDash/>}/>
     </Routes>
   );
 };

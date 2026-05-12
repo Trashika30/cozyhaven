@@ -1,6 +1,6 @@
 
-import Login from './pages/Login';
-import SearchHotel from './pages/SearchHotel';
+import Login from './parent_components/Login';
+import SearchHotel from './parent_components/SearchHotel';
 import Routing from './Routing';
 
 function App() {
