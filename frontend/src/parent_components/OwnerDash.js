@@ -7,7 +7,7 @@ const OwnerDash = () => {
   const [roomlist, setRoomlist] = useState([
     {
       roomId: 101,
-      roomType: "Grand Seaside Resort",
+      roomType: "Double Deluxe Room",
       maxOccupy: 3,
       baseFare: 3000,
       ac: true,
@@ -20,7 +20,7 @@ const OwnerDash = () => {
 
     {
       roomId: 102,
-      roomType: "City View Hotel",
+      roomType: "Single Standard Room",
       maxOccupy: 2,
       baseFare: 2000,
       ac: false,
