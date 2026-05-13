@@ -1,0 +1,218 @@
+.hotel-page {
+    background: #F8F5F0;
+    min-height: 100vh;
+    font-family: 'Poppins', sans-serif;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 60px;
+    background: #F8F5F0;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+}
+.label-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.label-text {
+    margin: 0;
+}
+
+.info-icon {
+    color: #9C0A8F;
+    cursor: pointer;
+    font-size: 14px;
+}
+.logo {
+    color: #9C0A8F;
+}
+
+.nav-links {
+    display: flex;
+    gap: 25px;
+    align-items: center;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: #333;
+}
+
+.signin-btn {
+    border: none;
+    background: #9C0A8F;
+    color: white;
+    padding: 10px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.container {
+    max-width: 1200px;
+    margin: auto;
+    padding: 40px 20px;
+}
+
+.hotel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.rating {
+    background: #9C0A8F;
+    color: white;
+    padding: 8px 14px;
+    border-radius: 8px;
+}
+
+.gallery-section {
+    display: flex;
+    gap: 25px;
+    margin-top: 25px;
+}
+
+.main-image {
+    flex: 2;
+}
+
+.main-image img {
+    width: 100%;
+    border-radius: 16px;
+}
+
+.booking-card {
+    flex: 1;
+    border-radius: 16px;
+}
+
+.date-picker {
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+.guest-btn {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    background: #9C0A8F;
+    cursor: pointer;
+}
+
+.book-btn {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    background: #9C0A8F;
+    color: white;
+    border-radius: 10px;
+    cursor: pointer;
+    margin-top: 15px;
+}
+
+.about-section {
+    background: white;
+    padding: 25px;
+    border-radius: 16px;
+    margin-top: 30px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+}
+
+.hotel-tabs {
+    margin-top: 30px;
+}
+
+.guest-dropdown {
+    background: white;
+    padding: 15px;
+    border-radius: 12px;
+    width: 260px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.guest-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.guest-row select {
+    padding: 6px;
+    border-radius: 8px;
+}
+
+.room-type-card {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.room-type-card select {
+    flex: 1;
+    padding: 6px;
+    border-radius: 8px;
+}
+
+.remove-room-btn {
+    border: none;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    cursor: pointer;
+    background: red;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+}
+
+:global(.custom-date-picker .ant-picker-time-panel-column > li.ant-picker-time-panel-cell-selected .ant-picker-time-panel-cell-inner) {
+    background: #9C0A8F ;
+    color: #222
+}
+:global(.custom-date-picker .ant-picker-header-view) {
+    color: #222 !important;
+    font-weight: 600;
+}
+
+:global(.custom-date-picker .ant-picker-header-view button) {
+    color: #222 !important;
+}
+
+:global(.custom-date-picker .ant-picker-header button) {
+    color: #555 !important;
+}
+:global(.custom-date-picker .ant-picker-cell-selected .ant-picker-cell-inner) {
+    background: #9C0A8F 
+}
+
+:global(.custom-date-picker .ant-btn-primary) {
+    background: #9C0A8F ;
+    border: none 
+}
+
+:global(.custom-date-picker .ant-picker-now-btn) {
+    color: #9C0A8F 
+}
+
+.add-room-btn {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    background: #9C0A8F;
+    color: white;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.review-card {
+    margin-top: 20px;
+}
