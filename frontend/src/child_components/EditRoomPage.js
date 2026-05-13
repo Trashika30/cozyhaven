@@ -86,15 +86,7 @@ value={room.maxOccupy}
 style={{
 width:"100%",
 height:"45px"
-}}
-
-onChange={(value)=>
-setRoom({
-...room,
-maxOccupy:value
-})
-}
-/>
+}} onChange={(value)=>setRoom({...room,maxOccupy:value})}/>
 
 </Col>
 

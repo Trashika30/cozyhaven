@@ -67,14 +67,7 @@ border:"none",
 height:"42px",
 borderRadius:"10px",
 flex:1
-}}
-
-onClick={()=>
-navigate(`/editroom/${room.roomId}`,
-{
-state:room
-})
-}> Edit </Button>
+}}onClick={()=> navigate(`/editroom/${room.roomId}`,{state:room})}> Edit </Button>
 
 <Button
 danger
@@ -83,12 +76,7 @@ style={{
 height:"42px",
 borderRadius:"10px",
 flex:1
-}}
-
-onClick={()=>deleteRoom(room.roomId)}
->
-Delete
-</Button>
+}} onClick={()=>deleteRoom(room.roomId)}> Delete </Button>
 
 </div>
 

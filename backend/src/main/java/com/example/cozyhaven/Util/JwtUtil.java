@@ -1,18 +1,18 @@
 package com.example.cozyhaven.Util;
 
+import java.nio.charset.StandardCharsets;
+import java.security.Key;
+import java.util.Date;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import com.example.cozyhaven.Enum.Role;
+
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-
-import java.nio.charset.StandardCharsets;
-import java.security.Key;
-import java.util.Date;
 
 @Component
 public class JwtUtil {
@@ -25,36 +25,33 @@ public class JwtUtil {
 
     @PostConstruct
 
-    public void init(){//VALUE WILL BE ASSIGNED AFTER THE OBJ CREATION SO
+    public void init() {//VALUE WILL BE ASSIGNED AFTER THE OBJ CREATION SO
 
-        secretkey= Keys.hmacShaKeyFor(key.getBytes(StandardCharsets.UTF_8));
+        secretkey = Keys.hmacShaKeyFor(key.getBytes(StandardCharsets.UTF_8));
     }
 
-    public String generateToken(String email, Role role){
+    public String generateToken(String email, Role role) {
 
         return Jwts.builder()
                 .setSubject(email)
-                .claim("role",role.name())
+                .claim("role", role.name())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis()+expiration))
+                .setExpiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(secretkey, SignatureAlgorithm.HS256)
                 .compact();
     }
 
-    public boolean validateToken(String token){
-        try
-        {
+    public boolean validateToken(String token) {
+        try {
             extractEmail(token);
             return true;
 
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             return false;
         }
     }
 
-
-    public String extractEmail(String token){
+    public String extractEmail(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(secretkey)
                 .build()
@@ -64,13 +61,13 @@ public class JwtUtil {
 
     }
 
-    public String extractRole(String token){
+    public String extractRole(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(secretkey)
                 .build()
                 .parseClaimsJws(token)
                 .getBody()
-                .get("role",String.class);
+                .get("role", String.class);
 
     }
 
