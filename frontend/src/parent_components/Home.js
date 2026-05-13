@@ -1,5 +1,6 @@
 import { useState } from "react";
 import styles from "../css/Home.module.css";
+import { Link } from "react-router-dom";
 
 const Home = () => {
 
@@ -67,7 +68,7 @@ const Home = () => {
                 <div className={styles["nav-links"]}>
                     <a href="/">Home</a>
                     <a href="/">Hotels</a>
-                    <a href="/" className={styles.signin}> Sign In</a>
+                    <Link to="/login" className={styles.signin}> Sign In</Link>
                 </div>
             </div>
 
