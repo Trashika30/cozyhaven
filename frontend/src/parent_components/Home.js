@@ -1,8 +1,11 @@
 import { useState } from "react";
 import styles from "../css/Home.module.css";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
+
+    let navigate = useNavigate();
 
     const [guestOpen, setGuestOpen] = useState(false);
 
@@ -169,7 +172,7 @@ const Home = () => {
 
                     </div>
 
-                    <button className={styles["search-btn"]}>
+                    <button className={styles["search-btn"]} onClick={()=>navigate("/search")}>
                         Search
                     </button>
 
