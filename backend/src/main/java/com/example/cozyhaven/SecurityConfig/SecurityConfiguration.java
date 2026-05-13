@@ -22,11 +22,9 @@ public class SecurityConfiguration {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                //  OWNER + ADMIN
                 .requestMatchers(
                         "/hotel/owner/searchByOwnerId/**"
                 ).hasAnyRole("OWNER", "ADMIN")
-                //  (permit all)
                 .requestMatchers(
                         "/auth/**",
                         "/hotel/all/**",
@@ -35,7 +33,6 @@ public class SecurityConfiguration {
                         "/review/all/**",
                         "/room/all/**"
                 ).permitAll()
-                //  OWNER 
                 .requestMatchers(
                         "/hotel/owner/**",
                         "/payment/owner/**",
@@ -43,7 +40,6 @@ public class SecurityConfiguration {
                         "/room/owner/**",
                         "/review/owner/**"
                 ).hasRole("OWNER")
-                //  ADMIN
                 .requestMatchers(
                         "/hotel/admin/**",
                         "/payment/admin/**",
@@ -52,7 +48,6 @@ public class SecurityConfiguration {
                         "/room/admin/**",
                         "/user/admin/**"
                 ).hasRole("ADMIN")
-                //CUSTOMER 
                 .requestMatchers(
                         "/payment/customer/**",
                         "/booking/customer/**",
