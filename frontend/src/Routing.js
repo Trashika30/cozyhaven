@@ -5,6 +5,7 @@ import SearchHotel from "./parent_components/SearchHotel";
 import SignUp from "./parent_components/SignUp";
 import ViewHotel from "./parent_components/ViewHotel";
 import OwnerDash from "./parent_components/OwnerDash";
+import EditRoomPage from "./child_components/EditRoomPage";
 
 const Routing = () => {
 
@@ -16,6 +17,7 @@ const Routing = () => {
       <Route path="/search" element={<SearchHotel />} />
       <Route path="/viewHotel" element={<ViewHotel/>}/>
       <Route path="/ownerdash" element={<OwnerDash/>}/>
+      <Route path="/editroom/:id" element={<EditRoomPage/>}/>
     </Routes>
   );
 };

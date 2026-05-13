@@ -26,16 +26,16 @@ setIsModalOpen(true);
 
 const handleOk=()=>{
 
-const obj={
-roomId,
-roomType,
-maxOccupy,
-baseFare,
-ac,
-available,
-hotelId,
-pic
-};
+    const obj={
+        roomId,
+        roomType,
+        maxOccupy,
+        baseFare,
+        ac,
+        available,
+        hotelId,
+        pic:URL.createObjectURL(pic)
+        };
 
 setRooms([...rooms,obj]);
 
