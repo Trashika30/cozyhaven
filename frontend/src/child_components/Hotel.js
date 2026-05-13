@@ -8,7 +8,8 @@ const Hotel = ({ hotel }) => {
     <div className={styles["hotel-card"]}>
 
       <img
-        src={hotel.image}
+        src={hotel.imageUrl}
+        alt={hotel.hotelName}
         className={styles["hotel-image"]}
       />
 
