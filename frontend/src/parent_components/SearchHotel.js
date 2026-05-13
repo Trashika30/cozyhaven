@@ -44,7 +44,7 @@ const SearchHotel = () => {
     return (
         <>
             <div className={styles["hotels-container"]}>
-                //change to filter //need to add ranger
+               
 
                 {
                     hotels.map((hotel) => (
