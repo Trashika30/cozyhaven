@@ -2,11 +2,14 @@ import Hotel from '../child_components/Hotel'
 import { useState, useEffect } from "react"
 import { Link } from "react-router-dom";
 import styles from "../css/SearchNav.module.css";
+import { Spin } from "antd";
 
 const SearchHotel = () => {
 
     let [hotels, setHotels] = useState([])
     let [filteredHotels, setFilteredHotels] = useState([])
+
+    let [loading, setLoading] = useState(true);
 
     // profile popup
     let [showProfile, setShowProfile] = useState(false)
@@ -48,10 +51,11 @@ const SearchHotel = () => {
 
                 setHotels(response.data)
                 setFilteredHotels(response.data)
-
+                setLoading(false);
             })
 
             .catch((e) => {
+                setLoading(false);
 
                 let hotel = [
 
@@ -578,16 +582,35 @@ const SearchHotel = () => {
                     </p>
 
                     {
-                        filteredHotels.map((hotel) => (
+                        loading ?
 
-                            <Hotel
-                                key={hotel.hotelId}
-                                hotel={hotel}
-                            />
+                            <div
+                                style={{
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                    height: "300px"
+                                }}
+                            >
 
-                        ))
+                                <Spin
+                                    size="large"
+                                    tip="Loading Hotels..."
+                                />
+
+                            </div>
+
+                            :
+
+                            filteredHotels.map((hotel) => (
+
+                                <Hotel
+                                    key={hotel.hotelId}
+                                    hotel={hotel}
+                                />
+
+                            ))
                     }
-
                 </div>
 
             </div>

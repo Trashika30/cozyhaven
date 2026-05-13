@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { Input, Modal } from "antd";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styles from "../css/SignUp.module.css";
 
@@ -17,6 +18,20 @@ const SignUp = () => {
         address: ""
     });
 
+    let [confPassword, setConfPassword] = useState("");
+    let [passFlag, setPassFlag] = useState(false);
+
+    useEffect(
+        () => {
+            if (confPassword !== "") {
+                if (user.password !== confPassword)
+                    setPassFlag(true);
+                else setPassFlag(false);
+            }
+            else setPassFlag(false);
+
+        }, [user.password, confPassword]
+    )
     const handleChange = (e) => {
         setUser({
             ...user,
@@ -27,22 +42,34 @@ const SignUp = () => {
     const register = () => {
 
         if (
-            !user.firstName ||
-            !user.lastName ||
-            !user.age ||
-            !user.gender ||
-            !user.email ||
-            !user.password ||
-            !user.contact ||
-            !user.address
-        ) {
-            alert("Please fill all fields");
-            return;
+            !user.firstName || !user.lastName || !user.age || !user.gender ||
+            !user.email || !user.password || !user.contact || !user.address) {
+            Modal.error({
+                title: "Missing Fields",
+                content: "Please fill all fields before submitting.",
+                okText: "OK",
+                okButtonProps: {
+                    style: {
+                        backgroundColor: "#9C0A8F",
+                        borderColor: "#9C0A8F"
+                    }
+                }
+            }); return;
         }
 
         localStorage.setItem("cozyUser", JSON.stringify(user));
 
-        alert("Account created successfully!");
+        Modal.success({
+            title: "Success",
+            content: "Account created successfully!",
+            okText: "OK",
+            okButtonProps: {
+                style: {
+                    backgroundColor: "#9C0A8F",
+                    borderColor: "#9C0A8F"
+                }
+            }
+        });
 
         navigate("/login");
     };
@@ -94,7 +121,7 @@ const SignUp = () => {
                                 type="text"
                                 name="lastName"
                                 placeholder="Last Name"
-                                onChange={handleChange}/>
+                                onChange={handleChange} />
 
                         </div>
 
@@ -105,12 +132,27 @@ const SignUp = () => {
                             onChange={handleChange}
                         />
 
-                        <input
-                            type="text"
+                        <select
                             name="gender"
-                            placeholder="Gender"
                             onChange={handleChange}
-                        />
+                            defaultValue=""
+                        >
+                            <option value="" disabled>
+                                Select Gender
+                            </option>
+
+                            <option value="Male">
+                                Male
+                            </option>
+
+                            <option value="Female">
+                                Female
+                            </option>
+
+                            <option value="Other">
+                                Other
+                            </option>
+                        </select>
 
                         <input
                             type="email"
@@ -119,12 +161,30 @@ const SignUp = () => {
                             onChange={handleChange}
                         />
 
-                        <input
-                            type="password"
+                        <Input.Password
                             name="password"
                             placeholder="Password"
                             onChange={handleChange}
+                            style={{
+                                marginBottom: "12px",
+                                borderRadius: "10px",
+                                height: "45px"
+                            }}
                         />
+
+                        <Input.Password
+                            placeholder="Confirm Password"
+                            onChange={(e) => setConfPassword(e.target.value)}
+                            style={{
+                                marginBottom: "12px",
+                                borderRadius: "10px",
+                                height: "45px",
+                            }}
+                        />
+                        {
+                            passFlag && <h6 style={{ color: "red" }}>Confirm Password should be same as Password!!!</h6>
+                        }
+
 
                         <input
                             type="text"

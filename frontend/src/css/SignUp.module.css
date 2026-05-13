@@ -116,6 +116,23 @@ button:hover {
     font-size: 14px;
 }
 
+select {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 12px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    box-sizing: border-box;
+    background: white;
+    font-size: 14px;
+    font-family: 'Poppins', sans-serif;
+    /* color: #333; */
+    outline: none;
+    cursor: pointer;
+}
+
+
+
 .link span {
     color: #9C0A8F;
     cursor: pointer;

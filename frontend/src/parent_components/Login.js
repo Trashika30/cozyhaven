@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import style from "../css/login.module.css";
+import Modal from "antd/es/modal/Modal";
 const Login = () => {
 
     let [email, setEmail] = useState("");
@@ -9,7 +10,6 @@ const Login = () => {
     let [storedEmail, setStoredEmail] = useState("");
     let [storedPassword, setStoredPassword] = useState("");
 
-    let [invalidFlag, setInvalidFlag] = useState(false);
 
     let nav = useNavigate();
 
@@ -24,12 +24,45 @@ const Login = () => {
     )
 
     const validate = () => {
-        if(email === storedEmail && password === storedPassword){
-            alert("Login success!!");
+        if(email === "" || password === ""){
+            Modal.error({
+                            title: "Missing Fields",
+                            content: "Please fill all fields before submitting.",
+                            okText: "OK",
+                            okButtonProps: {
+                                style: {
+                                    backgroundColor: "#9C0A8F",
+                                    borderColor: "#9C0A8F"
+                                }
+                            }
+                        }); return;
+        }
+        else if(email === storedEmail && password === storedPassword){
+            Modal.success({
+                title: "Success",
+                content: "Login Success!!",
+                okText: "OK",
+                okButtonProps: {
+                    style: {
+                        backgroundColor: "#9C0A8F",
+                        borderColor: "#9C0A8F"
+                    }
+                }
+            });
             nav("/");
         }
         else
-            setInvalidFlag(true);            
+            Modal.error({
+                title: "Invalid User",
+                content: "Email or Password is not correct!!",
+                okText: "OK",
+                okButtonProps: {
+                    style: {
+                        backgroundColor: "#9C0A8F",
+                        borderColor: "#9C0A8F"
+                    }
+                }
+            }); return;            
     }
 
     return (
@@ -52,10 +85,7 @@ const Login = () => {
                 <div className={style.right}>
                     <div className={style.card}>
                         <h2>Sign In</h2>
-                        {
-                            !invalidFlag ? <p>Enter your credentials to continue</p>
-                            : <p>Invalid credentials!!</p>
-                        }
+                        <p>Enter your credentials to continue</p>
                         <input type="email" placeholder="Email Address" onChange={e=>setEmail(e.target.value)}/>
                         <input type="password" placeholder="Password" onChange={e => setPassword(e.target.value)} />
                         <div className={style["forgot-password"]}>
