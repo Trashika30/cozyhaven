@@ -42,9 +42,7 @@ const Hotel = ({ hotel }) => {
 
         <div className={styles["hotel-bottom"]}>
 
-          <h2>₹6000/night</h2>
-
-          <Link to={`/hotel/${hotel.hotelId}`}>
+          <Link to={`/viewHotel/${hotel.hotelId}`}>
             <button>View Details</button>
           </Link>
 

@@ -1,94 +1,108 @@
 package com.example.cozyhaven.Controller;
 
-import com.example.cozyhaven.ApiResponse.ApiResponse;
-import com.example.cozyhaven.DTO.UserDTO;
-import com.example.cozyhaven.Entity.User;
-import com.example.cozyhaven.Enum.Role;
-import com.example.cozyhaven.Exception.ResourceNotFoundException;
-import com.example.cozyhaven.Service.UserService;
-import jakarta.validation.Valid;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.AutoPopulatingList;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import com.example.cozyhaven.ApiResponse.ApiResponse;
+import com.example.cozyhaven.DTO.UserDTO;
+import com.example.cozyhaven.Exception.ResourceNotFoundException;
+import com.example.cozyhaven.Service.UserService;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/user")
 @Validated //validate parameters in methods.
 public class UserController {
+
     @Autowired
     UserService userService;
 
     //there is no separate register method for diff roles
     @PostMapping("/all/registerUser")
-    public ResponseEntity<ApiResponse<?>> registerUser(@Valid @RequestBody UserDTO user){
+    public ResponseEntity<ApiResponse<?>> registerUser(@Valid @RequestBody UserDTO user) {
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ApiResponse<>("User Registered Successfully!!!", HttpStatus.OK, userService.registerUser(user))
         );
     }
 
     @GetMapping("/admin/showAllCustomers")
-    public ResponseEntity<ApiResponse<List<UserDTO>>> showAllCustomers(){
+    public ResponseEntity<ApiResponse<List<UserDTO>>> showAllCustomers() {
         List<UserDTO> userList = userService.showAllCustomers();
-        if(userList.isEmpty()) throw new ResourceNotFoundException("No customer available!!!");
+        if (userList.isEmpty()) {
+            throw new ResourceNotFoundException("No customer available!!!");
+        }
         return ResponseEntity.status(HttpStatus.FOUND).body(
                 new ApiResponse<>("All customers fetched successfully", HttpStatus.FOUND, userList)
         );
     }
 
     @GetMapping("/admin/showAllOwners")
-    public ResponseEntity<ApiResponse<List<UserDTO>>> showAllOwners(){
+    public ResponseEntity<ApiResponse<List<UserDTO>>> showAllOwners() {
         List<UserDTO> userList = userService.showAllOwners();
-        if(userList.isEmpty()) throw new ResourceNotFoundException("No owner available!!!");
+        if (userList.isEmpty()) {
+            throw new ResourceNotFoundException("No owner available!!!");
+        }
         return ResponseEntity.status(HttpStatus.FOUND).body(
                 new ApiResponse<>("All owner fetched successfully", HttpStatus.FOUND, userList)
         );
     }
 
     @GetMapping("/admin/searchCustomer/{id}")
-    public ResponseEntity<ApiResponse<?>> searchCustomer(@PathVariable int id){
+    public ResponseEntity<ApiResponse<?>> searchCustomer(@PathVariable int id) {
         UserDTO customer = userService.searchCustomer(id);
-        if(customer == null)
+        if (customer == null) {
             throw new ResourceNotFoundException("Customer not found");
+        }
         return ResponseEntity.status(HttpStatus.FOUND).body(
-                    new ApiResponse<>("Customer found", HttpStatus.FOUND, customer)
-            );
+                new ApiResponse<>("Customer found", HttpStatus.FOUND, customer)
+        );
 
     }
 
     @GetMapping("/admin/searchOwner/{id}")
-    public ResponseEntity<ApiResponse<?>> searchOwner(@PathVariable int id){
+    public ResponseEntity<ApiResponse<?>> searchOwner(@PathVariable int id) {
         UserDTO owner = userService.searchOwner(id);
-        if(owner == null)
+        if (owner == null) {
             throw new ResourceNotFoundException("Owner not found");
+        }
         return ResponseEntity.status(HttpStatus.FOUND).body(
-                    new ApiResponse<>("Owner found", HttpStatus.FOUND, owner)
-            );//instead of owner there was Http.sTATUS.noTfOUND
+                new ApiResponse<>("Owner found", HttpStatus.FOUND, owner)
+        );//instead of owner there was Http.sTATUS.noTfOUND
     }
 
     @DeleteMapping("/admin/deleteCustomer/{id}")
-    public ResponseEntity<ApiResponse<?>> deleteCustomer(@PathVariable int id){
+    public ResponseEntity<ApiResponse<?>> deleteCustomer(@PathVariable int id) {
         UserDTO customer = userService.searchCustomer(id);
-        if(customer == null)
+        if (customer == null) {
             throw new ResourceNotFoundException("Customer not found");
-          userService.deleteCustomer(id);
+        }
+        userService.deleteCustomer(id);
         return ResponseEntity.status(HttpStatus.GONE).body(
                 new ApiResponse<>("Customer deleted", HttpStatus.GONE, customer)
         );
     }
 
     @DeleteMapping("/admin/deleteOwner/{id}")
-    public ResponseEntity<ApiResponse<?>> deleteOwner(@PathVariable int id){
+    public ResponseEntity<ApiResponse<?>> deleteOwner(@PathVariable int id) {
         UserDTO owner = userService.searchOwner(id);
-        if(owner == null)
+        if (owner == null) {
             throw new ResourceNotFoundException("Owner not found");
+        }
         userService.deleteOwner(id);
         return ResponseEntity.status(HttpStatus.GONE).body(
-              new ApiResponse<>("Owner deleted", HttpStatus.GONE, owner)
+                new ApiResponse<>("Owner deleted", HttpStatus.GONE, owner)
         );
     }
 }

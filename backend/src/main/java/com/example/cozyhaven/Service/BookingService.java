@@ -1,5 +1,12 @@
 package com.example.cozyhaven.Service;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.example.cozyhaven.DTO.BookingDTO;
 import com.example.cozyhaven.Entity.Booking;
 import com.example.cozyhaven.Entity.Hotel;
@@ -10,15 +17,10 @@ import com.example.cozyhaven.Mapper.BookingMapper;
 import com.example.cozyhaven.Repository.BookingRepo;
 import com.example.cozyhaven.Repository.HotelRepo;
 import com.example.cozyhaven.Repository.UserRepo;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class BookingService {
+
     @Autowired
     BookingRepo bookingRepo;
 
@@ -28,12 +30,11 @@ public class BookingService {
     @Autowired
     HotelRepo hotelRepo;
 
-
     public BookingDTO addBooking(BookingDTO booking1) {
-        Booking booking =BookingMapper.toEntity(booking1);
+        Booking booking = BookingMapper.toEntity(booking1);
         booking.setBookingDate(LocalDate.now());
         booking.setStatus(BookingStatus.CONFIRMED);
-        booking= bookingRepo.save(booking);
+        booking = bookingRepo.save(booking);
         return BookingMapper.toDTO(booking);
     }
 
@@ -49,17 +50,20 @@ public class BookingService {
 
     public List<BookingDTO> getUserBookings(int userId) {
         User customer = userRepo.findByUserIdAndRole(userId, Role.CUSTOMER);
-        if(customer == null) return new ArrayList<>();
+        if (customer == null) {
+            return new ArrayList<>();
+        }
         return customer.getBookings()
                 .stream().map(BookingMapper::toDTO)
                 .toList();
-
 
     }
 
     public List<BookingDTO> upcomingStay(int userId) {
         User customer = userRepo.findByUserIdAndRole(userId, Role.CUSTOMER);
-        if(customer == null) return new ArrayList<>();
+        if (customer == null) {
+            return new ArrayList<>();
+        }
         return customer.getBookings()
                 .stream()
                 .filter(b -> b.getCheckInDate().isAfter(LocalDate.now()))
@@ -69,7 +73,9 @@ public class BookingService {
 
     public List<BookingDTO> completedStay(int userId) {
         User customer = userRepo.findByUserIdAndRole(userId, Role.CUSTOMER);
-        if(customer == null) return new ArrayList<>();
+        if (customer == null) {
+            return new ArrayList<>();
+        }
         return customer.getBookings()
                 .stream()
                 .filter(b -> b.getCheckOutDate().isBefore(LocalDate.now()))
@@ -79,14 +85,16 @@ public class BookingService {
 
     public BookingDTO updateBookingStatus(int bookingId, BookingStatus status) {
         Booking booking = bookingRepo.findById(bookingId).orElse(null);
-        if(booking == null) return null;
+        if (booking == null) {
+            return null;
+        }
         booking.setStatus(status);
         return BookingMapper.toDTO(bookingRepo.save(booking));
     }
 
-    public BookingDTO cancelBooking(int bookingId, String reason){
+    public BookingDTO cancelBooking(int bookingId, String reason) {
         Booking b = bookingRepo.findById(bookingId).orElse(null);
-        if(b==null){
+        if (b == null) {
             return null;
         }
 
@@ -98,7 +106,9 @@ public class BookingService {
 
     public List<BookingDTO> searchBookingByHotelId(int hotelId) {
         Hotel hotel = hotelRepo.findById(hotelId).orElse(null);
-        if(hotel == null) return new ArrayList<>();
+        if (hotel == null) {
+            return new ArrayList<>();
+        }
         List<Booking> bookingList = bookingRepo.findByRoom_Hotel_HotelId(hotelId);
         return bookingList.stream().map(BookingMapper::toDTO).toList();
     }
