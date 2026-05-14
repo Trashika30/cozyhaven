@@ -35,3 +35,12 @@
     padding:10px 20px;
     border-radius:10px;
 }
+
+:global(.ant-spin-dot-item) {
+    background-color: #a000a0 !important;
+}
+
+:global(.ant-spin-text) {
+    color: #a000a0 !important;
+    font-weight: 600;
+}

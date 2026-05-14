@@ -2,6 +2,7 @@ import { CloseOutlined, InfoCircleOutlined } from "@ant-design/icons";
 import { Card, DatePicker, Tabs, Tooltip } from "antd";
 import { useState } from "react";
 import styles from "../css/ViewHotel.module.css";
+import { useNavigate } from "react-router-dom";
 
 const onOk = value => {
     console.log('onOk: ', value);
@@ -21,6 +22,8 @@ const ViewHotel = () => {
         ]);
     };
 
+    const nav = useNavigate();
+
     const updateRoomType = (index, field, value) => {
         const updatedRooms = [...roomTypes];
         updatedRooms[index][field] = value;
@@ -36,9 +39,29 @@ const ViewHotel = () => {
         setRoomTypes(roomTypes.filter((_, i) => i !== index));
     };
 
-    const printdata = ()=>{
+    const printdata = () => {
         console.log(checkIn, checkOut, adults, children, roomTypes);
     }
+
+    const calculateBaseAmount = () => {
+        let total = 0;
+        roomTypes.forEach((room) => {
+            let roomPrice = 0;
+            if (room.type.includes("Standard"))
+                roomPrice = 6000;
+            else if (room.type.includes("Deluxe"))
+                roomPrice = 8500;
+            else if (room.type.includes("Suite"))
+                roomPrice = 11500;
+            let roomCount = parseInt(room.rooms);
+
+            if (!isNaN(roomCount)) {
+                total += roomPrice * roomCount;
+            }
+        });
+
+        return total;
+    };
 
     return (
         <div className={styles["hotel-page"]}>
@@ -101,8 +124,24 @@ const ViewHotel = () => {
                             src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2"
                             alt="hotel"
                         />
+                        {
+                            calculateBaseAmount() > 0 &&
+                            <div className={styles["amount-card"]}>
+                                <p>
+                                    Base Amount
+                                </p>
+                                <h2>
+                                    ₹ {calculateBaseAmount()}
+                                </h2>
+                                <span>
+                                    Excluding taxes & additional charges
+                                </span>
+                            </div>
+                        }
 
                     </div>
+
+                    
 
                     <Card className={styles["booking-card"]}>
 
@@ -199,6 +238,7 @@ const ViewHotel = () => {
                             + Add Room Type
                         </button>
 
+                        
                         <button className={styles["book-btn"]} onClick={printdata}>
                             Book Now
                         </button>

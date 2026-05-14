@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styles from "../css/SignUp.module.css";
 
-const SignUp = (role, url) => {
+const SignUp = () => {
   const navigate = useNavigate();
 
   const [user, setUser] = useState({

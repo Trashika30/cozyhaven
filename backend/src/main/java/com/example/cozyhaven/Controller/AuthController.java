@@ -13,12 +13,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.cozyhaven.ApiResponse.ApiResponse;
 import com.example.cozyhaven.DTO.UserDTO;
+import com.example.cozyhaven.Enum.Role;
 import com.example.cozyhaven.Service.UserService;
 import com.example.cozyhaven.Util.JwtUtil;
 
 import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor //similar to autowired it requires variables to be private final
+@RequiredArgsConstructor // similar to autowired it requires variables to be private final
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
@@ -27,21 +28,34 @@ public class AuthController {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
 
-    @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@RequestBody UserDTO user) {
-
-        String email = user.getEmail();
-        String password = user.getPassword();
-
-        UserDTO user1 = userService.findUserByEmail(email);
+    public ResponseEntity<?> register(UserDTO user) {
+        UserDTO user1 = userService.findUserByEmail(user.getEmail());
         if (user1 != null) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(new ApiResponse<>("Email already exists", HttpStatus.CONFLICT, null));
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(new ApiResponse<>("Email already exists", HttpStatus.CONFLICT, null));
         }
-
-        user.setPassword(passwordEncoder.encode(password));
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userService.registerUser(user);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(new ApiResponse<>("User registered successfully", HttpStatus.CREATED, null));
+    }
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse<>("User registered successfully", HttpStatus.CREATED, null));
+    @PostMapping("/customer/register")
+    public ResponseEntity<?> registerCustomer(@RequestBody UserDTO user) {
+        user.setRole(Role.CUSTOMER);
+        return register(user);
+    }
+
+    @PostMapping("/owner/register")
+    public ResponseEntity<?> registerOwner(@RequestBody UserDTO user) {
+        user.setRole(Role.OWNER);
+        return register(user);
+    }
+
+    @PostMapping("/admin/register")
+    public ResponseEntity<?> registerAdmin(@RequestBody UserDTO user) {
+        user.setRole(Role.ADMIN);
+        return register(user);
     }
 
     @PostMapping("/login/{email}/{password}")
@@ -49,13 +63,14 @@ public class AuthController {
 
         UserDTO user = userService.findUserByEmail(email);
         if (user == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ApiResponse<>("User not registered", HttpStatus.UNAUTHORIZED, null));
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(new ApiResponse<>("User not registered", HttpStatus.UNAUTHORIZED, null));
         }
 
         if (!passwordEncoder.matches(password, user.getPassword())) {
             return new ResponseEntity<>("Invalid member", HttpStatus.UNAUTHORIZED);
         }
-        String token = jwtUtil.generateToken(email, user.getRole());//token assigned to frontend
+        String token = jwtUtil.generateToken(email, user.getRole());// token assigned to frontend
         return new ResponseEntity<>(Map.of("token", token), HttpStatus.OK);// token to postman
     }
 
