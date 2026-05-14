@@ -44,7 +44,7 @@ const Hotel = ({ hotel }) => {
 
           <h2>₹6000/night</h2>
 
-          <Link to={`/viewHotel/${hotel.hotelId}`}>
+          <Link to={`/hotel/${hotel.hotelId}`}>
             <button>View Details</button>
           </Link>
 
