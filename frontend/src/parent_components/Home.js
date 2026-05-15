@@ -1,7 +1,6 @@
 import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import styles from "../css/Home.module.css";
-import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
 
 const Home = () => {
 
@@ -71,7 +70,8 @@ const Home = () => {
                 <div className={styles["nav-links"]}>
                     <a href="/">Home</a>
                     <a href="/">Hotels</a>
-                    <Link to="/login" className={styles.signin}> Sign In</Link>
+                    <Link to="/signIn" className={styles.signin}> Sign In</Link>
+                    <Link to="/customerSignUp" className={styles.signin}> Sign Up</Link>
                 </div>
             </div>
 

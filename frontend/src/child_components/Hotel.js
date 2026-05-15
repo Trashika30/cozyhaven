@@ -23,7 +23,7 @@ const Hotel = ({ hotel }) => {
           </div>
 
           <h3 className={styles.rating}>{hotel.ratings}</h3>
-
+    
         </div>
 
         <div className={styles.amenities}>
@@ -37,8 +37,22 @@ const Hotel = ({ hotel }) => {
 
             ))
           }
-
+     
         </div>
+
+
+<div>
+
+  <p className={styles["starting-text"]}>
+    Starting From
+  </p>
+
+  <h2 className={styles["price"]}>
+    ₹{hotel.standard}
+    <span>/night</span>
+  </h2>
+
+</div>
         
         <div className={styles["hotel-bottom"]}>
 

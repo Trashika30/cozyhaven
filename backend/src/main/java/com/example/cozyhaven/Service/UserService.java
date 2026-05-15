@@ -1,17 +1,15 @@
 package com.example.cozyhaven.Service;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.example.cozyhaven.DTO.UserDTO;
 import com.example.cozyhaven.Entity.User;
 import com.example.cozyhaven.Enum.Role;
 import com.example.cozyhaven.Mapper.UserMapper;
 import com.example.cozyhaven.Repository.UserRepo;
-
-import jakarta.validation.Valid;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class UserService {
@@ -81,14 +79,15 @@ public class UserService {
         if (existingCustomer == null) {
             return null;
         }
+
         existingCustomer.setFirstName(user.getFirstName());
         existingCustomer.setLastName(user.getLastName());
-        existingCustomer.setAge(user.getAge());
-        existingCustomer.setGender(user.getGender());
+        //existingCustomer.setAge(user.getAge());
+        // existingCustomer.setGender(user.getGender());
         existingCustomer.setAddress(user.getAddress());
         existingCustomer.setContact(user.getContact());
         existingCustomer.setEmail(user.getEmail());
-        existingCustomer.setPassword(user.getPassword());
+
         User updatedCustomer = userRepo.save(existingCustomer);
         return UserMapper.toDTO(updatedCustomer);
     }

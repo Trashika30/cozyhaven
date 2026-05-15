@@ -132,7 +132,7 @@ const SearchHotel = () => {
 
           <button
             className={styles["signin-btn"]}
-            onClick={() => nav("/profile")}
+            onClick={() => nav("/userProfile")}
           >
             Profile
           </button>

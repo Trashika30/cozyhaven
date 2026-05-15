@@ -1,9 +1,9 @@
-import { Input, Modal } from "antd";
+import { Input, Modal, Spin } from "antd";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styles from "../css/SignUp.module.css";
 
-const SignUp = (role, url) => {
+const SignUp = ({ url }) => {
   const navigate = useNavigate();
 
   const [user, setUser] = useState({
@@ -20,12 +20,15 @@ const SignUp = (role, url) => {
   let [confPassword, setConfPassword] = useState("");
   let [passFlag, setPassFlag] = useState(false);
 
+  let [loading, setLoading] = useState(false);
+
   useEffect(() => {
     if (confPassword !== "") {
       if (user.password !== confPassword) setPassFlag(true);
       else setPassFlag(false);
     } else setPassFlag(false);
   }, [user.password, confPassword]);
+
   const handleChange = (e) => {
     setUser({
       ...user,
@@ -57,28 +60,59 @@ const SignUp = (role, url) => {
       });
       return;
     }
-
-    localStorage.setItem("cozyUser", JSON.stringify(user));
-
-    Modal.success({
-      title: "Success",
-      content: "Account created successfully!",
-      okText: "OK",
-      okButtonProps: {
-        style: {
-          backgroundColor: "#9C0A8F",
-          borderColor: "#9C0A8F",
-        },
+    setLoading(true);
+    fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
       },
-    });
-    navigate("/login");
+      body: JSON.stringify(user),
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        setLoading(false);
+        if (res.status === "409 CONFLICT") {
+          Modal.error({
+            title: res.message,
+            content: "User with this email already exists!!",
+            okText: "OK",
+            okButtonProps: {
+              style: {
+                backgroundColor: "#9C0A8F",
+                borderColor: "#9C0A8F",
+              },
+            },
+          });
+        } else if (res.status === "201 CREATED") {
+          Modal.success({
+            title: "Success",
+            content: res.message,
+            okText: "OK",
+            okButtonProps: {
+              style: {
+                backgroundColor: "#9C0A8F",
+                borderColor: "#9C0A8F",
+              },
+            },
+          });
+          navigate("/signIn");
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        setLoading(false);
+      });
   };
 
   return (
     <>
       <div className={styles.navbar}>
         <div className={styles.logo}>CozyHaven</div>
+        <div className={styles["nav-links"]}>
+          <Link to="/">Home</Link>
+        </div>
       </div>
+
       <div className={styles.container}>
         <div className={styles.left}>
           <div className={styles["left-content"]}>
@@ -172,10 +206,20 @@ const SignUp = (role, url) => {
               onChange={handleChange}
             />
 
-            <button onClick={register}>Create Account</button>
-
+            <button onClick={register} disabled={loading}>
+              {loading ? (
+                <Spin
+                  size="small"
+                  style={{
+                    color: "white",
+                  }}
+                />
+              ) : (
+                "Create Account"
+              )}
+            </button>
             <div className={styles.link}>
-              Already Registered? <Link to={"/login"}>Sign In</Link>
+              Already Registered? <Link to={"/signIn"}>Sign In</Link>
             </div>
           </div>
         </div>
