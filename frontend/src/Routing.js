@@ -6,7 +6,7 @@ import SignUp from "./parent_components/SignUp";
 import ViewHotel from "./parent_components/ViewHotel";
 import OwnerDash from "./parent_components/OwnerDash";
 import EditRoomPage from "./child_components/EditRoomPage";
-import UserBooking from "./parent_components/UserBookings";
+import UserProfile from "./parent_components/UserProfile";
 
 const Routing = () => {
 
@@ -16,10 +16,10 @@ const Routing = () => {
       <Route path="/signUp" element={<SignUp />} />
       <Route path="/login" element={<Login />} />
       <Route path="/search" element={<SearchHotel />} />
-      <Route path="/viewHotel/:id" element={<ViewHotel/>}/>
+      <Route path="/viewHotel/:hotelId" element={<ViewHotel/>}/>
       <Route path="/ownerdash" element={<OwnerDash/>}/>
       <Route path="/editroom/:id" element={<EditRoomPage/>}/>
-      <Route path="/booking/:userId" element={<UserBooking />}/>
+      <Route path="/userProfile/:userId" element={<UserProfile/>}/>
     </Routes>
   );
 };

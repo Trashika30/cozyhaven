@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -103,6 +104,30 @@ public class UserController {
         userService.deleteOwner(id);
         return ResponseEntity.status(HttpStatus.GONE).body(
                 new ApiResponse<>("Owner deleted", HttpStatus.GONE, owner)
+        );
+    }
+
+    @PutMapping("/customer/updateCustomer/{id}")
+    public ResponseEntity<ApiResponse<?>> updateCustomer(@PathVariable int id, @Valid @RequestBody UserDTO user) {
+        UserDTO existingCustomer = userService.searchCustomer(id);
+        if (existingCustomer == null) {
+            throw new ResourceNotFoundException("Customer not found");
+        }
+        UserDTO updatedCustomer = userService.updateCustomer(id, user);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ApiResponse<>("Customer updated successfully", HttpStatus.OK, updatedCustomer)
+        );
+    }
+
+    @PutMapping("/owner/updateOwner/{id}")
+    public ResponseEntity<ApiResponse<?>> updateOwner(@PathVariable int id, @Valid @RequestBody UserDTO user) {
+        UserDTO existingOwner = userService.searchOwner(id);
+        if (existingOwner == null) {
+            throw new ResourceNotFoundException("Owner not found");
+        }
+        UserDTO updatedOwner = userService.updateCustomer(id, user);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ApiResponse<>("Owner updated successfully", HttpStatus.OK, updatedOwner)
         );
     }
 }

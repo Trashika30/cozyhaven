@@ -2,6 +2,8 @@ package com.example.cozyhaven.DTO;
 
 import java.util.List;
 
+import com.example.cozyhaven.Entity.Review;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,4 +23,10 @@ public class HotelDTO {
     private List<String> amenities;
 
     private int ownerId;
+    private List<Review> reviews;
+
+    private double ratings;
+    private double standard;
+    private double deluxe;
+    private double suite;
 }

@@ -1,7 +1,13 @@
 package com.example.cozyhaven.Entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import jakarta.persistence.*;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
@@ -14,6 +20,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class Room {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int roomId;
@@ -27,12 +34,12 @@ public class Room {
     private boolean available;
 
     @ManyToOne
-    @JoinColumn(name = "hotelId")
-    @JsonBackReference //Avoids Dependency Loop - Child -> BackReference
-    Hotel hotel;
+    @JoinColumn(name = "hotel_id")
+    @JsonBackReference("hotel_rooms")
+    private Hotel hotel;
 
     public Room(String roomType, int maxOccupy, boolean ac, double baseFare,
-                boolean available, Hotel hotel) {
+            boolean available, Hotel hotel) {
         this.roomType = roomType;
         this.maxOccupy = maxOccupy;
         this.ac = ac;

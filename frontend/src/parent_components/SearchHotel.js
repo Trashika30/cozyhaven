@@ -2,289 +2,437 @@ import Hotel from "../child_components/Hotel";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import styles from "../css/SearchHotel.module.css";
+import { useNavigate } from "react-router-dom";
 
 const SearchHotel = () => {
 
-    const [hotels, setHotels] = useState([]);
+  let nav = useNavigate();
 
-    const [showProfile, setShowProfile] = useState(false);
+  const [hotels, setHotels] = useState([]);
 
-    const [priceRange, setPriceRange] = useState(10000);
+  const [showProfile, setShowProfile] = useState(false);
 
-    const [selectedAmenities, setSelectedAmenities] = useState([]);
+  const [priceRange, setPriceRange] = useState(10000);
 
-    const user = JSON.parse(sessionStorage.getItem("user"));
+  const [selectedAmenities, setSelectedAmenities] = useState([]);
 
-    useEffect(() => {
+  const [guestOpen, setGuestOpen] = useState(false);
 
-        fetch("http://localhost:9090/hotel/all/showAll")
+  const [location, setLocation] = useState("");
 
-            .then((res) => res.json())
+  const [checkInDate, setCheckInDate] = useState("");
 
-            .then((response) => {
+  const [checkOutDate, setCheckOutDate] = useState("");
 
-                setHotels(response.data);
+  const user = JSON.parse(sessionStorage.getItem("user"));
 
-            })
+  useEffect(() => {
 
-            .catch((e) => {
+    fetch("http://localhost:9090/hotel/all/showAll")
 
-                console.log("Error fetching hotels : ", e);
+      .then((res) => res.json())
 
-            });
+      .then((response) => {
 
-    }, []);
+        setHotels(response.data);
 
-    const handleAmenityChange = (amenity) => {
+      })
 
-        if (selectedAmenities.includes(amenity)) {
+      .catch((e) => {
 
-            setSelectedAmenities(
-                selectedAmenities.filter((a) => a !== amenity)
-            );
+        console.log("Error fetching hotels : ", e);
 
-        }
+      });
 
-        else {
+  }, []);
 
-            setSelectedAmenities([
-                ...selectedAmenities,
-                amenity
-            ]);
+  const handleAmenityChange = (amenity) => {
 
-        }
+    if (selectedAmenities.includes(amenity)) {
 
-    };
+      setSelectedAmenities(
+        selectedAmenities.filter((a) => a !== amenity)
+      );
 
-    const clearFilters = () => {
+    } else {
 
-        setPriceRange(10000);
+      setSelectedAmenities([
+        ...selectedAmenities,
+        amenity
+      ]);
 
-        setSelectedAmenities([]);
+    }
 
-    };
+  };
 
-    const filteredHotels = hotels.filter((hotel) => {
+  const clearFilters = () => {
 
-        let matchesPrice =
-            hotel.baseFare
-                ? hotel.baseFare <= priceRange
-                : true;
+    setPriceRange(10000);
 
-        let matchesAmenities =
-            selectedAmenities.length === 0 ||
+    setSelectedAmenities([]);
 
-            selectedAmenities.every((amenity) =>
-                hotel.amenities?.includes(amenity)
-            );
+    setLocation("");
 
-        return matchesPrice && matchesAmenities;
+  };
 
-    });
+  const filteredHotels = hotels.filter((hotel) => {
+
+    let matchesPrice =
+      hotel.standard ? hotel.standard <= priceRange : true;
+
+    let matchesAmenities =
+      selectedAmenities.length === 0 ||
+
+      selectedAmenities.every((amenity) =>
+        hotel.amenities?.includes(amenity)
+      );
+
+    let matchesLocation =
+      location === "" ||
+
+      hotel.location
+        ?.toLowerCase()
+        .includes(location.toLowerCase());
 
     return (
-
-        <>
-
-            {/* NAVBAR */}
-
-            <div className={styles.navbar}>
-
-                <div className={styles.logo}>
-                    CozyHaven
-                </div>
-
-                <div className={styles.navLinks}>
-
-                    <Link to="/" className={styles.navItem}>
-                        Home
-                    </Link>
-
-                    <Link to="/" className={styles.navItem}>
-                        Hotels
-                    </Link>
-
-                    <button
-                        onClick={() => setShowProfile(!showProfile)}
-                        className={styles.profileBtn}
-                    >
-                        Profile
-                    </button>
-
-                </div>
-
-            </div>
-
-            {/* PROFILE */}
-
-            {
-                showProfile && (
-
-                    <div className={styles.profilePopup}>
-
-                        <h2 className={styles.profileTitle}>
-                            User Profile
-                        </h2>
-
-                        <p>
-                            <strong>Name :</strong> {user?.userName}
-                        </p>
-
-                        <p>
-                            <strong>Email :</strong> {user?.email}
-                        </p>
-
-                        <p>
-                            <strong>Phone :</strong> {user?.phone}
-                        </p>
-
-                        <Link
-                            to={`/booking/${user?.userId}`}
-                            className={styles.bookingLink}
-                        >
-                            View Bookings
-                        </Link>
-
-                    </div>
-
-                )
-            }
-
-            {/* MAIN */}
-
-            <div className={styles.mainContainer}>
-
-                {/* FILTER */}
-
-                <div className={styles.filterBox}>
-
-                    <h2 className={styles.filterTitle}>
-                        Filters
-                    </h2>
-
-                    {/* PRICE */}
-
-                    <div>
-
-                        <h3 className={styles.sectionTitle}>
-                            Price Range
-                        </h3>
-
-                        <p className={styles.priceText}>
-                            ₹1000 - ₹{priceRange}
-                        </p>
-
-                        <input
-                            type="range"
-                            min="1000"
-                            max="10000"
-                            step="500"
-                            value={priceRange}
-                            onChange={(e) =>
-                                setPriceRange(Number(e.target.value))
-                            }
-                            className={styles.rangeInput}
-                        />
-
-                    </div>
-
-                    {/* AMENITIES */}
-
-                    <div className={styles.amenitiesSection}>
-
-                        <h3 className={styles.sectionTitle}>
-                            Amenities
-                        </h3>
-
-                        {
-                            [
-                                "Free WiFi",
-                                "Swimming Pool",
-                                "Parking",
-                                "Restaurant",
-                                "Gym",
-                                "Spa",
-                                "Room Service"
-                            ].map((amenity) => (
-
-                                <div
-                                    key={amenity}
-                                    className={styles.checkboxRow}
-                                >
-
-                                    <input
-                                        type="checkbox"
-                                        checked={
-                                            selectedAmenities.includes(amenity)
-                                        }
-                                        onChange={() =>
-                                            handleAmenityChange(amenity)
-                                        }
-                                        className={styles.checkbox}
-                                    />
-
-                                    <label className={styles.checkboxLabel}>
-                                        {amenity}
-                                    </label>
-
-                                </div>
-
-                            ))
-                        }
-
-                    </div>
-
-                    <button
-                        onClick={clearFilters}
-                        className={styles.clearBtn}
-                    >
-                        Clear Filters
-                    </button>
-
-                </div>
-
-                {/* HOTELS */}
-
-                <div className={styles.hotelsSection}>
-
-                    <h1 className={styles.hotelHeading}>
-                        All Hotels
-                    </h1>
-
-                    <p className={styles.hotelCount}>
-                        {filteredHotels.length} properties found
-                    </p>
-
-                    {
-                        filteredHotels.length > 0 ?
-
-                            filteredHotels.map((hotel) => (
-
-                                <Hotel
-                                    key={hotel.hotelId}
-                                    hotel={hotel}
-                                />
-
-                            ))
-
-                            :
-
-                            <div className={styles.noHotelsBox}>
-
-                                <h2 className={styles.noHotelsText}>
-                                    No Hotels Found
-                                </h2>
-
-                            </div>
-                    }
-
-                </div>
-
-            </div>
-
-        </>
-
+      matchesPrice &&
+      matchesAmenities &&
+      matchesLocation
     );
+
+  });
+
+  return (
+
+    <>
+
+      {/* NAVBAR */}
+
+      <div className={styles.navbar}>
+
+        <div className={styles.logo}>
+          CozyHaven
+        </div>
+
+        <div className={styles.navLinks}>
+
+          <Link
+            to="/"
+            className={styles.navItem}
+          >
+            Home
+          </Link>
+
+          <Link
+            to="/login"
+            className={styles.signin}
+          >
+            Sign In
+          </Link>
+
+          <button
+            className={styles["signin-btn"]}
+            onClick={() => nav("/profile")}
+          >
+            Profile
+          </button>
+
+        </div>
+
+      </div>
+
+      {/* MAIN */}
+
+      <div className={styles.mainContainer}>
+
+        {/* FILTER */}
+
+        <div className={styles.filterBox}>
+
+          <h2 className={styles.filterTitle}>
+            Filters
+          </h2>
+
+          {/* PRICE */}
+
+          <div>
+
+            <h3 className={styles.sectionTitle}>
+              Price Range
+            </h3>
+
+            <p className={styles.priceText}>
+              Standard Room Price:
+              ₹1000 - ₹{priceRange}
+            </p>
+
+            <input
+              type="range"
+              min="1000"
+              max="10000"
+              step="500"
+              value={priceRange}
+              onChange={(e) =>
+                setPriceRange(Number(e.target.value))
+              }
+              className={styles.rangeInput}
+            />
+
+          </div>
+
+          {/* AMENITIES */}
+
+          <div className={styles.amenitiesSection}>
+
+            <h3 className={styles.sectionTitle}>
+              Amenities
+            </h3>
+
+            {[
+              "Free WiFi",
+              "Swimming Pool",
+              "Parking",
+              "Restaurant",
+              "Gym",
+              "Spa",
+              "Room Service",
+            ].map((amenity) => (
+
+              <div
+                key={amenity}
+                className={styles.checkboxRow}
+              >
+
+                <input
+                  type="checkbox"
+                  checked={selectedAmenities.includes(amenity)}
+                  onChange={() =>
+                    handleAmenityChange(amenity)
+                  }
+                  className={styles.checkbox}
+                />
+
+                <label className={styles.checkboxLabel}>
+                  {amenity}
+                </label>
+
+              </div>
+
+            ))}
+
+          </div>
+
+          <button
+            onClick={clearFilters}
+            className={styles.clearBtn}
+          >
+            Clear Filters
+          </button>
+
+        </div>
+
+        {/* HOTELS */}
+
+        <div className={styles.hotelsSection}>
+
+          {/* SEARCH BOX */}
+
+          <div className={styles["search-box"]}>
+
+            <div className={styles["search-field"]}>
+
+              <label>
+                Location
+              </label>
+
+              <input
+                type="text"
+                placeholder="Where are you going?"
+                list="cities"
+                className={styles["city-input"]}
+                value={location}
+                onChange={(e) =>
+                  setLocation(e.target.value)
+                }
+              />
+
+              <datalist id="cities">
+
+                <option value="Chennai" />
+
+                <option value="Delhi" />
+
+                <option value="Kolkata" />
+
+                <option value="Mumbai" />
+
+              </datalist>
+
+            </div>
+
+            <div className={styles["date-group"]}>
+
+              <div className={styles["search-field"]}>
+
+                <label>
+                  Check-In
+                </label>
+
+                <input
+                  type="date"
+                  value={checkInDate}
+                  onChange={(e) =>
+                    setCheckInDate(e.target.value)
+                  }
+                />
+
+              </div>
+
+              <div className={styles["search-field"]}>
+
+                <label>
+                  Check-Out
+                </label>
+
+                <input
+                  type="date"
+                  value={checkOutDate}
+                  onChange={(e) =>
+                    setCheckOutDate(e.target.value)
+                  }
+                />
+
+              </div>
+
+            </div>
+
+            <div className={styles["guest-container"]}>
+
+              <button
+                className={styles["guest-btn"]}
+                onClick={() =>
+                  setGuestOpen(!guestOpen)
+                }
+              >
+                Guests & Rooms
+              </button>
+
+              {
+
+                guestOpen &&
+
+                <div className={styles["guest-dropdown"]}>
+
+                  <div className={styles.row}>
+
+                    <label>
+                      Adults
+                    </label>
+
+                    <select>
+
+                      <option>1</option>
+
+                      <option>2</option>
+
+                      <option>3</option>
+
+                      <option>4</option>
+
+                    </select>
+
+                  </div>
+
+                  <div className={styles.row}>
+
+                    <label>
+                      Children
+                    </label>
+
+                    <select>
+
+                      <option>0</option>
+
+                      <option>1</option>
+
+                      <option>2</option>
+
+                      <option>3</option>
+
+                    </select>
+
+                  </div>
+
+                  <div className={styles.row}>
+
+                    <label>
+                      Rooms
+                    </label>
+
+                    <select>
+
+                      <option>1</option>
+
+                      <option>2</option>
+
+                      <option>3</option>
+
+                    </select>
+
+                  </div>
+
+                </div>
+
+              }
+
+            </div>
+
+            <button className={styles["search-btn"]}>
+              Search
+            </button>
+
+          </div>
+
+          <h1 className={styles.hotelHeading}>
+            All Hotels
+          </h1>
+
+          <p className={styles.hotelCount}>
+            {filteredHotels.length} properties found
+          </p>
+
+          {
+
+            filteredHotels.length > 0 ?
+
+              filteredHotels.map((hotel) => (
+
+                <Hotel
+                  key={hotel.hotelId}
+                  hotel={hotel}
+                />
+
+              ))
+
+              :
+
+              <div className={styles.noHotelsBox}>
+
+                <h2 className={styles.noHotelsText}>
+                  No Hotels Found
+                </h2>
+
+              </div>
+
+          }
+
+        </div>
+
+      </div>
+
+    </>
+
+  );
 
 };
 

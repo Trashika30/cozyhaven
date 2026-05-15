@@ -9,6 +9,184 @@
     top:0;
     z-index:1000;
 }
+/* SEARCH BOX */
+
+.search-box{
+    background:#F8F5F0;
+
+    padding:28px;
+
+    border-radius:20px;
+
+    display:flex;
+
+    align-items:flex-end;
+
+    justify-content:space-between;
+
+    gap:18px;
+
+    box-shadow:0 10px 25px rgba(0,0,0,0.15);
+
+    margin-bottom:35px;
+
+    flex-wrap:nowrap;
+}
+
+/* FIELD */
+
+.search-field{
+    display:flex;
+
+    flex-direction:column;
+
+    text-align:left;
+}
+
+.search-field label{
+    font-size:14px;
+
+    color:#666;
+
+    margin-bottom:6px;
+
+    font-weight:500;
+}
+
+/* INPUTS */
+
+.search-field input,
+.city-input{
+    width:190px;
+
+    height:50px;
+
+    padding:0 14px;
+
+    border:1px solid #ddd;
+
+    border-radius:10px;
+
+    outline:none;
+
+    font-size:14px;
+
+    background:white;
+
+    box-sizing:border-box;
+}
+
+.search-field input:focus{
+    border:1px solid #9C0A8F;
+}
+
+/* DATE GROUP */
+
+.date-group{
+    display:flex;
+
+    gap:15px;
+}
+
+/* GUEST */
+
+.guest-container{
+    position:relative;
+}
+
+.guest-btn{
+    width:190px;
+
+    height:50px;
+
+    border:1px solid #ddd;
+
+    border-radius:10px;
+
+    background:white;
+
+    cursor:pointer;
+
+    font-size:14px;
+
+    color:#555;
+}
+
+.guest-dropdown{
+    position:absolute;
+
+    top:65px;
+
+    left:0;
+
+    background:white;
+
+    width:260px;
+
+    padding:20px;
+
+    border-radius:15px;
+
+    box-shadow:0 8px 25px rgba(0,0,0,0.2);
+
+    z-index:100;
+}
+
+.row{
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:18px;
+}
+
+.row label{
+    font-size:15px;
+
+    font-weight:500;
+
+    color:#333;
+}
+
+.row select{
+    padding:6px 10px;
+
+    border-radius:8px;
+
+    border:1px solid #ccc;
+}
+
+/* SEARCH BUTTON */
+
+.search-btn{
+    height:50px;
+
+    padding:0 40px;
+
+    border:none;
+
+    border-radius:12px;
+
+    background:#9C0A8F;
+
+    color:white;
+
+    font-size:16px;
+
+    font-weight:600;
+
+    cursor:pointer;
+
+    transition:0.3s;
+
+    min-width:170px;
+}
+
+.search-btn:hover{
+    background:#7E006E;
+}
 
 .logo{
     font-size:34px;

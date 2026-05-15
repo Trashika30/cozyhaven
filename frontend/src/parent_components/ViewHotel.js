@@ -1,350 +1,410 @@
 import { CloseOutlined, InfoCircleOutlined } from "@ant-design/icons";
 import { Card, DatePicker, Tabs, Tooltip } from "antd";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styles from "../css/ViewHotel.module.css";
-import { useNavigate } from "react-router-dom";
-
-const onOk = value => {
-    console.log('onOk: ', value);
-};
+import { useNavigate, useParams } from "react-router-dom";
 
 const ViewHotel = () => {
+  const { hotelId } = useParams();
 
-    const [roomTypes, setRoomTypes] = useState([]);
+  const nav = useNavigate();
 
-    const addRoomType = () => {
-        setRoomTypes([
-            ...roomTypes,
-            {
-                type: "",
-                rooms: ""
-            }
-        ]);
-    };
+  const user = JSON.parse(sessionStorage.getItem("user"));
 
-    const nav = useNavigate();
+  const [hotel, setHotel] = useState(null);
 
-    const updateRoomType = (index, field, value) => {
-        const updatedRooms = [...roomTypes];
-        updatedRooms[index][field] = value;
-        setRoomTypes(updatedRooms);
-    };
+  const [roomTypes, setRoomTypes] = useState([]);
 
-    let [checkIn, setCheckIn] = useState("");
-    let [checkOut, setCheckOut] = useState("");
-    let [adults, setAdults] = useState(0);
-    let [children, setChildren] = useState(0);
+  const [checkIn, setCheckIn] = useState("");
 
-    const removeRoomType = (index) => {
-        setRoomTypes(roomTypes.filter((_, i) => i !== index));
-    };
+  const [checkOut, setCheckOut] = useState("");
 
-    const printdata = () => {
-        console.log(checkIn, checkOut, adults, children, roomTypes);
+  const [adults, setAdults] = useState(0);
+
+  const [children, setChildren] = useState(0);
+
+  const [reviews, setReviews] = useState([]);
+
+  useEffect(() => {
+    fetch(`http://localhost:9090/hotel/all/searchById/${hotelId}`)
+      .then((res) => res.json())
+
+      .then((response) => {
+        console.log(response);
+
+        setHotel(response.data);
+      })
+
+      .catch((e) => {
+        console.log(e);
+      });
+
+    fetch(`http://localhost:9090/review/all/searchByHotelId/${hotelId}`)
+      .then((res) => res.json())
+
+      .then((response) => {
+        console.log(response);
+
+        setReviews(response.data);
+      })
+
+      .catch((e) => {
+        console.log(e);
+
+        setReviews([]);
+      });
+  }, [hotelId]);
+
+  const addRoomType = () => {
+    setRoomTypes([
+      ...roomTypes,
+      {
+        type: "",
+        rooms: "",
+      },
+    ]);
+  };
+
+  const updateRoomType = (index, field, value) => {
+    const updatedRooms = [...roomTypes];
+
+    updatedRooms[index][field] = value;
+
+    setRoomTypes(updatedRooms);
+  };
+
+  const removeRoomType = (index) => {
+    setRoomTypes(roomTypes.filter((_, i) => i !== index));
+  };
+
+  const calculateBaseAmount = () => {
+    let total = 0;
+
+    roomTypes.forEach((room) => {
+      let roomPrice = 0;
+
+      if (room.type.includes("Standard")) roomPrice = hotel.standard;
+      else if (room.type.includes("Deluxe")) roomPrice = hotel.deluxe;
+      else if (room.type.includes("Suite")) roomPrice = hotel.suite;
+
+      let roomCount = parseInt(room.rooms);
+
+      if (!isNaN(roomCount)) {
+        total += roomPrice * roomCount;
+      }
+    });
+
+    return total;
+  };
+
+  const createBooking = () => {
+    if (!checkIn || !checkOut) {
+      alert("Please select dates");
+
+      return;
     }
 
-    const calculateBaseAmount = () => {
-        let total = 0;
-        roomTypes.forEach((room) => {
-            let roomPrice = 0;
-            if (room.type.includes("Standard"))
-                roomPrice = 6000;
-            else if (room.type.includes("Deluxe"))
-                roomPrice = 8500;
-            else if (room.type.includes("Suite"))
-                roomPrice = 11500;
-            let roomCount = parseInt(room.rooms);
+    if (roomTypes.length === 0) {
+      alert("Please add room type");
 
-            if (!isNaN(roomCount)) {
-                total += roomPrice * roomCount;
-            }
-        });
+      return;
+    }
 
-        return total;
+    const bookingData = {
+      hotelName: hotel.hotelName,
+
+      roomType: roomTypes.map((r) => r.type).join(", "),
+
+      checkInDate: checkIn,
+
+      checkOutDate: checkOut,
+
+      childCount: children,
+
+      adultCount: adults,
+
+      totalAmount: calculateBaseAmount(),
+
+      status: "BOOKED",
+
+      roomId: hotel.hotelId,
+
+      userId: user.userId,
+
+      cancellationReason: "",
     };
 
-    return (
-        <div className={styles["hotel-page"]}>
+    fetch("http://localhost:9090/booking/customer/addBooking", {
+      method: "POST",
 
-            <div className={styles["navbar"]}>
+      headers: {
+        "Content-Type": "application/json",
+      },
 
-                <h2 className={styles["logo"]}>
-                    CozyHaven
-                </h2>
+      body: JSON.stringify(bookingData),
+    })
+      .then((res) => res.json())
 
-                <div className={styles["nav-links"]}>
+      .then((response) => {
+        console.log(response);
 
-                    <a href="/">
-                        Home
-                    </a>
+        alert("Booking Successful");
 
-                    <a href="/">
-                        Hotels
-                    </a>
+        nav(`/booking/${user.userId}`);
+      })
 
-                    <button className={styles["signin-btn"]}>
-                        Sign In
-                    </button>
+      .catch((e) => {
+        console.log(e);
 
-                </div>
+        alert("Booking Failed");
+      });
+  };
 
-            </div>
+  // IMPORTANT FIX
 
-            <div className={styles["container"]}>
+  if (!hotel) {
+    return <h1>Loading...</h1>;
+  }
 
-                <div className={styles["hotel-header"]}>
+  return (
+    <div className={styles["hotel-page"]}>
+      {/* NAVBAR */}
 
-                    <div>
+      <div className={styles["navbar"]}>
+        <h2 className={styles["logo"]}>CozyHaven</h2>
 
-                        <h1>
-                            Grand Seaside Resort
-                        </h1>
+        <div className={styles["nav-links"]}>
+          <a href="/">Home</a>
 
-                        <p>
-                            📍 Calangute Beach, North Goa
-                        </p>
+          <a href="/search">Hotels</a>
 
-                        <p>
-                            1247 reviews
-                        </p>
-
-                    </div>
-
-                    <div className={styles["rating"]}>
-                        ⭐ 4.8
-                    </div>
-
-                </div>
-
-                <div className={styles["gallery-section"]}>
-
-                    <div className={styles["main-image"]}>
-
-                        <img
-                            src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2"
-                            alt="hotel"
-                        />
-                        {
-                            calculateBaseAmount() > 0 &&
-                            <div className={styles["amount-card"]}>
-                                <p>
-                                    Base Amount
-                                </p>
-                                <h2>
-                                    ₹ {calculateBaseAmount()}
-                                </h2>
-                                <span>
-                                    Excluding taxes & additional charges
-                                </span>
-                            </div>
-                        }
-
-                    </div>
-
-                    
-
-                    <Card className={styles["booking-card"]}>
-
-                        <h2>
-                            Starting at ₹6000 / night
-                        </h2>
-
-                        <p>
-                            Excludes taxes and fees
-                        </p><br />
-
-                        <p>
-                            Check-in
-                        </p>
-
-                        <DatePicker className={styles["date-picker"]} onChange={(date, dateString) => setCheckIn(dateString)} />
-
-                        <p>
-                            Check-out
-                        </p>
-                        <DatePicker className={styles["date-picker"]} onChange={(date, dateString) => setCheckOut(dateString)} />
-
-                        <div className={styles["date-picker"]}>
-
-                            <div className={styles["label-row"]}>
-
-                                <p>Adults</p>
-
-                                <Tooltip title="Adult age should be above 14">
-                                    <InfoCircleOutlined className={styles["info-icon"]} />
-                                </Tooltip>
-
-                            </div>
-
-                            <input type="number" placeholder="Enter number of Adults" onChange={e => setAdults(parseInt(e.target.value))} />
-
-                        </div>
-
-                        <div className={styles["date-picker"]}>
-
-                            <div className={styles["label-row"]}>
-
-                                <p className={styles["label-text"]}>
-                                    Children
-                                </p>
-
-                                <Tooltip title="Children age should be less than 14">
-                                    <InfoCircleOutlined className={styles["info-icon"]} />
-                                </Tooltip>
-
-                            </div>
-
-                            <input type="number" placeholder="Enter number of Children" onChange={e => setChildren(parseInt(e.target.value))} />
-
-                        </div>
-
-                        {
-                            roomTypes.map((room, index) => (
-                                <div className={styles["room-type-card"]} key={index}>
-
-                                    <select onChange={(e) =>
-                                        updateRoomType(index, "type", e.target.value)
-                                    }>
-                                        <option>Select</option>
-                                        <option>Standard ₹6000/N</option>
-                                        <option>Deluxe ₹8500/N</option>
-                                        <option>Suite ₹11500/N</option>
-                                    </select>
-
-                                    <select onChange={(e) =>
-                                        updateRoomType(index, "rooms", e.target.value)
-                                    }>
-                                        <option>Select</option>
-                                        <option>1 Room</option>
-                                        <option>2 Rooms</option>
-                                        <option>3 Rooms</option>
-                                        <option>4 Rooms</option>
-                                    </select>
-
-                                    <button
-                                        className={styles["remove-room-btn"]}
-                                        onClick={() => removeRoomType(index)}
-                                    >
-                                        <CloseOutlined />
-                                    </button>
-                                </div>
-                            ))
-                        }
-
-                        <button
-                            className={styles["add-room-btn"]}
-                            onClick={addRoomType}
-                        >
-                            + Add Room Type
-                        </button>
-
-                        
-                        <button className={styles["book-btn"]} onClick={printdata}>
-                            Book Now
-                        </button>
-
-                    </Card>
-
-                </div>
-
-                <div className={styles["about-section"]}>
-
-                    <h2>
-                        About this property
-                    </h2>
-
-                    <p>
-                        Experience luxury by the beach at Grand Seaside Resort.
-                        Our premium rooms offer stunning ocean views, modern amenities,
-                        and exceptional service.
-                    </p>
-
-                </div>
-
-                <Tabs
-                    defaultActiveKey="1"
-                    className={styles["hotel-tabs"]}
-                    items={[
-                        {
-                            key: "1",
-                            label: "Amenities",
-                            children: (
-                                <ul>
-                                    <li>Free WiFi</li>
-                                    <li>Swimming Pool</li>
-                                    <li>Parking</li>
-                                    <li>Air Conditioning</li>
-                                    <li>Gym</li>
-                                    <li>Spa</li>
-                                </ul>
-                            )
-                        },
-                        {
-                            key: "2",
-                            label: "Food & Dining",
-                            children: (
-                                <ul>
-                                    <li>Seafood Restaurant</li>
-                                    <li>Buffet Breakfast</li>
-                                    <li>Beachside Café</li>
-                                    <li>24/7 Room Service</li>
-                                </ul>
-                            )
-                        },
-                        {
-                            key: "3",
-                            label: "Guest Reviews",
-                            children: (
-                                <div>
-
-                                    <h3>
-                                        ⭐ 4.8 rating from 1247 reviews
-                                    </h3>
-
-                                    <div className={styles["review-card"]}>
-                                        <h4>⭐ 5.0 – Priya Sharma</h4>
-
-                                        <p>
-                                            Amazing stay! The beach view from the room was stunning.
-                                        </p>
-                                    </div>
-
-                                    <div className={styles["review-card"]}>
-                                        <h4>⭐ 4.7 – Rahul Mehta</h4>
-
-                                        <p>
-                                            Rooms were very clean and spacious.
-                                        </p>
-                                    </div>
-
-                                </div>
-                            )
-                        },
-                        {
-                            key: "4",
-                            label: "Location",
-                            children: (
-                                <p>
-                                    Calangute Beach Road, Goa
-                                </p>
-                            )
-                        },
-                        {
-                            key: "5",
-                            label: "Contact Details",
-                            children: (
-                                <div>
-                                    <p>📞 +91 9876543210</p>
-                                    <p>📧 reservations@grandseaside.com</p>
-                                </div>
-                            )
-                        }
-                    ]}
-                />
-
-            </div>
-
+          <button
+            className={styles["signin-btn"]}
+            onClick={() => nav("/profile")}
+          >
+            Profile
+          </button>
         </div>
-    );
-}
+      </div>
+
+      {/* MAIN */}
+
+      <div className={styles["container"]}>
+        {/* HEADER */}
+
+        <div className={styles["hotel-header"]}>
+          <div>
+            <h1>{hotel.hotelName}</h1>
+
+            <p>📍 {hotel.location}</p>
+
+            <p>Luxury Stay Experience</p>
+          </div>
+
+          <div className={styles["rating"]}>{hotel.ratings}</div>
+        </div>
+
+        {/* IMAGE + BOOKING */}
+
+        <div className={styles["gallery-section"]}>
+          <div className={styles["main-image"]}>
+            <img src={hotel.imageUrl} alt={hotel.hotelName} />
+
+            {calculateBaseAmount() > 0 && (
+              <div className={styles["amount-card"]}>
+                <p>Base Amount</p>
+
+                <h2>₹ {calculateBaseAmount()}</h2>
+
+                <span>Excluding taxes & additional charges</span>
+              </div>
+            )}
+          </div>
+
+          {/* BOOKING CARD */}
+
+          <Card className={styles["booking-card"]}>
+            <h2>Starting at ₹ {hotel.standard} / night</h2>
+
+            <p>Excludes taxes and fees</p>
+
+            <br />
+
+            <p>Check-in</p>
+
+            <DatePicker
+              className={styles["date-picker"]}
+              onChange={(date, dateString) => setCheckIn(dateString)}
+            />
+
+            <p>Check-out</p>
+
+            <DatePicker
+              className={styles["date-picker"]}
+              onChange={(date, dateString) => setCheckOut(dateString)}
+            />
+
+            {/* ADULTS */}
+
+            <div className={styles["date-picker"]}>
+              <div className={styles["label-row"]}>
+                <p>Adults</p>
+
+                <Tooltip title="Adult age above 14">
+                  <InfoCircleOutlined className={styles["info-icon"]} />
+                </Tooltip>
+              </div>
+
+              <input
+                type="number"
+                placeholder="Enter Adults"
+                onChange={(e) => setAdults(parseInt(e.target.value))}
+              />
+            </div>
+
+            {/* CHILDREN */}
+
+            <div className={styles["date-picker"]}>
+              <div className={styles["label-row"]}>
+                <p>Children</p>
+
+                <Tooltip title="Children age below 14">
+                  <InfoCircleOutlined className={styles["info-icon"]} />
+                </Tooltip>
+              </div>
+
+              <input
+                type="number"
+                placeholder="Enter Children"
+                onChange={(e) => setChildren(parseInt(e.target.value))}
+              />
+            </div>
+
+            {/* ROOM TYPES */}
+
+            {roomTypes.map((room, index) => (
+              <div className={styles["room-type-card"]} key={index}>
+                <select
+                  onChange={(e) =>
+                    updateRoomType(index, "type", e.target.value)
+                  }
+                >
+                  <option>Select</option>
+
+                  <option>Standard {`₹${hotel.standard}/N`}</option>
+
+                  <option>Deluxe {`₹${hotel.deluxe}/N`}</option>
+
+                  <option>Suite {`₹${hotel.suite}/N`}</option>
+                </select>
+
+                <select
+                  onChange={(e) =>
+                    updateRoomType(index, "rooms", e.target.value)
+                  }
+                >
+                  <option>Select</option>
+
+                  <option>1 Room</option>
+
+                  <option>2 Rooms</option>
+
+                  <option>3 Rooms</option>
+
+                  <option>4 Rooms</option>
+                </select>
+
+                <button
+                  className={styles["remove-room-btn"]}
+                  onClick={() => removeRoomType(index)}
+                >
+                  <CloseOutlined />
+                </button>
+              </div>
+            ))}
+
+            <button className={styles["add-room-btn"]} onClick={addRoomType}>
+              + Add Room Type
+            </button>
+
+            <button className={styles["book-btn"]} onClick={createBooking}>
+              Book Now
+            </button>
+          </Card>
+        </div>
+
+        {/* ABOUT */}
+
+        <div className={styles["about-section"]}>
+          <h2>About this property</h2>
+
+          <p>{hotel.description}</p>
+        </div>
+
+        {/* TABS */}
+
+        <Tabs
+          defaultActiveKey="1"
+          className={styles["hotel-tabs"]}
+          items={[
+            {
+              key: "1",
+
+              label: "Amenities",
+
+              children: (
+                <ul>
+                  {hotel.amenities?.map((item, index) => (
+                    <li key={index}>{item}</li>
+                  ))}
+                </ul>
+              ),
+            },
+
+            {
+              key: "2",
+
+              label: "Location",
+
+              children: <p>{hotel.location}</p>,
+            },
+
+            {
+              key: "3",
+
+              label: "Contact",
+
+              children: <p>📞 {hotel.contact}</p>,
+            },
+
+            {
+              key: "4",
+
+              label: "Reviews",
+
+              children: (
+                <>
+                  {reviews?.length > 0 ? (
+                    reviews.map((review, index) => (
+                      <div key={index} className={styles["review-card"]}>
+                        <h4>Customer {review.customerId}</h4>
+
+                        <p>{review.comment}</p>
+
+                        <span>⭐ {review.rating}</span>
+                      </div>
+                    ))
+                  ) : (
+                    <p>No reviews yet.</p>
+                  )}
+                </>
+              ),
+            },
+          ]}
+        />
+      </div>
+    </div>
+  );
+};
+
 export default ViewHotel;

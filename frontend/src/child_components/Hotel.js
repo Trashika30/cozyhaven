@@ -22,7 +22,7 @@ const Hotel = ({ hotel }) => {
             <p>{hotel.location}</p>
           </div>
 
-          <h3 className={styles.rating}>5.0</h3>
+          <h3 className={styles.rating}>{hotel.ratings}</h3>
 
         </div>
 
@@ -39,7 +39,7 @@ const Hotel = ({ hotel }) => {
           }
 
         </div>
-
+        
         <div className={styles["hotel-bottom"]}>
 
           <Link to={`/viewHotel/${hotel.hotelId}`}>

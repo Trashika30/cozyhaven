@@ -50,21 +50,12 @@ public class Hotel {
     private List<Review> reviews;
 
     @OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL)
-    @JsonManagedReference //Avoids Dependency Loop - Parent -> ManagedReference
+    @JsonManagedReference("hotel_rooms")
     List<Room> rooms;
 
-    public Hotel(String hotelName,
-            String description,
-            String location,
-            String contact,
-            List<String> amenities,
-            User owner) {
-        this.hotelName = hotelName;
-        this.description = description;
-        this.location = location;
-        this.contact = contact;
-        this.amenities = amenities;
-        this.owner = owner;
-    }
+    private double ratings;
+    private double standard;
+    private double deluxe;
+    private double suite;
 
 }

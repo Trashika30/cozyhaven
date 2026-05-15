@@ -5,6 +5,9 @@ import com.example.cozyhaven.Entity.User;
 import com.example.cozyhaven.Enum.Role;
 import com.example.cozyhaven.Mapper.UserMapper;
 import com.example.cozyhaven.Repository.UserRepo;
+
+import jakarta.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,12 +15,13 @@ import java.util.List;
 
 @Service
 public class UserService {
+
     @Autowired
     UserRepo userRepo;
 
     public UserDTO registerUser(UserDTO user) {
-       User u = userRepo.save(UserMapper.toEntity(user));
-       return UserMapper.toDTO(u);
+        User u = userRepo.save(UserMapper.toEntity(user));
+        return UserMapper.toDTO(u);
     }
 
     public List<UserDTO> showAllCustomers() {
@@ -49,8 +53,7 @@ public class UserService {
     public boolean deleteCustomer(int id) {
         User customer = userRepo.findByUserIdAndRole(id, Role.CUSTOMER);
 
-
-        if(customer == null){
+        if (customer == null) {
             return false;
         }
 
@@ -60,7 +63,7 @@ public class UserService {
 
     public boolean deleteOwner(int id) {
         User owner = userRepo.findByUserIdAndRole(id, Role.OWNER);
-        if(owner== null){
+        if (owner == null) {
             return false;
         }
 
@@ -71,6 +74,40 @@ public class UserService {
     public UserDTO findUserByEmail(String email) {
         return UserMapper.toDTO(userRepo.findByEmail(email));
 
+    }
+
+    public UserDTO updateCustomer(int id, UserDTO user) {
+        User existingCustomer = userRepo.findByUserIdAndRole(id, Role.CUSTOMER);
+        if (existingCustomer == null) {
+            return null;
+        }
+        existingCustomer.setFirstName(user.getFirstName());
+        existingCustomer.setLastName(user.getLastName());
+        existingCustomer.setAge(user.getAge());
+        existingCustomer.setGender(user.getGender());
+        existingCustomer.setAddress(user.getAddress());
+        existingCustomer.setContact(user.getContact());
+        existingCustomer.setEmail(user.getEmail());
+        existingCustomer.setPassword(user.getPassword());
+        User updatedCustomer = userRepo.save(existingCustomer);
+        return UserMapper.toDTO(updatedCustomer);
+    }
+
+    public UserDTO updateOwner(int id, UserDTO user) {
+        User existingOwner = userRepo.findByUserIdAndRole(id, Role.OWNER);
+        if (existingOwner == null) {
+            return null;
+        }
+        existingOwner.setFirstName(user.getFirstName());
+        existingOwner.setLastName(user.getLastName());
+        existingOwner.setAge(user.getAge());
+        existingOwner.setGender(user.getGender());
+        existingOwner.setAddress(user.getAddress());
+        existingOwner.setContact(user.getContact());
+        existingOwner.setEmail(user.getEmail());
+        existingOwner.setPassword(user.getPassword());
+        User updatedOwner = userRepo.save(existingOwner);
+        return UserMapper.toDTO(updatedOwner);
     }
 
 }
