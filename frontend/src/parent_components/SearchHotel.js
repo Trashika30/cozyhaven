@@ -75,13 +75,13 @@ const SearchHotel = () => {
 
   };
 
-  const filteredHotels = hotels.filter((hotel) => {
+  const filteredHotels = hotels?.filter((hotel) => {
 
     let matchesPrice =
       hotel.standard ? hotel.standard <= priceRange : true;
 
     let matchesAmenities =
-      selectedAmenities.length === 0 ||
+      selectedAmenities?.length === 0 ||
 
       selectedAmenities.every((amenity) =>
         hotel.amenities?.includes(amenity)
@@ -398,12 +398,12 @@ const SearchHotel = () => {
           </h1>
 
           <p className={styles.hotelCount}>
-            {filteredHotels.length} properties found
+            {filteredHotels?.length} properties found
           </p>
 
           {
 
-            filteredHotels.length > 0 ?
+            filteredHotels?.length > 0 ?
 
               filteredHotels.map((hotel) => (
 

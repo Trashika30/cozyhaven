@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import styles from "../css/ViewHotel.module.css";
 
 const UserProfile = () => {
-
   const storedUser = JSON.parse(sessionStorage.getItem("currentUser"));
 
   const [user, setUser] = useState({
@@ -18,64 +17,54 @@ const UserProfile = () => {
   const [bookings, setBookings] = useState([]);
 
   useEffect(() => {
-
     if (storedUser) {
-
       setUser(storedUser.user);
 
       fetch(
         `http://localhost:9090/booking/customer/searchUserBookings/${storedUser.user.userId}`,
       )
-
         .then((res) => res.json())
 
         .then((data) => {
-
           console.log(data);
 
           setBookings(data.data || []);
-
         })
 
         .catch((e) => {
-
           console.log(e);
-
         });
-
     }
-
   }, []);
 
   const handleChange = (e) => {
-
     const { name, value } = e.target;
 
     setUser({
       ...user,
       [name]: value,
     });
-
   };
 
   const updateProfile = () => {
-
+    console.log("entered func");
+    console.log(user);
     fetch(`http://localhost:9090/user/customer/updateCustomer/${user.userId}`, {
-
       method: "PUT",
 
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${storedUser.token}`,
       },
 
       body: JSON.stringify(user),
-
     })
-
-      .then((res) => res.json())
+      .then((res) => {
+        console.log("raw data");
+        return res.json();
+      })
 
       .then((data) => {
-
         console.log(data);
 
         alert("Profile Updated Successfully");
@@ -85,47 +74,31 @@ const UserProfile = () => {
           JSON.stringify({
             ...storedUser,
             user: data.data,
-          })
+          }),
         );
-      
-        setUser(data.data);
 
+        setUser(data.data);
       })
 
       .catch((e) => {
-
         console.log(e);
 
         alert("Update Failed");
-
       });
-
   };
 
   return (
-
     <div className={styles["hotel-page"]}>
-
       {/* NAVBAR */}
 
       <div className={styles["navbar"]}>
-
-        <h2 className={styles["logo"]}>
-          CozyHaven
-        </h2>
+        <h2 className={styles["logo"]}>CozyHaven</h2>
 
         <div className={styles["nav-links"]}>
+          <Link to="/">Home</Link>
 
-          <Link to="/">
-            Home
-          </Link>
-
-          <Link to="/search">
-            Hotels
-          </Link>
-
+          <Link to="/search">Hotels</Link>
         </div>
-
       </div>
 
       {/* MAIN CONTENT */}
@@ -137,7 +110,6 @@ const UserProfile = () => {
           padding: "40px",
         }}
       >
-
         {/* PROFILE CARD */}
 
         <div
@@ -149,7 +121,6 @@ const UserProfile = () => {
             marginBottom: "40px",
           }}
         >
-
           <h1
             style={{
               marginBottom: "25px",
@@ -165,7 +136,6 @@ const UserProfile = () => {
               gap: "20px",
             }}
           >
-
             <input
               type="text"
               name="firstName"
@@ -208,7 +178,6 @@ const UserProfile = () => {
                 gridColumn: "1/3",
               }}
             />
-
           </div>
 
           <button
@@ -221,13 +190,11 @@ const UserProfile = () => {
           >
             Update Profile
           </button>
-
         </div>
 
         {/* BOOKINGS */}
 
         <div>
-
           <h1
             style={{
               marginBottom: "25px",
@@ -237,9 +204,7 @@ const UserProfile = () => {
           </h1>
 
           {bookings.length > 0 ? (
-
             bookings.map((booking) => (
-
               <div
                 key={booking.bookingId}
                 style={{
@@ -250,10 +215,7 @@ const UserProfile = () => {
                   boxShadow: "0 2px 10px rgba(0,0,0,0.1)",
                 }}
               >
-
-                <h2>
-                  {booking.hotelName}
-                </h2>
+                <h2>{booking.hotelName}</h2>
 
                 <p>
                   <strong>Room Type:</strong> {booking.roomType}
@@ -282,13 +244,9 @@ const UserProfile = () => {
                 <p>
                   <strong>Status:</strong> {booking.status}
                 </p>
-
               </div>
-
             ))
-
           ) : (
-
             <div
               style={{
                 backgroundColor: "white",
@@ -296,23 +254,13 @@ const UserProfile = () => {
                 borderRadius: "15px",
               }}
             >
-
-              <h2>
-                No Bookings Found
-              </h2>
-
+              <h2>No Bookings Found</h2>
             </div>
-
           )}
-
         </div>
-
       </div>
-
     </div>
-
   );
-
 };
 
 export default UserProfile;
