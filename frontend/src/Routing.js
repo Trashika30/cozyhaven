@@ -1,6 +1,8 @@
 import { Route, Routes } from "react-router-dom";
 import Home from "./parent_components/Home";
-
+import AddHotel from "./parent_components/AddHotel";
+import EditProperty from "./parent_components/EditProperty";
+import ViewBookings from "./parent_components/ViewBookings";
 import SearchHotel from "./parent_components/SearchHotel";
 
 import EditRoomPage from "./child_components/EditRoomPage";
@@ -27,6 +29,11 @@ const Routing = () => {
       <Route path="/editroom/:id" element={<EditRoomPage />} />
       <Route path="/userProfile" element={<UserProfile />} />
       <Route path="/payment/:bookingId" element={<Payment />} />
+
+      <Route path="/addHotel" element={<AddHotel />} />
+
+      <Route path="/editProperty/:hotelId" element={<EditProperty />} />
+      <Route path="/viewBookings/:hotelId" element={<ViewBookings />} />
     </Routes>
   );
 };

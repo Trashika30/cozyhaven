@@ -2,25 +2,44 @@ package com.example.cozyhaven.Mapper;
 
 import com.example.cozyhaven.DTO.HotelDTO;
 import com.example.cozyhaven.Entity.Hotel;
+import com.example.cozyhaven.Entity.User;
 
 public class HotelMapper {
 
-    public static Hotel toEntity(HotelDTO hoteldto) {
-        Hotel h = new Hotel();
-        h.setHotelName(hoteldto.getHotelName());
-        h.setDescription(hoteldto.getDescription());
-        h.setLocation(hoteldto.getLocation());
-        h.setContact(hoteldto.getContact());
-        h.setImageUrl(hoteldto.getImageUrl());
-        h.setAmenities(hoteldto.getAmenities());
-        h.setReviews(hoteldto.getReviews());
-        h.setRatings(hoteldto.getRatings());
-        h.setStandard(hoteldto.getStandard());
-        h.setDeluxe(hoteldto.getDeluxe());
-        h.setSuite(hoteldto.getSuite());
-        //dont set owner object here it is detaching
+    public static Hotel toEntity(HotelDTO dto) {
 
-        return h;
+        Hotel hotel = new Hotel();
+
+        hotel.setHotelName(dto.getHotelName());
+
+        hotel.setDescription(dto.getDescription());
+
+        hotel.setLocation(dto.getLocation());
+
+        hotel.setContact(dto.getContact());
+
+        hotel.setImageUrl(dto.getImageUrl());
+
+        hotel.setAmenities(dto.getAmenities());
+
+        hotel.setRatings(dto.getRatings());
+
+        hotel.setStandard(dto.getStandard());
+
+        hotel.setDeluxe(dto.getDeluxe());
+
+        hotel.setSuite(dto.getSuite());
+
+        if (dto.getOwnerId() != 0) {
+
+            User owner = new User();
+
+            owner.setUserId(dto.getOwnerId());
+
+            hotel.setOwner(owner);
+        }
+
+        return hotel;
     }
 
     public static HotelDTO toDto(Hotel hotel) {

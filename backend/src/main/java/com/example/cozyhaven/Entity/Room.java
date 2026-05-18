@@ -31,7 +31,8 @@ public class Room {
     @Positive(message = "Base fare cannot be 0 or less")
     private double baseFare;
     private boolean ac;
-    private boolean available;
+    private int totalAvailable;
+    private int totalRooms;
 
     @ManyToOne
     @JoinColumn(name = "hotel_id")
@@ -39,12 +40,13 @@ public class Room {
     private Hotel hotel;
 
     public Room(String roomType, int maxOccupy, boolean ac, double baseFare,
-            boolean available, Hotel hotel) {
+            int totalAvailable, Hotel hotel, int totalRooms) {
         this.roomType = roomType;
         this.maxOccupy = maxOccupy;
         this.ac = ac;
         this.baseFare = baseFare;
-        this.available = available;
+        this.totalAvailable = totalAvailable;
         this.hotel = hotel;
+        this.totalRooms = totalRooms;
     }
 }

@@ -38,6 +38,7 @@ const SignIn = () => {
     })
       .then((res) => res.json())
       .then((res) => {
+        console.log(res.data);
         setLoading(false);
         if (res.status === "401 UNAUTHORIZED") {
           Modal.error({
@@ -63,8 +64,15 @@ const SignIn = () => {
               },
             },
           });
-          sessionStorage.setItem("currentUser", JSON.stringify(res.data));
-          nav("/");
+          sessionStorage.setItem("currentUser",JSON.stringify(res.data));
+          
+          let cuser = JSON.parse(sessionStorage.getItem("currentUser") );
+          
+          if (cuser.user.role === "OWNER") {
+            nav("/ownerdash");
+          } else {
+            nav("/");
+          }
         }
       })
       .catch((err) => {

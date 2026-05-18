@@ -12,9 +12,10 @@ public class RoomMapper {
         room.setMaxOccupy(roomDTO.getMaxOccupy());
         room.setBaseFare(roomDTO.getBaseFare());
         room.setAc(roomDTO.isAc());
-        room.setAvailable(roomDTO.isAvailable());
+        room.setTotalAvailable(roomDTO.getTotalAvailable());
+        room.setTotalRooms(roomDTO.getTotalRooms());
 
-        if(roomDTO.getHotelId() != 0){
+        if (roomDTO.getHotelId() != 0) {
             Hotel hotel = new Hotel();
             hotel.setHotelId(roomDTO.getHotelId());
             room.setHotel(hotel);
@@ -24,16 +25,19 @@ public class RoomMapper {
     }
 
     public static RoomDTO toDto(Room room) {
-        if(room == null) return null;
+        if (room == null) {
+            return null;
+        }
         RoomDTO dto = new RoomDTO();
         dto.setRoomId(room.getRoomId());
         dto.setRoomType(room.getRoomType());
         dto.setMaxOccupy(room.getMaxOccupy());
         dto.setBaseFare(room.getBaseFare());
         dto.setAc(room.isAc());
-        dto.setAvailable(room.isAvailable());
+        dto.setTotalAvailable(room.getTotalAvailable());
+        dto.setTotalRooms(room.getTotalRooms());
 
-        if(room.getHotel() != null){
+        if (room.getHotel() != null) {
             dto.setHotelId(room.getHotel().getHotelId());
         }
 

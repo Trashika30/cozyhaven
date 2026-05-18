@@ -1,5 +1,8 @@
+// OwnerDash.jsx
+
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import styles from "../css/OwnerDash.module.css";
 
 const OwnerDash = () => {
   const navigate = useNavigate();
@@ -30,110 +33,173 @@ const OwnerDash = () => {
       .catch((e) => console.log(e));
   }, []);
 
-  return (
-    <div
-      style={{
-        padding: "30px",
-        background: "#f8f5f2",
-        minHeight: "100vh",
-      }}
-    >
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginBottom: "30px",
-        }}
-      >
-        <h1
-          style={{
-            fontSize: "28px",
-            color: "#1f2937",
-          }}
-        >
-          My Hotels
-        </h1>
+  const logout = () => {
+    sessionStorage.clear();
 
-        <button
-          onClick={() => navigate("/addHotel")}
-          style={{
-            padding: "10px 18px",
-            border: "none",
-            borderRadius: "10px",
-            background: "#8e24aa",
-            color: "white",
-            cursor: "pointer",
-          }}
-        >
-          Add Hotel
-        </button>
+    navigate("/");
+  };
+
+  return (
+    <div className={styles["ownerdash-container"]}>
+      {/* NAVBAR */}
+
+      <div className={styles["owner-navbar"]}>
+        <div className={styles["owner-logo"]}>
+          CozyHaven
+        </div>
+
+        <div className={styles["owner-nav-links"]}>
+          <Link to="/">Home</Link>
+
+          <Link to="/">Hotels</Link>
+
+          <button
+            className={styles["add-hotel-btn"]}
+            onClick={() => navigate("/addHotel")}
+          >
+            AddHotel
+          </button>
+
+          <button
+            className={styles["logout-btn"]}
+            onClick={logout}
+          >
+            SignOut
+          </button>
+        </div>
       </div>
 
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns:
-            "repeat(auto-fit,minmax(320px,1fr))",
-          gap: "20px",
-        }}
-      >
-        {hotelList.map((hotel) => (
-          <div
-            key={hotel.hotelId}
-            style={{
-              background: "white",
-              borderRadius: "18px",
-              overflow: "hidden",
-              boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
-            }}
-          >
-            <img
-              src={hotel.imageUrl}
-              alt=""
-              style={{
-                width: "100%",
-                height: "220px",
-                objectFit: "cover",
-              }}
-            />
+      {/* CONTENT */}
 
+      <div className={styles["owner-content"]}>
+        <div className={styles["owner-heading"]}>
+          <h1>My Hotels</h1>
+
+          <p>
+            Manage and edit your listed properties
+          </p>
+        </div>
+
+        {/* HOTEL GRID */}
+
+        <div className={styles["hotel-grid"]}>
+          {hotelList.map((hotel) => (
             <div
-              style={{
-                padding: "18px",
-              }}
+              key={hotel.hotelId}
+              className={styles["hotel-card"]}
             >
-              <h2
-                style={{
-                  fontSize: "20px",
-                  marginBottom: "10px",
-                }}
-              >
-                {hotel.hotelName}
-              </h2>
+              <img
+                src={hotel.imageUrl}
+                alt={hotel.hotelName}
+                className={styles["hotel-image"]}
+              />
 
-              <p>{hotel.location}</p>
+              <div className={styles["hotel-details"]}>
+                <h2>{hotel.hotelName}</h2>
 
-              <button
-                onClick={() =>
-                  navigate(`/manageRooms/${hotel.hotelId}`)
-                }
-                style={{
-                  marginTop: "15px",
-                  width: "100%",
-                  padding: "12px",
-                  border: "none",
-                  borderRadius: "10px",
-                  background: "#1f2937",
-                  color: "white",
-                  cursor: "pointer",
-                }}
-              >
-                Manage Rooms
-              </button>
+                <p
+                  className={
+                    styles["hotel-location"]
+                  }
+                >
+                  📍 {hotel.location}
+                </p>
+
+                <p
+                  className={
+                    styles["hotel-description"]
+                  }
+                >
+                  {hotel.description}
+                </p>
+
+                {/* PRICE SECTION */}
+
+                <div
+                  className={
+                    styles["price-section"]
+                  }
+                >
+                  <div>
+                    <span>Standard</span>
+
+                    <h3>
+                      ₹ {hotel.standard}
+                    </h3>
+                  </div>
+
+                  <div>
+                    <span>Deluxe</span>
+
+                    <h3>
+                      ₹ {hotel.deluxe}
+                    </h3>
+                  </div>
+
+                  <div>
+                    <span>Suite</span>
+
+                    <h3>
+                      ₹ {hotel.suite}
+                    </h3>
+                  </div>
+                </div>
+
+                {/* BUTTONS */}
+
+                <div
+                  className={
+                    styles["hotel-buttons"]
+                  }
+                >
+                  <button
+                    className={
+                      styles["edit-btn"]
+                    }
+                    onClick={() =>
+                      navigate(
+                        `/editProperty/${hotel.hotelId}`,
+                      )
+                    }
+                  >
+                    Edit Property
+                  </button>
+
+                  <button
+                    className={
+                      styles["view-btn"]
+                    }
+                    onClick={()=>navigate(`/viewBookings/${hotel.hotelId}`)}
+                  >
+                    View Bookings
+                  </button>
+                </div>
+              </div>
             </div>
+          ))}
+        </div>
+
+        {/* EMPTY STATE */}
+
+        {hotelList.length === 0 && (
+          <div
+            className={styles["empty-state"]}
+          >
+            <h2>No Hotels Added Yet</h2>
+
+            <p>
+              Start by adding your first hotel
+            </p>
+
+            <button
+              onClick={() =>
+                navigate("/addHotel")
+              }
+            >
+              Add Hotel
+            </button>
           </div>
-        ))}
+        )}
       </div>
     </div>
   );

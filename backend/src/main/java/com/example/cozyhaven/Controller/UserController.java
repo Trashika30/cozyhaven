@@ -60,7 +60,7 @@ public class UserController {
         );
     }
 
-    @GetMapping("/admin/searchCustomer/{id}")
+    @GetMapping("/all/searchCustomer/{id}")
     public ResponseEntity<ApiResponse<?>> searchCustomer(@PathVariable int id) {
         UserDTO customer = userService.searchCustomer(id);
         if (customer == null) {
