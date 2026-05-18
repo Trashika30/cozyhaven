@@ -9,7 +9,7 @@ const ViewHotel = () => {
 
   const nav = useNavigate();
 
-  const user = JSON.parse(sessionStorage.getItem("user"));
+  const currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
 
   const [hotel, setHotel] = useState(null);
 
@@ -111,6 +111,9 @@ const ViewHotel = () => {
     }
 
     const bookingData = {
+
+      
+
       hotelName: hotel.hotelName,
 
       roomType: roomTypes.map((r) => r.type).join(", "),
@@ -125,11 +128,9 @@ const ViewHotel = () => {
 
       totalAmount: calculateBaseAmount(),
 
-      status: "BOOKED",
-
       roomId: hotel.hotelId,
 
-      userId: user.userId,
+      userId: currentUser.user?.userId,
 
       cancellationReason: "",
     };
@@ -139,6 +140,7 @@ const ViewHotel = () => {
 
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${currentUser.token}`,
       },
 
       body: JSON.stringify(bookingData),
@@ -147,10 +149,10 @@ const ViewHotel = () => {
 
       .then((response) => {
         console.log(response);
-
+        console.log(hotel.hotelName);
         alert("Booking Successful");
 
-        nav(`/booking/${user.userId}`);
+   //     nav(`/booking/${currentUser.user.userId}`);
       })
 
       .catch((e) => {

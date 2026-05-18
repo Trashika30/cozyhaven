@@ -1,18 +1,24 @@
 package com.example.cozyhaven.Controller;
 
-import com.example.cozyhaven.ApiResponse.ApiResponse;
-import com.example.cozyhaven.DTO.BookingDTO;
-import com.example.cozyhaven.Entity.Booking;
-import com.example.cozyhaven.Enum.BookingStatus;
-import com.example.cozyhaven.Exception.ResourceNotFoundException;
-import com.example.cozyhaven.Service.BookingService;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.lang.module.ResolutionException;
-import java.util.List;
+import com.example.cozyhaven.ApiResponse.ApiResponse;
+import com.example.cozyhaven.DTO.BookingDTO;
+import com.example.cozyhaven.Enum.BookingStatus;
+import com.example.cozyhaven.Exception.ResourceNotFoundException;
+import com.example.cozyhaven.Service.BookingService;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")

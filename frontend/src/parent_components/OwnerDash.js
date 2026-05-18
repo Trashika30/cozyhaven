@@ -1,111 +1,140 @@
-import { useState } from "react";
-import AddRoom from "../child_components/AddRoom";
-import EditRoom from "../child_components/EditRoom";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const OwnerDash = () => {
-//dummy data for now
-  const [roomlist, setRoomlist] = useState([
-    {
-      roomId: 101,
-      roomType: "Double Deluxe Room",
-      maxOccupy: 3,
-      baseFare: 3000,
-      ac: true,
-      available: true,
-      hotelId: 1,
-      location: "Goa",
-      imageUrl:
-        "https://images.unsplash.com/photo-1566073771259-6a8506099945",
-    },
+  const navigate = useNavigate();
 
-    {
-      roomId: 102,
-      roomType: "Single Standard Room",
-      maxOccupy: 2,
-      baseFare: 2000,
-      ac: false,
-      available: true,
-      hotelId: 2,
-      location: "Chennai",
-      imageUrl:
-        "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267",
-    },
-  ]);
+  const storedUser = JSON.parse(
+    sessionStorage.getItem("currentUser"),
+  );
 
-  const updateRoom = (updatedRoom) => {
+  const [hotelList, setHotelList] = useState([]);
 
-    const updatedList = roomlist.map((room) =>
-      room.roomId === updatedRoom.roomId
-        ? updatedRoom
-        : room
-    );
+  useEffect(() => {
+    fetch(
+      `http://localhost:9090/hotel/owner/searchByOwnerId/${storedUser.user.userId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${storedUser.token}`,
+        },
+      },
+    )
+      .then((res) => res.json())
 
-    setRoomlist(updatedList);
-  };
+      .then((data) => {
+        console.log(data);
 
-  const deleteRoom = (id) => {
+        setHotelList(data.data || []);
+      })
 
-    const filteredRooms = roomlist.filter(
-      (room) => room.roomId !== id
-    );
-
-    setRoomlist(filteredRooms);
-  };
+      .catch((e) => console.log(e));
+  }, []);
 
   return (
     <div
       style={{
-        padding: "40px",
-        background: "#f7f4f9",
+        padding: "30px",
+        background: "#f8f5f2",
         minHeight: "100vh",
       }}
     >
-
-     
-
       <div
         style={{
-          marginBottom: "40px",
           display: "flex",
-          justifyContent: "center",
-        }}
-      >
-        <AddRoom />
-      </div>
-
-
-      <h1
-        style={{
+          justifyContent: "space-between",
+          alignItems: "center",
           marginBottom: "30px",
-          color: "#8e24aa",
-          fontSize: "32px",
-          fontWeight: "700",
         }}
       >
-        Room List
-      </h1>
+        <h1
+          style={{
+            fontSize: "28px",
+            color: "#1f2937",
+          }}
+        >
+          My Hotels
+        </h1>
 
+        <button
+          onClick={() => navigate("/addHotel")}
+          style={{
+            padding: "10px 18px",
+            border: "none",
+            borderRadius: "10px",
+            background: "#8e24aa",
+            color: "white",
+            cursor: "pointer",
+          }}
+        >
+          Add Hotel
+        </button>
+      </div>
 
       <div
         style={{
           display: "grid",
           gridTemplateColumns:
-            "repeat(auto-fit,minmax(350px,1fr))",
-          gap: "30px",
+            "repeat(auto-fit,minmax(320px,1fr))",
+          gap: "20px",
         }}
       >
-        {
-          roomlist.map((room) => (
-            <EditRoom
-              key={room.roomId}
-              room={room}
-              updateRoom={updateRoom}
-              deleteRoom={deleteRoom}
+        {hotelList.map((hotel) => (
+          <div
+            key={hotel.hotelId}
+            style={{
+              background: "white",
+              borderRadius: "18px",
+              overflow: "hidden",
+              boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
+            }}
+          >
+            <img
+              src={hotel.imageUrl}
+              alt=""
+              style={{
+                width: "100%",
+                height: "220px",
+                objectFit: "cover",
+              }}
             />
-          ))
-        }
-      </div>
 
+            <div
+              style={{
+                padding: "18px",
+              }}
+            >
+              <h2
+                style={{
+                  fontSize: "20px",
+                  marginBottom: "10px",
+                }}
+              >
+                {hotel.hotelName}
+              </h2>
+
+              <p>{hotel.location}</p>
+
+              <button
+                onClick={() =>
+                  navigate(`/manageRooms/${hotel.hotelId}`)
+                }
+                style={{
+                  marginTop: "15px",
+                  width: "100%",
+                  padding: "12px",
+                  border: "none",
+                  borderRadius: "10px",
+                  background: "#1f2937",
+                  color: "white",
+                  cursor: "pointer",
+                }}
+              >
+                Manage Rooms
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

@@ -33,7 +33,7 @@ public class BookingService {
     public BookingDTO addBooking(BookingDTO booking1) {
         Booking booking = BookingMapper.toEntity(booking1);
         booking.setBookingDate(LocalDate.now());
-        booking.setStatus(BookingStatus.CONFIRMED);
+        booking.setStatus(BookingStatus.PENDING);
         booking = bookingRepo.save(booking);
         return BookingMapper.toDTO(booking);
     }
@@ -111,5 +111,10 @@ public class BookingService {
         }
         List<Booking> bookingList = bookingRepo.findByRoom_Hotel_HotelId(hotelId);
         return bookingList.stream().map(BookingMapper::toDTO).toList();
+    }
+
+    public BookingDTO searchBookingOwnerById(int id) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'searchBookingOwnerById'");
     }
 }

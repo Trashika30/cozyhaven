@@ -1,19 +1,28 @@
 package com.example.cozyhaven.Entity;
 
+import java.time.LocalDate;
+
 import com.example.cozyhaven.Enum.BookingStatus;
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import jakarta.persistence.*;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDate;
 
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class Booking {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int bookingId;
@@ -23,12 +32,14 @@ public class Booking {
     private LocalDate checkOutDate;
     private LocalDate bookingDate;
     private double totalAmount;
+    private String hotelName;
+    private String roomType;
+    private int userId;
 
     @Enumerated(EnumType.STRING)
     private BookingStatus status;
 
     private String cancellationReason;
-
 
     @ManyToOne
     @JoinColumn(name = "customerId")

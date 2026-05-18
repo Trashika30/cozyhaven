@@ -22,6 +22,14 @@ const UserProfile = () => {
 
       fetch(
         `http://localhost:9090/booking/customer/searchUserBookings/${storedUser.user.userId}`,
+        {
+          method: "GET",
+
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${storedUser.token}`,
+          },
+        },
       )
         .then((res) => res.json())
 
@@ -47,8 +55,6 @@ const UserProfile = () => {
   };
 
   const updateProfile = () => {
-    console.log("entered func");
-    console.log(user);
     fetch(`http://localhost:9090/user/customer/updateCustomer/${user.userId}`, {
       method: "PUT",
 
@@ -59,14 +65,9 @@ const UserProfile = () => {
 
       body: JSON.stringify(user),
     })
-      .then((res) => {
-        console.log("raw data");
-        return res.json();
-      })
+      .then((res) => res.json())
 
       .then((data) => {
-        console.log(data);
-
         alert("Profile Updated Successfully");
 
         sessionStorage.setItem(
@@ -84,6 +85,48 @@ const UserProfile = () => {
         console.log(e);
 
         alert("Update Failed");
+      });
+  };
+
+  const cancelBooking = (bookingId) => {
+    const reason = prompt("Enter cancellation reason:");
+
+    if (!reason || reason.trim() === "") {
+      alert("Cancellation reason is required");
+      return;
+    }
+
+    fetch(
+      `http://localhost:9090/booking/customer/cancelBooking/${bookingId}/${encodeURIComponent(reason)}`,
+      {
+        method: "PUT",
+
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${storedUser.token}`,
+        },
+      },
+    )
+      .then((res) => res.json())
+
+      .then((data) => {
+        console.log(data);
+
+        alert("Booking Cancelled Successfully");
+
+        setBookings((prevBookings) =>
+          prevBookings.map((booking) =>
+            booking.bookingId === bookingId
+              ? { ...booking, status: "CANCELLED" }
+              : booking,
+          ),
+        );
+      })
+
+      .catch((e) => {
+        console.log(e);
+
+        alert("Cancellation Failed");
       });
   };
 
@@ -114,11 +157,11 @@ const UserProfile = () => {
 
         <div
           style={{
-            backgroundColor: "white",
+            background: "rgba(255,255,255,0.95)",
             padding: "30px",
-            borderRadius: "15px",
-            boxShadow: "0 2px 10px rgba(0,0,0,0.1)",
-            marginBottom: "40px",
+            borderRadius: "22px",
+            marginBottom: "35px",
+            boxShadow: "0 8px 24px rgba(0,0,0,0.08)",
           }}
         >
           <h1
@@ -195,9 +238,11 @@ const UserProfile = () => {
         {/* BOOKINGS */}
 
         <div>
-          <h1
-            style={{
-              marginBottom: "25px",
+         <h1 style={{
+              marginBottom: "18px",
+              fontSize: "20px",
+              fontWeight: "700",
+              color: "#9635a4",
             }}
           >
             My Bookings
@@ -208,42 +253,139 @@ const UserProfile = () => {
               <div
                 key={booking.bookingId}
                 style={{
-                  backgroundColor: "white",
-                  padding: "25px",
-                  borderRadius: "15px",
+                  background: "white",
+                  padding: "22px",
+                  borderRadius: "18px",
                   marginBottom: "20px",
-                  boxShadow: "0 2px 10px rgba(0,0,0,0.1)",
+                  boxShadow: "0 4px 15px rgba(0,0,0,0.08)",
+                  maxWidth: "950px",
                 }}
               >
-                <h2>{booking.hotelName}</h2>
+                <h2
+                  style={{
+                    fontSize: "12px",
+                    fontWeight: "700",
+                    marginBottom: "20px",
+                    color: "#1f2937",
+                  }}
+                >
+                  {booking.hotelName}
+                </h2>
 
-                <p>
-                  <strong>Room Type:</strong> {booking.roomType}
-                </p>
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "repeat(3, 1fr)",
+                    gap: "20px",
+                  }}
+                >
+                  <div>
+                    <p
+                      style={{
+                        marginBottom: "12px",
+                        fontSize: "16px",
+                      }}
+                    >
+                      <strong>Room Type:</strong> {booking.roomType}
+                    </p>
 
-                <p>
-                  <strong>Check In:</strong> {booking.checkInDate}
-                </p>
+                    <p
+                      style={{
+                        fontSize: "16px",
+                      }}
+                    >
+                      <strong>Adults:</strong> {booking.adultCount}
+                    </p>
+                  </div>
 
-                <p>
-                  <strong>Check Out:</strong> {booking.checkOutDate}
-                </p>
+                  <div>
+                    <p
+                      style={{
+                        marginBottom: "12px",
+                        fontSize: "16px",
+                      }}
+                    >
+                      <strong>Check In:</strong> {booking.checkInDate}
+                    </p>
 
-                <p>
-                  <strong>Adults:</strong> {booking.adultCount}
-                </p>
+                    <p
+                      style={{
+                        fontSize: "16px",
+                      }}
+                    >
+                      <strong>Children:</strong> {booking.childCount}
+                    </p>
+                  </div>
 
-                <p>
-                  <strong>Children:</strong> {booking.childCount}
-                </p>
+                  <div>
+                    <p
+                      style={{
+                        marginBottom: "12px",
+                        fontSize: "16px",
+                      }}
+                    >
+                      <strong>Check Out:</strong> {booking.checkOutDate}
+                    </p>
 
-                <p>
-                  <strong>Total Amount:</strong> ₹ {booking.totalAmount}
-                </p>
+                    <p
+                      style={{
+                        fontSize: "16px",
+                      }}
+                    >
+                      <strong>Total:</strong> ₹ {booking.totalAmount}
+                    </p>
+                  </div>
+                </div>
 
-                <p>
-                  <strong>Status:</strong> {booking.status}
-                </p>
+                <div
+                  style={{
+                    marginTop: "22px",
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
+                  <p
+                    style={{
+                      fontSize: "16px",
+                      fontWeight: "600",
+                    }}
+                  >
+                    <strong>Status:</strong>{" "}
+                    <span
+                      style={{
+                        color:
+                          booking.status === "CANCELLED"
+                            ? "#dc2626"
+                            : booking.status === "PENDING"
+                            ? "#f59e0b"
+                            : "#16a34a",
+                      }}
+                    >
+                      {booking.status}
+                    </span>
+                  </p>
+
+                  {booking.status === "PENDING" && (
+                    <button
+                      onClick={() => cancelBooking(booking.bookingId)}
+                      style={{
+                        padding: "10px 18px",
+                        background:
+                          "linear-gradient(135deg, #ef4444, #dc2626)",
+                        color: "white",
+                        border: "none",
+                        borderRadius: "10px",
+                        cursor: "pointer",
+                        fontWeight: "600",
+                        fontSize: "14px",
+                        boxShadow: "0 4px 10px rgba(220,38,38,0.3)",
+                      }}
+                    >
+                      Cancel Booking
+                    </button>
+                  )}
+                </div>
               </div>
             ))
           ) : (
