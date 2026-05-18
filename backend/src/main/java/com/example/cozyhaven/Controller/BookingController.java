@@ -78,13 +78,13 @@ public class BookingController {
         return ResponseEntity.status(HttpStatus.FOUND).body(new ApiResponse<>("Completed stays : ", HttpStatus.FOUND, bookingList));
     }
 
-    @PutMapping("/owner/updateBookingStatus/{bookingId}/{status}")
+    @PutMapping("/all/updateBookingStatus/{bookingId}/{status}")
     public ResponseEntity<?> updateBookingStatus(@PathVariable int bookingId, @PathVariable BookingStatus status) {
         BookingDTO booking = bookingService.updateBookingStatus(bookingId, status);
         if (booking == null) {
             throw new ResourceNotFoundException("Booking not found!!!");
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse<>("Updated Booking !", HttpStatus.NOT_FOUND, booking));
+        return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse<>("Updated Booking!!", HttpStatus.OK, booking));
     }
 
     @PutMapping("/customer/cancelBooking/{bookingId}/{reason}")

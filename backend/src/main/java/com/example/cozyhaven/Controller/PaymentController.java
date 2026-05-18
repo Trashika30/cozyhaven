@@ -5,11 +5,16 @@ import com.example.cozyhaven.ApiResponse.ApiResponse;
 import com.example.cozyhaven.DTO.PaymentDTO;
 import com.example.cozyhaven.Exception.ResourceNotFoundException;
 import com.example.cozyhaven.Service.PaymentService;
+import com.razorpay.Order;
+import com.razorpay.RazorpayClient;
+
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import java.util.Map;
 import java.util.List;
 //done
 @RestController
@@ -116,5 +121,35 @@ public class PaymentController {
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ApiResponse<>("Refund success", HttpStatus.OK, p)
         );
+    }
+
+
+      @Value("${razorpay.key.id}")
+    private String razorpayKey;
+
+    @Value("${razorpay.key.secret}")
+    private String razorpaySecret;
+
+    @PostMapping("/customer/createOrder")
+    public ResponseEntity<?> createOrder(@RequestBody Map<String, Object> data)
+            throws Exception {
+
+        int amount = Integer.parseInt(data.get("amount").toString());
+
+        RazorpayClient client =
+                new RazorpayClient(razorpayKey, razorpaySecret);
+
+        JSONObject orderRequest = new JSONObject();
+
+        orderRequest.put("amount", amount * 100);
+
+        orderRequest.put("currency", "INR");
+
+        orderRequest.put("receipt", "txn_" + System.currentTimeMillis());
+
+        Order order = client.orders.create(orderRequest);
+
+        return ResponseEntity.status(HttpStatus.ACCEPTED)
+        .body(new ApiResponse<>("Payment Success!!!", HttpStatus.ACCEPTED, order.toString()));
     }
 }

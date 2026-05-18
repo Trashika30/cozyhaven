@@ -1,8 +1,8 @@
 import { CloseOutlined, InfoCircleOutlined } from "@ant-design/icons";
-import { Card, DatePicker, Tabs, Tooltip } from "antd";
-import { useState, useEffect } from "react";
-import styles from "../css/ViewHotel.module.css";
+import { Card, DatePicker, Tabs, Tooltip, message } from "antd";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import styles from "../css/ViewHotel.module.css";
 
 const ViewHotel = () => {
   const { hotelId } = useParams();
@@ -98,22 +98,22 @@ const ViewHotel = () => {
   };
 
   const createBooking = () => {
-    if (!checkIn || !checkOut) {
-      alert("Please select dates");
+    if (!checkIn) {
+      message.error("Please select CheckIn");
+      return;
+    }
 
+    if(!checkOut){
+      message.error("Please select CheckOut");
       return;
     }
 
     if (roomTypes.length === 0) {
-      alert("Please add room type");
-
+      message.error("Please add room type");
       return;
     }
 
     const bookingData = {
-
-      
-
       hotelName: hotel.hotelName,
 
       roomType: roomTypes.map((r) => r.type).join(", "),
@@ -147,18 +147,13 @@ const ViewHotel = () => {
     })
       .then((res) => res.json())
 
-      .then((response) => {
-        console.log(response);
-        console.log(hotel.hotelName);
-        alert("Booking Successful");
-
-   //     nav(`/booking/${currentUser.user.userId}`);
+      .then((res) => {
+        console.log(res);
+        nav(`/payment/${res.data.bookingId}`, { state: {hotel} });
       })
 
       .catch((e) => {
         console.log(e);
-
-        alert("Booking Failed");
       });
   };
 
