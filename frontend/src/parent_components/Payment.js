@@ -71,7 +71,7 @@ const Payment = () => {
       .then((data) => {
         const order = JSON.parse(data.data);
         const options = {
-          key: "rzp_test_SqlJcTJ95EZekk",
+          key: "rzp_test_Sqoy4vJCtp7yOn",
           amount: order.amount,
           currency: order.currency,
           name: hotel.hotelName,

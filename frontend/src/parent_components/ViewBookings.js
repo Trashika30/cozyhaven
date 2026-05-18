@@ -1,518 +1,364 @@
+// ViewBookings.js
+
 import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import styles from "../css/ViewBookings.module.css";
 
 const ViewBookings = () => {
   const { hotelId } = useParams();
 
   const navigate = useNavigate();
 
-  const storedUser = JSON.parse(
+  const currentUser = JSON.parse(
     sessionStorage.getItem("currentUser"),
   );
 
   const [bookings, setBookings] = useState([]);
 
+  const [filteredBookings, setFilteredBookings] =
+    useState([]);
+
+  const [search, setSearch] = useState("");
+
   const [loading, setLoading] = useState(true);
 
   const [stats, setStats] = useState({
     total: 0,
-    standard: 0,
-    deluxe: 0,
-    suite: 0,
+    confirmed: 0,
+    pending: 0,
+    cancelled: 0,
   });
 
   useEffect(() => {
-    fetchBookings();
+    loadBookings();
   }, []);
 
-  const fetchBookings = async () => {
-    try {
-      // FETCH BOOKINGS
+  useEffect(() => {
+    const filtered = bookings.filter(
+      (booking) => {
+        const fullName = `${booking.customer?.firstName || ""} ${booking.customer?.lastName || ""}`
+          .toLowerCase();
 
-      const bookingResponse = await fetch(
+        return fullName.includes(
+          search.toLowerCase(),
+        );
+      },
+    );
+
+    setFilteredBookings(filtered);
+  }, [search, bookings]);
+
+  const loadBookings = async () => {
+    try {
+      setLoading(true);
+
+      const response = await fetch(
         `http://localhost:9090/booking/owner/searchBookingByHotelId/${hotelId}`,
         {
+          method: "GET",
           headers: {
-            Authorization: `Bearer ${storedUser.token}`,
+            Authorization: `Bearer ${currentUser?.token}`,
+            "Content-Type": "application/json",
           },
         },
       );
 
-      const bookingResult =
-        await bookingResponse.json();
+      const result = await response.json();
 
-      console.log(bookingResult);
+      const bookingData = Array.isArray(result)
+        ? result
+        : result.data || [];
 
-      const bookingList =
-        bookingResult.data || [];
+      const updatedBookings = await Promise.all(
+        bookingData.map(async (booking) => {
+          try {
+            const userRes = await fetch(
+              `http://localhost:9090/user/all/searchCustomer/${booking.userId}`,
+              {
+                headers: {
+                  Authorization: `Bearer ${currentUser?.token}`,
+                },
+              },
+            );
 
-      // FETCH USER DETAILS FOR EACH BOOKING
+            const userData =
+              await userRes.json();
 
-      const enrichedBookings =
-        await Promise.all(
-          bookingList.map(async (booking) => {
-            try {
-              const userResponse =
-                await fetch(
-                  `http://localhost:9090/user/all/searchCustomer/${booking.userId}`,
-                );
+            return {
+              ...booking,
+              customer:
+                userData.data || {},
+            };
+          } catch (error) {
+            console.log(error);
 
-              const userResult =
-                await userResponse.json();
+            return {
+              ...booking,
+              customer: {},
+            };
+          }
+        }),
+      );
 
-              return {
-                ...booking,
-                user:
-                  userResult.data || {},
-              };
-            } catch {
-              return {
-                ...booking,
-                user: {},
-              };
-            }
-          }),
-        );
+      setBookings(updatedBookings);
 
-      setBookings(enrichedBookings);
+      let confirmed = 0;
+      let pending = 0;
+      let cancelled = 0;
 
-      // COUNT ROOM TYPES
-
-      let standard = 0;
-      let deluxe = 0;
-      let suite = 0;
-
-      enrichedBookings.forEach((booking) => {
-        if (
-          booking.roomType === "STANDARD"
-        ) {
-          standard++;
+      updatedBookings.forEach((booking) => {
+        if (booking.status === "CONFIRMED") {
+          confirmed++;
         }
 
-        if (
-          booking.roomType === "DELUXE"
-        ) {
-          deluxe++;
+        if (booking.status === "PENDING") {
+          pending++;
         }
 
-        if (booking.roomType === "SUITE") {
-          suite++;
+        if (booking.status === "CANCELLED") {
+          cancelled++;
         }
       });
 
       setStats({
-        total: enrichedBookings.length,
-        standard,
-        deluxe,
-        suite,
+        total: updatedBookings.length,
+        confirmed,
+        pending,
+        cancelled,
       });
 
       setLoading(false);
-    } catch (e) {
-      console.log(e);
+    } catch (error) {
+      console.log(error);
 
       setLoading(false);
     }
   };
 
+  const getStatusClass = (status) => {
+    if (status === "CONFIRMED") {
+      return styles.confirmed;
+    }
+
+    if (status === "PENDING") {
+      return styles.pending;
+    }
+
+    return styles.cancelled;
+  };
+
   if (loading) {
     return (
-      <h2
-        style={{
-          textAlign: "center",
-          marginTop: "100px",
-        }}
-      >
-        Loading...
-      </h2>
+      <div className={styles.loadingContainer}>
+        <h1>Loading Bookings...</h1>
+      </div>
     );
   }
 
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        background: "#f8f5f2",
-        padding: "35px",
-      }}
-    >
-      {/* TOP SECTION */}
+    <div className={styles.container}>
+      <div className={styles.topSection}>
+        <button
+          className={styles.backBtn}
+          onClick={() =>
+            navigate("/ownerdash")
+          }
+        >
+          ← Back
+        </button>
 
-      <div
-        style={{
-          display: "flex",
-          justifyContent:
-            "space-between",
-          alignItems: "center",
-          marginBottom: "30px",
-        }}
-      >
-        <div>
-          <button
-            onClick={() =>
-              navigate("/ownerdash")
-            }
-            style={{
-              border: "none",
-              background: "transparent",
-              color: "#7e006e",
-              cursor: "pointer",
-              fontWeight: "600",
-              marginBottom: "10px",
-            }}
-          >
-            ← Back
-          </button>
+        <h1>Hotel Bookings</h1>
 
-          <h1
-            style={{
-              margin: 0,
-              color: "#1f2937",
-            }}
-          >
-            Hotel Bookings
-          </h1>
-        </div>
+        <p>
+          Manage and monitor all hotel
+          reservations
+        </p>
       </div>
 
       {/* STATS */}
 
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns:
-            "repeat(auto-fit,minmax(220px,1fr))",
-          gap: "20px",
-          marginBottom: "35px",
-        }}
-      >
-        <div
-          style={{
-            background: "white",
-            padding: "25px",
-            borderRadius: "18px",
-            boxShadow:
-              "0 4px 12px rgba(0,0,0,0.06)",
-          }}
-        >
-          <p
-            style={{
-              color: "#6b7280",
-              marginBottom: "10px",
-            }}
-          >
-            Total Bookings
-          </p>
-
-          <h2
-            style={{
-              margin: 0,
-              color: "#7e006e",
-              fontSize: "32px",
-            }}
-          >
-            {stats.total}
-          </h2>
+      <div className={styles.statsGrid}>
+        <div className={styles.statCard}>
+          <p>Total Bookings</p>
+          <h2>{stats.total}</h2>
         </div>
 
-        <div
-          style={{
-            background: "white",
-            padding: "25px",
-            borderRadius: "18px",
-            boxShadow:
-              "0 4px 12px rgba(0,0,0,0.06)",
-          }}
-        >
-          <p
-            style={{
-              color: "#6b7280",
-              marginBottom: "10px",
-            }}
-          >
-            Standard Rooms
-          </p>
-
-          <h2
-            style={{
-              margin: 0,
-              color: "#7e006e",
-              fontSize: "32px",
-            }}
-          >
-            {stats.standard}
-          </h2>
+        <div className={styles.statCard}>
+          <p>Confirmed</p>
+          <h2>{stats.confirmed}</h2>
         </div>
 
-        <div
-          style={{
-            background: "white",
-            padding: "25px",
-            borderRadius: "18px",
-            boxShadow:
-              "0 4px 12px rgba(0,0,0,0.06)",
-          }}
-        >
-          <p
-            style={{
-              color: "#6b7280",
-              marginBottom: "10px",
-            }}
-          >
-            Deluxe Rooms
-          </p>
-
-          <h2
-            style={{
-              margin: 0,
-              color: "#7e006e",
-              fontSize: "32px",
-            }}
-          >
-            {stats.deluxe}
-          </h2>
+        <div className={styles.statCard}>
+          <p>Pending</p>
+          <h2>{stats.pending}</h2>
         </div>
 
-        <div
-          style={{
-            background: "white",
-            padding: "25px",
-            borderRadius: "18px",
-            boxShadow:
-              "0 4px 12px rgba(0,0,0,0.06)",
-          }}
-        >
-          <p
-            style={{
-              color: "#6b7280",
-              marginBottom: "10px",
-            }}
-          >
-            Suite Rooms
-          </p>
-
-          <h2
-            style={{
-              margin: 0,
-              color: "#7e006e",
-              fontSize: "32px",
-            }}
-          >
-            {stats.suite}
-          </h2>
+        <div className={styles.statCard}>
+          <p>Cancelled</p>
+          <h2>{stats.cancelled}</h2>
         </div>
+      </div>
+
+      {/* SEARCH */}
+
+      <div className={styles.searchContainer}>
+        <input
+          type="text"
+          placeholder="Search customer..."
+          value={search}
+          onChange={(e) =>
+            setSearch(e.target.value)
+          }
+        />
       </div>
 
       {/* TABLE */}
 
-      <div
-        style={{
-          background: "white",
-          borderRadius: "20px",
-          overflow: "hidden",
-          boxShadow:
-            "0 5px 15px rgba(0,0,0,0.08)",
-        }}
-      >
-        <table
-          style={{
-            width: "100%",
-            borderCollapse: "collapse",
-          }}
-        >
-          <thead
-            style={{
-              background: "#7e006e",
-              color: "white",
-            }}
-          >
+      <div className={styles.tableContainer}>
+        <table className={styles.table}>
+          <thead>
             <tr>
-              <th style={thStyle}>
-                Booking ID
-              </th>
-
-              <th style={thStyle}>
-                Customer
-              </th>
-
-              <th style={thStyle}>
-                Email
-              </th>
-
-              <th style={thStyle}>
-                Contact
-              </th>
-
-              <th style={thStyle}>
-                Room Type
-              </th>
-
-              <th style={thStyle}>
-                Check In
-              </th>
-
-              <th style={thStyle}>
-                Check Out
-              </th>
-
-              <th style={thStyle}>
-                Guests
-              </th>
-
-              <th style={thStyle}>
-                Amount
-              </th>
-
-              <th style={thStyle}>
-                Status
-              </th>
+              <th>Booking</th>
+              <th>Customer</th>
+              <th>Room Details</th>
+              <th>Check In</th>
+              <th>Check Out</th>
+              <th>Guests</th>
+              <th>Amount</th>
+              <th>Status</th>
             </tr>
           </thead>
 
           <tbody>
-            {bookings.map((booking) => (
-              <tr
-                key={booking.bookingId}
-                style={{
-                  borderBottom:
-                    "1px solid #e5e7eb",
-                }}
-              >
-                <td style={tdStyle}>
-                  #{booking.bookingId}
-                </td>
-
-                <td style={tdStyle}>
-                  {
-                    booking.user
-                      ?.firstName
-                  }{" "}
-                  {
-                    booking.user
-                      ?.lastName
-                  }
-                </td>
-
-                <td style={tdStyle}>
-                  {booking.user?.email}
-                </td>
-
-                <td style={tdStyle}>
-                  {
-                    booking.user
-                      ?.contact
-                  }
-                </td>
-
-                <td style={tdStyle}>
-                  {booking.roomType}
-                </td>
-
-                <td style={tdStyle}>
-                  {
-                    booking.checkInDate
-                  }
-                </td>
-
-                <td style={tdStyle}>
-                  {
-                    booking.checkOutDate
-                  }
-                </td>
-
-                <td style={tdStyle}>
-                  Adults:
-                  {
-                    booking.adultCount
-                  }
-                  <br />
-                  Children:
-                  {
-                    booking.childCount
-                  }
-                </td>
-
-                <td style={tdStyle}>
-                  ₹{" "}
-                  {
-                    booking.totalAmount
-                  }
-                </td>
-
-                <td style={tdStyle}>
-                  <span
-                    style={{
-                      padding:
-                        "6px 12px",
-                      borderRadius:
-                        "20px",
-
-                      background:
-                        booking.status ===
-                        "CONFIRMED"
-                          ? "#dcfce7"
-                          : booking.status ===
-                            "PENDING"
-                          ? "#fef3c7"
-                          : "#fee2e2",
-
-                      color:
-                        booking.status ===
-                        "CONFIRMED"
-                          ? "#166534"
-                          : booking.status ===
-                            "PENDING"
-                          ? "#92400e"
-                          : "#991b1b",
-
-                      fontSize:
-                        "13px",
-
-                      fontWeight:
-                        "600",
-                    }}
-                  >
-                    {
-                      booking.status
+            {filteredBookings.length > 0 ? (
+              filteredBookings.map(
+                (booking) => (
+                  <tr
+                    key={
+                      booking.bookingId
                     }
-                  </span>
+                  >
+                    <td>
+                      <div
+                        className={
+                          styles.bookingId
+                        }
+                      >
+                        #
+                        {
+                          booking.bookingId
+                        }
+                      </div>
+
+                      <div
+                        className={
+                          styles.hotelName
+                        }
+                      >
+                        {
+                          booking.hotelName
+                        }
+                      </div>
+                    </td>
+
+                    <td>
+                      <div
+                        className={
+                          styles.customerName
+                        }
+                      >
+                        {booking.customer
+                          ?.firstName ||
+                          "Guest"}{" "}
+                        {booking.customer
+                          ?.lastName ||
+                          ""}
+                      </div>
+
+                      <div
+                        className={
+                          styles.customerEmail
+                        }
+                      >
+                        {booking.customer
+                          ?.email ||
+                          "No Email"}
+                      </div>
+                    </td>
+
+                    <td>
+                      {
+                        booking.roomType
+                      }
+                    </td>
+
+                    <td>
+                      {
+                        booking.checkInDate
+                      }
+                    </td>
+
+                    <td>
+                      {
+                        booking.checkOutDate
+                      }
+                    </td>
+
+                    <td>
+                      Adults:{" "}
+                      {
+                        booking.adultCount
+                      }
+                      <br />
+
+                      Children:{" "}
+                      {
+                        booking.childCount
+                      }
+                    </td>
+
+                    <td
+                      className={
+                        styles.amount
+                      }
+                    >
+                      ₹
+                      {
+                        booking.totalAmount
+                      }
+                    </td>
+
+                    <td>
+                      <span
+                        className={`${styles.status} ${getStatusClass(
+                          booking.status,
+                        )}`}
+                      >
+                        {
+                          booking.status
+                        }
+                      </span>
+                    </td>
+                  </tr>
+                ),
+              )
+            ) : (
+              <tr>
+                <td
+                  colSpan="8"
+                  className={
+                    styles.noBookings
+                  }
+                >
+                  No Bookings Found
                 </td>
               </tr>
-            ))}
+            )}
           </tbody>
         </table>
-
-        {bookings.length === 0 && (
-          <div
-            style={{
-              padding: "60px",
-              textAlign: "center",
-            }}
-          >
-            <h2
-              style={{
-                color: "#374151",
-              }}
-            >
-              No Bookings Found
-            </h2>
-          </div>
-        )}
       </div>
     </div>
   );
-};
-
-const thStyle = {
-  padding: "16px",
-  textAlign: "left",
-  fontSize: "14px",
-};
-
-const tdStyle = {
-  padding: "16px",
-  fontSize: "14px",
-  color: "#374151",
 };
 
 export default ViewBookings;

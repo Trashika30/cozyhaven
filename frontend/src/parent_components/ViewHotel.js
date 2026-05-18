@@ -114,6 +114,7 @@ const ViewHotel = () => {
     }
 
     const bookingData = {
+      hotelId:hotel.hotelId,
       hotelName: hotel.hotelName,
 
       roomType: roomTypes.map((r) => r.type).join(", "),

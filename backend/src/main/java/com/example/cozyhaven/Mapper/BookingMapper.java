@@ -35,6 +35,8 @@ public class BookingMapper {
 
         dto.setCancellationReason(booking.getCancellationReason());
 
+        dto.setHotelId(booking.getHotelId());
+
         dto.setRoomId(
                 booking.getRoom() != null
                 ? booking.getRoom().getRoomId()
@@ -73,6 +75,8 @@ public class BookingMapper {
         booking.setCancellationReason(dto.getCancellationReason());
 
         booking.setUserId(dto.getUserId());
+
+        booking.setHotelId(dto.getHotelId());
 
         if (dto.getRoomId() != 0) {
 

@@ -35,6 +35,7 @@ public class Booking {
     private String hotelName;
     private String roomType;
     private int userId;
+    private int hotelId;
 
     @Enumerated(EnumType.STRING)
     private BookingStatus status;

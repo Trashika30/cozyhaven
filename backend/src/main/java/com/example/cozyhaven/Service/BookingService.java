@@ -109,7 +109,7 @@ public class BookingService {
         if (hotel == null) {
             return new ArrayList<>();
         }
-        List<Booking> bookingList = bookingRepo.findByRoom_Hotel_HotelId(hotelId);
+        List<Booking> bookingList = bookingRepo.findByHotelId(hotelId);
         return bookingList.stream().map(BookingMapper::toDTO).toList();
     }
 

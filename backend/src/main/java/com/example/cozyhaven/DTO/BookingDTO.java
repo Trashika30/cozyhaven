@@ -1,16 +1,18 @@
 package com.example.cozyhaven.DTO;
 
+import java.time.LocalDate;
+
 import com.example.cozyhaven.Enum.BookingStatus;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class BookingDTO {
+
     private Integer bookingId;
     private String hotelName;
     private String roomType;
@@ -23,11 +25,10 @@ public class BookingDTO {
     private int roomId;
     private int userId;
     private String cancellationReason;
-
+    private int hotelId;
 
     public BookingDTO(String hotelName, String roomType, LocalDate checkInDate,
-                      LocalDate checkOutDate, int childCount, int adultCount,
-                      double totalAmount, BookingStatus status, int roomId) {
+            LocalDate checkOutDate, int childCount, int adultCount, double totalAmount, BookingStatus status, int roomId, int hotelId) {
         this.hotelName = hotelName;
         this.roomType = roomType;
         this.checkInDate = checkInDate;
@@ -37,5 +38,6 @@ public class BookingDTO {
         this.totalAmount = totalAmount;
         this.status = status;
         this.roomId = roomId;
+        this.hotelId = hotelId;
     }
 }
