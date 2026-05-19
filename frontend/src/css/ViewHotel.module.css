@@ -388,3 +388,23 @@
     color: white;
     border: none
 }
+
+.cancelled-status {
+    color: #dc2626;
+}
+
+.pending-status {
+    color: #f59e0b;
+}
+
+.confirmed-status {
+    color: #16a34a;
+}
+
+.refund-requested-status {
+    color: #f59e0b;
+}
+
+.refunded-status {
+    color: #16a34a;
+}

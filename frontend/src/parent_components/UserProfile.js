@@ -143,6 +143,8 @@ const UserProfile = () => {
 
                   status: "CANCELLED",
 
+                  refundStatus: "REFUND_REQUESTED",
+
                   cancellationReason: cancelReason,
                 }
               : booking,
@@ -440,55 +442,80 @@ const UserProfile = () => {
                     alignItems: "center",
                   }}
                 >
-                  <p
+                  <div
                     style={{
-                      fontSize: "16px",
-                      fontWeight: "600",
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: "10px",
                     }}
                   >
-                    <strong>Status:</strong>{" "}
-                    <span
+                    <p
                       style={{
-                        color:
-                          booking.status === "CANCELLED"
-                            ? "#dc2626"
-                            : booking.status === "PENDING"
-                              ? "#f59e0b"
-                              : "#16a34a",
+                        fontSize: "16px",
+                        fontWeight: "600",
+                        margin: 0,
                       }}
                     >
-                      {booking.status}
-                    </span>
-                  </p>
+                      <strong>Status:</strong>{" "}
+                      <span
+                        className={
+                          booking.status === "CANCELLED"
+                            ? styles["cancelled-status"]
+                            : booking.status === "PENDING"
+                              ? styles["pending-status"]
+                              : styles["confirmed-status"]
+                        }
+                      >
+                        {booking.status}
+                      </span>
+                    </p>
+
+                    {booking.refundStatus && (
+                      <p
+                        style={{
+                          fontSize: "16px",
+                          fontWeight: "600",
+                          margin: 0,
+                        }}
+                      >
+                        <strong>Refund Status:</strong>{" "}
+                        <span
+                          className={
+                            booking.refundStatus === "REFUNDED"
+                              ? styles["refunded-status"]
+                              : styles["refund-requested-status"]
+                          }
+                        >
+                          {booking.refundStatus}
+                        </span>
+                      </p>
+                    )}
+                  </div>
 
                   {booking.status === "PENDING" ? (
-                    <>
-                      <div className={styles["pending-btn-group"]}>
-                        <button
-                          onClick={() => cancelProcess(booking.bookingId)}
-                          className={styles["cancel-process-btn"]}
-                        >
-                          Cancel Process
-                        </button>
-
-                        <button
-                          onClick={() => nav(`/payment/${booking.bookingId}`)}
-                          className={styles["continue-booking-btn"]}
-                        >
-                          Continue Booking
-                        </button>
-                      </div>
-                    </>
-                  ) : (
-                    booking.status === "CONFIRMED" && (
+                    <div className={styles["pending-btn-group"]}>
                       <button
-                        onClick={() => cancelBooking(booking.bookingId)}
-                        className={styles["cancel-booking-btn"]}
+                        onClick={() => cancelProcess(booking.bookingId)}
+                        className={styles["cancel-process-btn"]}
                       >
-                        Cancel Booking
+                        Cancel Process
                       </button>
-                    )
-                  )}
+
+                      <button
+                        onClick={() => nav(`/payment/${booking.bookingId}`)}
+                        className={styles["continue-booking-btn"]}
+                      >
+                        Continue Booking
+                      </button>
+                    </div>
+                  ) : booking.status === "CONFIRMED" ? (
+                    <button
+                      onClick={() => cancelBooking(booking.bookingId)}
+                      className={styles["cancel-booking-btn"]}
+                    >
+                      Cancel Booking
+                    </button>
+                  ) : null}
                 </div>
               </div>
             ))
@@ -530,7 +557,6 @@ const UserProfile = () => {
           onChange={(e) => setCancelReason(e.target.value)}
         />
       </Modal>
-      ;
     </div>
   );
 };

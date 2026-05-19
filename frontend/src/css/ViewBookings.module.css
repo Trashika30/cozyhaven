@@ -169,6 +169,11 @@
   color: #92400e;
 }
 
+.refundRequested {
+  background: #fff3cd;
+  color: #d97706;
+}
+
 .cancelled {
   background: #fee2e2;
   color: #991b1b;
@@ -181,3 +186,26 @@
   font-weight: 700;
   color: #6b7280;
 }
+
+.clickableStatus {
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.clickableStatus:hover {
+  transform: scale(1.04);
+  opacity: 0.9;
+}
+
+.booking-status-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.booking-status-text {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0;
+}
+

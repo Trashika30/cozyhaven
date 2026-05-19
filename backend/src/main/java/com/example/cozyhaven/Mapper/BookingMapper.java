@@ -35,13 +35,24 @@ public class BookingMapper {
 
         dto.setCancellationReason(booking.getCancellationReason());
 
+        dto.setRefundAmount(
+                booking.getRefundAmount());
+
+        dto.setRefundRequestDate(
+                booking.getRefundRequestDate());
+
+        dto.setRefundProcessedDate(
+                booking.getRefundProcessedDate());
+
+        dto.setRefundStatus(
+                booking.getRefundStatus());
+
         dto.setHotelId(booking.getHotelId());
 
         dto.setRoomId(
                 booking.getRoom() != null
-                ? booking.getRoom().getRoomId()
-                : 0
-        );
+                        ? booking.getRoom().getRoomId()
+                        : 0);
 
         dto.setUserId(booking.getUserId());
 
@@ -73,6 +84,18 @@ public class BookingMapper {
         booking.setStatus(dto.getStatus());
 
         booking.setCancellationReason(dto.getCancellationReason());
+
+        booking.setRefundAmount(
+                dto.getRefundAmount());
+
+        booking.setRefundRequestDate(
+                dto.getRefundRequestDate());
+
+        booking.setRefundProcessedDate(
+                dto.getRefundProcessedDate());
+
+        booking.setRefundStatus(
+                dto.getRefundStatus());
 
         booking.setUserId(dto.getUserId());
 

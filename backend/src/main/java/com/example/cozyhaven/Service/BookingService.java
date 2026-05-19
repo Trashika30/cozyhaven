@@ -1,6 +1,7 @@
 package com.example.cozyhaven.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -92,6 +93,17 @@ public class BookingService {
         return BookingMapper.toDTO(bookingRepo.save(booking));
     }
 
+    public BookingDTO approveRefund(int bookingId){
+        Booking booking = bookingRepo.findById(bookingId).orElse(null);
+        if (booking == null) {
+            return null;
+        }
+        booking.setStatus(BookingStatus.CANCELLED);
+        booking.setRefundStatus("REFUNDED");
+        booking.setRefundProcessedDate(LocalDate.now());
+        return BookingMapper.toDTO(bookingRepo.save(booking));
+    }
+
     public BookingDTO cancelBooking(int bookingId, String reason) {
         Booking b = bookingRepo.findById(bookingId).orElse(null);
         if (b == null) {
@@ -99,6 +111,11 @@ public class BookingService {
         }
 
         b.setStatus(BookingStatus.CANCELLED);
+        b.setRefundStatus("REFUND_REQUESTED");
+
+        b.setRefundRequestDate(LocalDate.now());
+
+        b.setRefundAmount(b.getTotalAmount());
         b.setCancellationReason(reason);
 
         return BookingMapper.toDTO(bookingRepo.save(b));

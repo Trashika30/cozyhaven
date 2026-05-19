@@ -104,6 +104,16 @@ public class BookingController {
                 .body(new ApiResponse<>("Cancelled Booking !", HttpStatus.GONE, b));
     }
 
+    @PutMapping("/owner/approveRefund/{bookingId}")
+    public ResponseEntity<?> approveRefund(@PathVariable int bookingId){
+        BookingDTO b = bookingService.approveRefund(bookingId);
+        if (b == null) {
+            throw new ResourceNotFoundException("Booking not found!!!");
+        }
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new ApiResponse<>("Refund Approved!!", HttpStatus.OK, b));
+    }
+
     @GetMapping("/owner/searchBookingByHotelId/{hotelId}")
     public ResponseEntity<?> searchBookingByHotelId(@PathVariable int hotelId) {
         List<BookingDTO> bookingList = bookingService.searchBookingByHotelId(hotelId);

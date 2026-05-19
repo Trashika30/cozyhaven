@@ -26,9 +26,15 @@ public class BookingDTO {
     private int userId;
     private String cancellationReason;
     private int hotelId;
+    private Double refundAmount;
+    private LocalDate refundRequestDate;
+    private LocalDate refundProcessedDate;
+    private String refundStatus;
 
     public BookingDTO(String hotelName, String roomType, LocalDate checkInDate,
-            LocalDate checkOutDate, int childCount, int adultCount, double totalAmount, BookingStatus status, int roomId, int hotelId) {
+            LocalDate checkOutDate, int childCount, int adultCount, double totalAmount, BookingStatus status,
+            int roomId, int hotelId, Double refundAmount, LocalDate refundRequestDate, LocalDate refundProcessedDate,
+        String refundStatus) {
         this.hotelName = hotelName;
         this.roomType = roomType;
         this.checkInDate = checkInDate;
@@ -39,5 +45,9 @@ public class BookingDTO {
         this.status = status;
         this.roomId = roomId;
         this.hotelId = hotelId;
+        this.refundAmount = refundAmount;
+        this.refundRequestDate = refundRequestDate;
+        this.refundProcessedDate = refundProcessedDate;
+        this.refundStatus = refundStatus;
     }
 }

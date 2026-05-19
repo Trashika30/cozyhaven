@@ -41,6 +41,10 @@ public class Booking {
     private BookingStatus status;
 
     private String cancellationReason;
+    private Double refundAmount;
+    private LocalDate refundRequestDate;
+    private LocalDate refundProcessedDate;
+    private String refundStatus;
 
     @ManyToOne
     @JoinColumn(name = "customerId")
