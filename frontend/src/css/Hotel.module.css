@@ -100,3 +100,9 @@ a{
     margin:auto;
     padding:30px;
 }
+
+.unavailable-hotel {
+    opacity: 0.55;
+    filter: grayscale(40%);
+    pointer-events: none;
+}

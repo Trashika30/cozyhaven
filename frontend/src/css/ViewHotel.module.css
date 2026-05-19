@@ -408,3 +408,36 @@
 .refunded-status {
     color: #16a34a;
 }
+
+.single-room-card {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 20px;
+}
+
+.room-select-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.room-select-group p {
+    margin: 0;
+    font-weight: 600;
+    color: #374151;
+}
+
+.room-select {
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid #d1d5db;
+    font-size: 15px;
+    outline: none;
+    transition: 0.2s ease;
+}
+
+.room-select:focus {
+    border-color: #7c3aed;
+}

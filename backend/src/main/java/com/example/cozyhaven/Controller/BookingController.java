@@ -32,7 +32,7 @@ public class BookingController {
     @PostMapping("/customer/addBooking")
     public ResponseEntity<ApiResponse<BookingDTO>> addBooking(@RequestBody BookingDTO booking) {
         return ResponseEntity.status(HttpStatus.ACCEPTED)
-                .body(new ApiResponse<>("Booking added!", HttpStatus.FOUND, bookingService.addBooking(booking)));
+                .body(new ApiResponse<>("Booking added!", HttpStatus.ACCEPTED, bookingService.addBooking(booking)));
     }
 
     @GetMapping("/admin/showAll")
