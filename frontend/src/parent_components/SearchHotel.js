@@ -124,6 +124,15 @@ const SearchHotel = () => {
           </Link>
 
           <Link
+      to="/search"
+      className={styles.navItem}
+    >
+      Hotels
+    </Link>
+
+    {!sessionStorage.getItem("currentUser") ? (
+      <>
+        <Link
             to="/login"
             className={styles.signin}
           >
