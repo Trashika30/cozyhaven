@@ -54,6 +54,7 @@ public class HotelController {
 
     @GetMapping("/all/searchById/{id}")
     public ResponseEntity<?> searchHotelById(@PathVariable int id) {
+        System.out.println("Fetching hotel obj for payment");
         HotelDTO h = service.searchHotelById(id);
         if (h == null) {
             throw new ResourceNotFoundException("Hotel not found");

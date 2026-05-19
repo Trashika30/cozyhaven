@@ -150,7 +150,7 @@ const ViewHotel = () => {
 
       .then((res) => {
         console.log(res);
-        nav(`/payment/${res.data.bookingId}`, { state: { hotel } });
+        nav(`/payment/${res.data.bookingId}`);
       })
 
       .catch((e) => {
