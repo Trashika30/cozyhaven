@@ -70,8 +70,10 @@ const SignIn = () => {
           
           if (cuser.user.role === "OWNER") {
             nav("/ownerdash");
-          } else {
-            nav("/");
+          } else if(cuser.user.role === "ADMIN") {
+            nav("/admindash");
+          }else{
+            nav("/")
           }
         }
       })

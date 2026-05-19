@@ -14,6 +14,9 @@ import SignIn from "./parent_components/SignIn";
 import UserProfile from "./parent_components/UserProfile";
 import ViewHotel from "./parent_components/ViewHotel";
 
+import AdminDash from "./parent_components/AdminDash";
+import AdminSignUp from "./parent_components/AdminSignUp";
+
 const Routing = () => {
   return (
     <Routes>
@@ -31,9 +34,14 @@ const Routing = () => {
       <Route path="/payment/:bookingId" element={<Payment />} />
 
       <Route path="/addHotel" element={<AddHotel />} />
-
+      
       <Route path="/editProperty/:hotelId" element={<EditProperty />} />
       <Route path="/viewBookings/:hotelId" element={<ViewBookings />} />
+
+
+
+      <Route path="/adminSignUp" element={<AdminSignUp/>} />
+      <Route path="/admindash" element={<AdminDash />} />
     </Routes>
   );
 };
