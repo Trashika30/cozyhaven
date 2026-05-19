@@ -5,7 +5,6 @@ import styles from "../css/SearchHotel.module.css";
 import { useNavigate } from "react-router-dom";
 
 const SearchHotel = () => {
-
   let nav = useNavigate();
 
   const [hotels, setHotels] = useState([]);
@@ -29,26 +28,17 @@ const SearchHotel = () => {
   const user = JSON.parse(sessionStorage.getItem("user"));
 
   useEffect(() => {
-
     fetch("http://localhost:9090/hotel/all/showAll")
-
       .then((res) => res.json())
 
       .then((response) => {
-
         setHotels(response.data);
-
       })
 
       .catch((e) => {
-
         console.log("Error fetching hotels : ", e);
-
       });
-
   }, []);
-
-  
 
   const fetchAvailability = () => {
     if (!checkInDate || !checkOutDate) {
@@ -80,59 +70,33 @@ const SearchHotel = () => {
   }, [hotels, checkInDate, checkOutDate]);
 
   const handleAmenityChange = (amenity) => {
-
     if (selectedAmenities.includes(amenity)) {
-
-      setSelectedAmenities(
-        selectedAmenities.filter((a) => a !== amenity)
-      );
-
+      setSelectedAmenities(selectedAmenities.filter((a) => a !== amenity));
     } else {
-
-      setSelectedAmenities([
-        ...selectedAmenities,
-        amenity
-      ]);
-
+      setSelectedAmenities([...selectedAmenities, amenity]);
     }
-
   };
 
   const clearFilters = () => {
-
     setPriceRange(10000);
 
     setSelectedAmenities([]);
 
     setLocation("");
-
   };
 
   const filteredHotels = hotels?.filter((hotel) => {
-
-    let matchesPrice =
-      hotel.standard ? hotel.standard <= priceRange : true;
+    let matchesPrice = hotel.standard ? hotel.standard <= priceRange : true;
 
     let matchesAmenities =
       selectedAmenities?.length === 0 ||
-
-      selectedAmenities.every((amenity) =>
-        hotel.amenities?.includes(amenity)
-      );
+      selectedAmenities.every((amenity) => hotel.amenities?.includes(amenity));
 
     let matchesLocation =
       location === "" ||
+      hotel.location?.toLowerCase().includes(location.toLowerCase());
 
-      hotel.location
-        ?.toLowerCase()
-        .includes(location.toLowerCase());
-
-    return (
-      matchesPrice &&
-      matchesAmenities &&
-      matchesLocation
-    );
-
+    return matchesPrice && matchesAmenities && matchesLocation;
   });
 
   const isHotelAvailable = (hotelId) => {
@@ -157,20 +121,30 @@ const SearchHotel = () => {
             Home
           </Link>
 
-          <Link to="/login" className={styles.signin}>
-            Sign In
+          <Link to="/search" className={styles.navItem}>
+            Hotels
           </Link>
 
-          <button
-            className={styles["signin-btn"]}
-            onClick={() => nav("/userProfile")}
-          >
-            Profile
-          </button>
+          {!sessionStorage.getItem("currentUser") ? (
+            <>
+              <Link to="/signIn" className={styles.signin}>
+                Sign In
+              </Link>
+            </>
+          ) : (
+            <button
+              className={styles.signin}
+              onClick={() => {
+                sessionStorage.removeItem("currentUser");
+                sessionStorage.removeItem("token");
+                nav("/");
+              }}
+            >
+              Logout
+            </button>
+          )}
         </div>
       </div>
-
-      {/* MAIN */}
 
       <div className={styles.mainContainer}>
         {/* FILTER */}
@@ -361,7 +335,6 @@ const SearchHotel = () => {
       </div>
     </>
   );
-
 };
 
 export default SearchHotel;

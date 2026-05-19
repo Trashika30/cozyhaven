@@ -53,9 +53,13 @@ public class User {
     @JsonManagedReference("user_bookings") //Avoids Dependency Loop - Parent -> ManagedReference
     private List<Booking> bookings;
 
-    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
-    @JsonManagedReference("owner_hotels") //Avoids Dependency Loop - Parent -> ManagedReference
-    List<Hotel> hotels;
+    @OneToMany(
+            mappedBy = "owner",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    @JsonManagedReference("owner_hotels")
+    private List<Hotel> hotels;
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
     @JsonManagedReference("user_reviews")
