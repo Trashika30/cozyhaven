@@ -113,8 +113,9 @@ public class BookingService {
         return bookingList.stream().map(BookingMapper::toDTO).toList();
     }
 
-    public BookingDTO searchBookingOwnerById(int id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'searchBookingOwnerById'");
+    public void deleteBooking(int bookingId) {
+        System.out.println("Service" + bookingId);
+
+        bookingRepo.deleteById(bookingId);
     }
 }

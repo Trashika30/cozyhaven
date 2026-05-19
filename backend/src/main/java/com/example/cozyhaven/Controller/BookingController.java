@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,7 +31,8 @@ public class BookingController {
 
     @PostMapping("/customer/addBooking")
     public ResponseEntity<ApiResponse<BookingDTO>> addBooking(@RequestBody BookingDTO booking) {
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(new ApiResponse<>("Booking added!", HttpStatus.FOUND, bookingService.addBooking(booking)));
+        return ResponseEntity.status(HttpStatus.ACCEPTED)
+                .body(new ApiResponse<>("Booking added!", HttpStatus.FOUND, bookingService.addBooking(booking)));
     }
 
     @GetMapping("/admin/showAll")
@@ -48,7 +50,8 @@ public class BookingController {
         if (booking == null) {
             throw new ResourceNotFoundException("Booking not found");
         }
-        return ResponseEntity.status(HttpStatus.FOUND).body(new ApiResponse<>("Booking detail for id:" + id, HttpStatus.FOUND, booking));
+        return ResponseEntity.status(HttpStatus.FOUND)
+                .body(new ApiResponse<>("Booking detail for id:" + id, HttpStatus.FOUND, booking));
     }
 
     @GetMapping("/customer/searchUserBookings/{userId}")
@@ -57,7 +60,8 @@ public class BookingController {
         if (bookingList.isEmpty()) {
             throw new ResourceNotFoundException("Booking not found");
         }
-        return ResponseEntity.status(HttpStatus.FOUND).body(new ApiResponse<>("Bookings detail for user id:" + userId, HttpStatus.FOUND, bookingList));
+        return ResponseEntity.status(HttpStatus.FOUND)
+                .body(new ApiResponse<>("Bookings detail for user id:" + userId, HttpStatus.FOUND, bookingList));
     }
 
     @GetMapping("/customer/upcomingStay/{userId}")
@@ -66,7 +70,8 @@ public class BookingController {
         if (bookingList.isEmpty()) {
             throw new ResourceNotFoundException("Booking not found");
         }
-        return ResponseEntity.status(HttpStatus.FOUND).body(new ApiResponse<>("Upcoming plans: ", HttpStatus.FOUND, bookingList));
+        return ResponseEntity.status(HttpStatus.FOUND)
+                .body(new ApiResponse<>("Upcoming plans: ", HttpStatus.FOUND, bookingList));
     }
 
     @GetMapping("/customer/completedStay/{userId}")
@@ -75,7 +80,8 @@ public class BookingController {
         if (bookingList.isEmpty()) {
             throw new ResourceNotFoundException("No completed bookings found!!!");
         }
-        return ResponseEntity.status(HttpStatus.FOUND).body(new ApiResponse<>("Completed stays : ", HttpStatus.FOUND, bookingList));
+        return ResponseEntity.status(HttpStatus.FOUND)
+                .body(new ApiResponse<>("Completed stays : ", HttpStatus.FOUND, bookingList));
     }
 
     @PutMapping("/all/updateBookingStatus/{bookingId}/{status}")
@@ -84,7 +90,8 @@ public class BookingController {
         if (booking == null) {
             throw new ResourceNotFoundException("Booking not found!!!");
         }
-        return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse<>("Updated Booking!!", HttpStatus.OK, booking));
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new ApiResponse<>("Updated Booking!!", HttpStatus.OK, booking));
     }
 
     @PutMapping("/customer/cancelBooking/{bookingId}/{reason}")
@@ -93,7 +100,8 @@ public class BookingController {
         if (b == null) {
             throw new ResourceNotFoundException("Booking not found!!!");
         }
-        return ResponseEntity.status(HttpStatus.GONE).body(new ApiResponse<>("Cancelled Booking !", HttpStatus.GONE, b));
+        return ResponseEntity.status(HttpStatus.GONE)
+                .body(new ApiResponse<>("Cancelled Booking !", HttpStatus.GONE, b));
     }
 
     @GetMapping("/owner/searchBookingByHotelId/{hotelId}")
@@ -102,7 +110,21 @@ public class BookingController {
         if (bookingList.isEmpty()) {
             throw new ResourceNotFoundException("Booking not found for this hotel");
         }
-        return ResponseEntity.status(HttpStatus.FOUND).body(new ApiResponse<>("Bookings of this hotelId: " + hotelId, HttpStatus.FOUND, bookingList));
+        return ResponseEntity.status(HttpStatus.FOUND)
+                .body(new ApiResponse<>("Bookings of this hotelId: " + hotelId, HttpStatus.FOUND, bookingList));
+    }
+
+    @DeleteMapping("/customer/deletePendingBooking/{bookingId}")
+    public ResponseEntity<?> deletePendingBookingById(@PathVariable int bookingId) {
+        BookingDTO b = bookingService.searchBookingById(bookingId);
+        if (b != null) {
+            System.out.println("controler");
+            bookingService.deleteBooking(bookingId);
+            return ResponseEntity.status(HttpStatus.GONE).body(
+                    new ApiResponse<>("Booking Deleted!!", HttpStatus.GONE, b));
+        }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                new ApiResponse<>("Booking Not found!!", HttpStatus.BAD_REQUEST, null));
     }
 
 }

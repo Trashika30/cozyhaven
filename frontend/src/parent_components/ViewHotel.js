@@ -103,7 +103,7 @@ const ViewHotel = () => {
       return;
     }
 
-    if(!checkOut){
+    if (!checkOut) {
       message.error("Please select CheckOut");
       return;
     }
@@ -114,7 +114,7 @@ const ViewHotel = () => {
     }
 
     const bookingData = {
-      hotelId:hotel.hotelId,
+      hotelId: hotel.hotelId,
       hotelName: hotel.hotelName,
 
       roomType: roomTypes.map((r) => r.type).join(", "),
@@ -150,7 +150,7 @@ const ViewHotel = () => {
 
       .then((res) => {
         console.log(res);
-        nav(`/payment/${res.data.bookingId}`, { state: {hotel} });
+        nav(`/payment/${res.data.bookingId}`, { state: { hotel } });
       })
 
       .catch((e) => {

@@ -1,5 +1,6 @@
+import { Input, message, Modal } from "antd";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styles from "../css/ViewHotel.module.css";
 
 const UserProfile = () => {
@@ -14,7 +15,14 @@ const UserProfile = () => {
     address: "",
   });
 
+  const nav = useNavigate();
+
   const [bookings, setBookings] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const [cancelReason, setCancelReason] = useState("");
+
+  const [selectedBookingId, setSelectedBookingId] = useState(null);
 
   useEffect(() => {
     if (storedUser) {
@@ -89,15 +97,18 @@ const UserProfile = () => {
   };
 
   const cancelBooking = (bookingId) => {
-    const reason = prompt("Enter cancellation reason:");
+    setSelectedBookingId(bookingId);
+    setIsModalOpen(true);
+  };
 
-    if (!reason || reason.trim() === "") {
-      alert("Cancellation reason is required");
+  const confirmCancelBooking = () => {
+    if (!cancelReason.trim()) {
+      message.error("Cancellation reason is required");
       return;
     }
 
     fetch(
-      `http://localhost:9090/booking/customer/cancelBooking/${bookingId}/${encodeURIComponent(reason)}`,
+      `http://localhost:9090/booking/customer/cancelBooking/${selectedBookingId}/${encodeURIComponent(cancelReason)}`,
       {
         method: "PUT",
 
@@ -112,28 +123,95 @@ const UserProfile = () => {
       .then((data) => {
         console.log(data);
 
-        alert("Booking Cancelled Successfully");
+        Modal.success({
+          title: "Cancellation Success",
+          content: "Amount will be refunded within 7 business days",
+          okText: "OK",
+          okButtonProps: {
+            style: {
+              backgroundColor: "#9C0A8F",
+              borderColor: "#9C0A8F",
+            },
+          },
+        });
 
         setBookings((prevBookings) =>
           prevBookings.map((booking) =>
-            booking.bookingId === bookingId
-              ? { ...booking, status: "CANCELLED" }
+            booking.bookingId === selectedBookingId
+              ? {
+                  ...booking,
+
+                  status: "CANCELLED",
+
+                  cancellationReason: cancelReason,
+                }
               : booking,
           ),
         );
+
+        setIsModalOpen(false);
+
+        setCancelReason("");
+
+        setSelectedBookingId(null);
       })
 
       .catch((e) => {
         console.log(e);
 
-        alert("Cancellation Failed");
+        message.error("Cancellation Failed");
       });
+  };
+
+  const cancelProcess = (bookingId) => {
+    Modal.confirm({
+      title: "Cancel Booking Process",
+      content: "Are you sure you want to cancel this pending booking process?",
+      okText: "Yes, Cancel",
+      cancelText: "No",
+      okButtonProps: {
+        danger: true,
+        className: styles["modal-ok-btn"],
+      },
+      cancelButtonProps: {
+        className: styles["modal-cancel-btn"],
+      },
+      onOk() {
+        fetch(
+          `http://localhost:9090/booking/customer/deletePendingBooking/${bookingId}`,
+          {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${storedUser.token}`,
+            },
+          },
+        )
+          .then((res) => res.json())
+          .then((res) => {
+            console.log(res);
+            if (res.status === "410 GONE") {
+              message.success("Booking Process Cancelled Successfully!!");
+              setBookings((prevBookings) =>
+                prevBookings.filter(
+                  (booking) => booking.bookingId !== bookingId,
+                ),
+              );
+            } else {
+              console.log(res.data);
+            }
+          })
+          .catch((e) => {
+            console.log(e);
+            message.error("Cancellation Failed");
+          });
+      },
+    });
   };
 
   return (
     <div className={styles["hotel-page"]}>
       {/* NAVBAR */}
-
       <div className={styles["navbar"]}>
         <h2 className={styles["logo"]}>CozyHaven</h2>
 
@@ -143,9 +221,7 @@ const UserProfile = () => {
           <Link to="/search">Hotels</Link>
         </div>
       </div>
-
       {/* MAIN CONTENT */}
-
       <div
         style={{
           maxWidth: "1200px",
@@ -172,55 +248,73 @@ const UserProfile = () => {
             User Profile
           </h1>
 
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr",
-              gap: "20px",
-            }}
-          >
-            <input
-              type="text"
-              name="firstName"
-              placeholder="First Name"
-              value={user.firstName}
-              onChange={handleChange}
-            />
+          <div className={styles["profile-input-grid"]}>
+            <div className={styles["input-group"]}>
+              <label className={styles["input-label"]}>First Name</label>
 
-            <input
-              type="text"
-              name="lastName"
-              placeholder="Last Name"
-              value={user.lastName}
-              onChange={handleChange}
-            />
+              <input
+                type="text"
+                name="firstName"
+                placeholder="First Name"
+                value={user.firstName}
+                onChange={handleChange}
+                className={styles["profile-input"]}
+              />
+            </div>
 
-            <input
-              type="email"
-              name="email"
-              placeholder="Email"
-              value={user.email}
-              onChange={handleChange}
-            />
+            <div className={styles["input-group"]}>
+              <label className={styles["input-label"]}>Last Name</label>
 
-            <input
-              type="text"
-              name="contact"
-              placeholder="Contact"
-              value={user.contact}
-              onChange={handleChange}
-            />
+              <input
+                type="text"
+                name="lastName"
+                placeholder="Last Name"
+                value={user.lastName}
+                onChange={handleChange}
+                className={styles["profile-input"]}
+              />
+            </div>
 
-            <input
-              type="text"
-              name="address"
-              placeholder="Address"
-              value={user.address}
-              onChange={handleChange}
-              style={{
-                gridColumn: "1/3",
-              }}
-            />
+            <div className={styles["input-group"]}>
+              <label className={styles["input-label"]}>Email Address</label>
+
+              <input
+                type="email"
+                name="email"
+                placeholder="Email"
+                value={user.email}
+                onChange={handleChange}
+                className={styles["profile-input"]}
+              />
+            </div>
+
+            <div className={styles["input-group"]}>
+              <label className={styles["input-label"]}>Contact Number</label>
+
+              <input
+                type="text"
+                name="contact"
+                placeholder="Contact"
+                value={user.contact}
+                onChange={handleChange}
+                className={styles["profile-input"]}
+              />
+            </div>
+
+            <div
+              className={`${styles["input-group"]} ${styles["address-field"]}`}
+            >
+              <label className={styles["input-label"]}>Address</label>
+
+              <input
+                type="text"
+                name="address"
+                placeholder="Address"
+                value={user.address}
+                onChange={handleChange}
+                className={styles["profile-input"]}
+              />
+            </div>
           </div>
 
           <button
@@ -238,7 +332,8 @@ const UserProfile = () => {
         {/* BOOKINGS */}
 
         <div>
-         <h1 style={{
+          <h1
+            style={{
               marginBottom: "18px",
               fontSize: "20px",
               fontWeight: "700",
@@ -263,7 +358,7 @@ const UserProfile = () => {
               >
                 <h2
                   style={{
-                    fontSize: "12px",
+                    fontSize: "16px",
                     fontWeight: "700",
                     marginBottom: "20px",
                     color: "#1f2937",
@@ -358,32 +453,41 @@ const UserProfile = () => {
                           booking.status === "CANCELLED"
                             ? "#dc2626"
                             : booking.status === "PENDING"
-                            ? "#f59e0b"
-                            : "#16a34a",
+                              ? "#f59e0b"
+                              : "#16a34a",
                       }}
                     >
                       {booking.status}
                     </span>
                   </p>
 
-                  {booking.status === "PENDING" && (
-                    <button
-                      onClick={() => cancelBooking(booking.bookingId)}
-                      style={{
-                        padding: "10px 18px",
-                        background:
-                          "linear-gradient(135deg, #ef4444, #dc2626)",
-                        color: "white",
-                        border: "none",
-                        borderRadius: "10px",
-                        cursor: "pointer",
-                        fontWeight: "600",
-                        fontSize: "14px",
-                        boxShadow: "0 4px 10px rgba(220,38,38,0.3)",
-                      }}
-                    >
-                      Cancel Booking
-                    </button>
+                  {booking.status === "PENDING" ? (
+                    <>
+                      <div className={styles["pending-btn-group"]}>
+                        <button
+                          onClick={() => cancelProcess(booking.bookingId)}
+                          className={styles["cancel-process-btn"]}
+                        >
+                          Cancel Process
+                        </button>
+
+                        <button
+                          onClick={() => nav(`/payment/${booking.bookingId}`)}
+                          className={styles["continue-booking-btn"]}
+                        >
+                          Continue Booking
+                        </button>
+                      </div>
+                    </>
+                  ) : (
+                    booking.status === "CONFIRMED" && (
+                      <button
+                        onClick={() => cancelBooking(booking.bookingId)}
+                        className={styles["cancel-booking-btn"]}
+                      >
+                        Cancel Booking
+                      </button>
+                    )
                   )}
                 </div>
               </div>
@@ -401,6 +505,32 @@ const UserProfile = () => {
           )}
         </div>
       </div>
+      <Modal
+        title="Cancel Booking"
+        open={isModalOpen}
+        onOk={confirmCancelBooking}
+        onCancel={() => {
+          setIsModalOpen(false);
+
+          setCancelReason("");
+        }}
+        okText="Cancel Booking"
+        okButtonProps={{
+          danger: true,
+          className: styles["modal-ok-btn"],
+        }}
+        cancelButtonProps={{
+          className: styles["modal-cancel-btn"],
+        }}
+      >
+        <Input.TextArea
+          rows={4}
+          placeholder="Enter cancellation reason"
+          value={cancelReason}
+          onChange={(e) => setCancelReason(e.target.value)}
+        />
+      </Modal>
+      ;
     </div>
   );
 };
