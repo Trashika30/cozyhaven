@@ -24,6 +24,8 @@ const SearchHotel = () => {
 
   const [checkOutDate, setCheckOutDate] = useState("");
 
+  const [availabilityData, setAvailabilityData] = useState({});
+
   const user = JSON.parse(sessionStorage.getItem("user"));
 
   useEffect(() => {
@@ -45,6 +47,37 @@ const SearchHotel = () => {
       });
 
   }, []);
+
+  
+
+  const fetchAvailability = () => {
+    if (!checkInDate || !checkOutDate) {
+      return;
+    }
+
+    hotels.forEach((hotel) => {
+      fetch(
+        `http://localhost:9090/room/all/availability/${hotel.hotelId}?checkIn=${checkInDate}&checkOut=${checkOutDate}`,
+      )
+        .then((res) => res.json())
+        .then((response) => {
+          setAvailabilityData((prev) => ({
+            ...prev,
+            [hotel.hotelId]: response.data,
+          }));
+        })
+
+        .catch((e) => {
+          console.log(e);
+        });
+    });
+  };
+
+  useEffect(() => {
+    if (hotels.length > 0 && checkInDate && checkOutDate) {
+      fetchAvailability();
+    }
+  }, [hotels, checkInDate, checkOutDate]);
 
   const handleAmenityChange = (amenity) => {
 
@@ -102,40 +135,29 @@ const SearchHotel = () => {
 
   });
 
+  const isHotelAvailable = (hotelId) => {
+    const rooms = availabilityData[hotelId];
+
+    if (!rooms) {
+      return true;
+    }
+
+    return rooms.some((room) => room.availableRooms > 0);
+  };
+
   return (
-
     <>
-
       {/* NAVBAR */}
 
       <div className={styles.navbar}>
-
-        <div className={styles.logo}>
-          CozyHaven
-        </div>
+        <div className={styles.logo}>CozyHaven</div>
 
         <div className={styles.navLinks}>
-
-          <Link
-            to="/"
-            className={styles.navItem}
-          >
+          <Link to="/" className={styles.navItem}>
             Home
           </Link>
 
-          <Link
-      to="/search"
-      className={styles.navItem}
-    >
-      Hotels
-    </Link>
-
-    {!sessionStorage.getItem("currentUser") ? (
-      <>
-        <Link
-            to="/login"
-            className={styles.signin}
-          >
+          <Link to="/login" className={styles.signin}>
             Sign In
           </Link>
 
@@ -145,34 +167,24 @@ const SearchHotel = () => {
           >
             Profile
           </button>
-
         </div>
-
       </div>
 
       {/* MAIN */}
 
       <div className={styles.mainContainer}>
-
         {/* FILTER */}
 
         <div className={styles.filterBox}>
-
-          <h2 className={styles.filterTitle}>
-            Filters
-          </h2>
+          <h2 className={styles.filterTitle}>Filters</h2>
 
           {/* PRICE */}
 
           <div>
-
-            <h3 className={styles.sectionTitle}>
-              Price Range
-            </h3>
+            <h3 className={styles.sectionTitle}>Price Range</h3>
 
             <p className={styles.priceText}>
-              Standard Room Price:
-              ₹1000 - ₹{priceRange}
+              Standard Room Price: ₹1000 - ₹{priceRange}
             </p>
 
             <input
@@ -181,21 +193,15 @@ const SearchHotel = () => {
               max="10000"
               step="500"
               value={priceRange}
-              onChange={(e) =>
-                setPriceRange(Number(e.target.value))
-              }
+              onChange={(e) => setPriceRange(Number(e.target.value))}
               className={styles.rangeInput}
             />
-
           </div>
 
           {/* AMENITIES */}
 
           <div className={styles.amenitiesSection}>
-
-            <h3 className={styles.sectionTitle}>
-              Amenities
-            </h3>
+            <h3 className={styles.sectionTitle}>Amenities</h3>
 
             {[
               "Free WiFi",
@@ -206,53 +212,32 @@ const SearchHotel = () => {
               "Spa",
               "Room Service",
             ].map((amenity) => (
-
-              <div
-                key={amenity}
-                className={styles.checkboxRow}
-              >
-
+              <div key={amenity} className={styles.checkboxRow}>
                 <input
                   type="checkbox"
                   checked={selectedAmenities.includes(amenity)}
-                  onChange={() =>
-                    handleAmenityChange(amenity)
-                  }
+                  onChange={() => handleAmenityChange(amenity)}
                   className={styles.checkbox}
                 />
 
-                <label className={styles.checkboxLabel}>
-                  {amenity}
-                </label>
-
+                <label className={styles.checkboxLabel}>{amenity}</label>
               </div>
-
             ))}
-
           </div>
 
-          <button
-            onClick={clearFilters}
-            className={styles.clearBtn}
-          >
+          <button onClick={clearFilters} className={styles.clearBtn}>
             Clear Filters
           </button>
-
         </div>
 
         {/* HOTELS */}
 
         <div className={styles.hotelsSection}>
-
           {/* SEARCH BOX */}
 
           <div className={styles["search-box"]}>
-
             <div className={styles["search-field"]}>
-
-              <label>
-                Location
-              </label>
+              <label>Location</label>
 
               <input
                 type="text"
@@ -260,13 +245,10 @@ const SearchHotel = () => {
                 list="cities"
                 className={styles["city-input"]}
                 value={location}
-                onChange={(e) =>
-                  setLocation(e.target.value)
-                }
+                onChange={(e) => setLocation(e.target.value)}
               />
 
               <datalist id="cities">
-
                 <option value="Chennai" />
 
                 <option value="Delhi" />
@@ -274,72 +256,45 @@ const SearchHotel = () => {
                 <option value="Kolkata" />
 
                 <option value="Mumbai" />
-
               </datalist>
-
             </div>
 
             <div className={styles["date-group"]}>
-
               <div className={styles["search-field"]}>
-
-                <label>
-                  Check-In
-                </label>
+                <label>Check-In</label>
 
                 <input
                   type="date"
                   value={checkInDate}
-                  onChange={(e) =>
-                    setCheckInDate(e.target.value)
-                  }
+                  onChange={(e) => setCheckInDate(e.target.value)}
                 />
-
               </div>
 
               <div className={styles["search-field"]}>
-
-                <label>
-                  Check-Out
-                </label>
+                <label>Check-Out</label>
 
                 <input
                   type="date"
                   value={checkOutDate}
-                  onChange={(e) =>
-                    setCheckOutDate(e.target.value)
-                  }
+                  onChange={(e) => setCheckOutDate(e.target.value)}
                 />
-
               </div>
-
             </div>
 
             <div className={styles["guest-container"]}>
-
               <button
                 className={styles["guest-btn"]}
-                onClick={() =>
-                  setGuestOpen(!guestOpen)
-                }
+                onClick={() => setGuestOpen(!guestOpen)}
               >
                 Guests & Rooms
               </button>
 
-              {
-
-                guestOpen &&
-
+              {guestOpen && (
                 <div className={styles["guest-dropdown"]}>
-
                   <div className={styles.row}>
-
-                    <label>
-                      Adults
-                    </label>
+                    <label>Adults</label>
 
                     <select>
-
                       <option>1</option>
 
                       <option>2</option>
@@ -347,19 +302,13 @@ const SearchHotel = () => {
                       <option>3</option>
 
                       <option>4</option>
-
                     </select>
-
                   </div>
 
                   <div className={styles.row}>
-
-                    <label>
-                      Children
-                    </label>
+                    <label>Children</label>
 
                     <select>
-
                       <option>0</option>
 
                       <option>1</option>
@@ -367,80 +316,50 @@ const SearchHotel = () => {
                       <option>2</option>
 
                       <option>3</option>
-
                     </select>
-
                   </div>
 
                   <div className={styles.row}>
-
-                    <label>
-                      Rooms
-                    </label>
+                    <label>Rooms</label>
 
                     <select>
-
                       <option>1</option>
 
                       <option>2</option>
 
                       <option>3</option>
-
                     </select>
-
                   </div>
-
                 </div>
-
-              }
-
+              )}
             </div>
 
-            <button className={styles["search-btn"]}>
-              Search
-            </button>
-
+            <button className={styles["search-btn"]}>Search</button>
           </div>
 
-          <h1 className={styles.hotelHeading}>
-            All Hotels
-          </h1>
+          <h1 className={styles.hotelHeading}>All Hotels</h1>
 
           <p className={styles.hotelCount}>
             {filteredHotels?.length} properties found
           </p>
 
-          {
-
-            filteredHotels?.length > 0 ?
-
-              filteredHotels.map((hotel) => (
-
-                <Hotel
-                  key={hotel.hotelId}
-                  hotel={hotel}
-                />
-
-              ))
-
-              :
-
-              <div className={styles.noHotelsBox}>
-
-                <h2 className={styles.noHotelsText}>
-                  No Hotels Found
-                </h2>
-
-              </div>
-
-          }
-
+          {filteredHotels?.length > 0 ? (
+            filteredHotels.map((hotel) => (
+              <Hotel
+                key={hotel.hotelId}
+                hotel={hotel}
+                availability={availabilityData[hotel.hotelId]}
+                available={isHotelAvailable(hotel.hotelId)}
+              />
+            ))
+          ) : (
+            <div className={styles.noHotelsBox}>
+              <h2 className={styles.noHotelsText}>No Hotels Found</h2>
+            </div>
+          )}
         </div>
-
       </div>
-
     </>
-
   );
 
 };

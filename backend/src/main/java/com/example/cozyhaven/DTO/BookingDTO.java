@@ -16,6 +16,7 @@ public class BookingDTO {
     private Integer bookingId;
     private String hotelName;
     private String roomType;
+    private int roomsBooked;
     private LocalDate checkInDate;
     private LocalDate checkOutDate;
     private int childCount;
@@ -31,12 +32,13 @@ public class BookingDTO {
     private LocalDate refundProcessedDate;
     private String refundStatus;
 
-    public BookingDTO(String hotelName, String roomType, LocalDate checkInDate,
+    public BookingDTO(String hotelName, String roomType, int roomsBooked, LocalDate checkInDate,
             LocalDate checkOutDate, int childCount, int adultCount, double totalAmount, BookingStatus status,
             int roomId, int hotelId, Double refundAmount, LocalDate refundRequestDate, LocalDate refundProcessedDate,
         String refundStatus) {
         this.hotelName = hotelName;
         this.roomType = roomType;
+        this.roomsBooked = roomsBooked;
         this.checkInDate = checkInDate;
         this.checkOutDate = checkOutDate;
         this.childCount = childCount;

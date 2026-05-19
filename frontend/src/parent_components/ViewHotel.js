@@ -1,4 +1,4 @@
-import { CloseOutlined, InfoCircleOutlined } from "@ant-design/icons";
+import { InfoCircleOutlined } from "@ant-design/icons";
 import { Card, DatePicker, Tabs, Tooltip, message } from "antd";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -13,8 +13,9 @@ const ViewHotel = () => {
 
   const [hotel, setHotel] = useState(null);
 
-  const [roomTypes, setRoomTypes] = useState([]);
+  const [selectedRoomType, setSelectedRoomType] = useState("");
 
+  const [roomsBooked, setRoomsBooked] = useState(1);
   const [checkIn, setCheckIn] = useState("");
 
   const [checkOut, setCheckOut] = useState("");
@@ -24,6 +25,8 @@ const ViewHotel = () => {
   const [children, setChildren] = useState(0);
 
   const [reviews, setReviews] = useState([]);
+
+  const [rooms, setRooms] = useState([]);
 
   useEffect(() => {
     fetch(`http://localhost:9090/hotel/all/searchById/${hotelId}`)
@@ -53,49 +56,44 @@ const ViewHotel = () => {
 
         setReviews([]);
       });
+
+    fetch(`http://localhost:9090/room/all/getRooms/${hotelId}`)
+      .then((res) => res.json())
+
+      .then((response) => {
+        console.log(response);
+
+        setRooms(response.data);
+      })
+
+      .catch((e) => {
+        console.log(e);
+      });
   }, [hotelId]);
 
-  const addRoomType = () => {
-    setRoomTypes([
-      ...roomTypes,
-      {
-        type: "",
-        rooms: "",
-      },
-    ]);
-  };
-
-  const updateRoomType = (index, field, value) => {
-    const updatedRooms = [...roomTypes];
-
-    updatedRooms[index][field] = value;
-
-    setRoomTypes(updatedRooms);
-  };
-
-  const removeRoomType = (index) => {
-    setRoomTypes(roomTypes.filter((_, i) => i !== index));
-  };
-
   const calculateBaseAmount = () => {
-    let total = 0;
+    if (!selectedRoomType) {
+      return 0;
+    }
 
-    roomTypes.forEach((room) => {
-      let roomPrice = 0;
+    let roomPrice = 0;
 
-      if (room.type.includes("Standard")) roomPrice = hotel.standard;
-      else if (room.type.includes("Deluxe")) roomPrice = hotel.deluxe;
-      else if (room.type.includes("Suite")) roomPrice = hotel.suite;
+    if (selectedRoomType === "STANDARD") {
+      roomPrice = hotel.standard;
+    } else if (selectedRoomType === "DELUXE") {
+      roomPrice = hotel.deluxe;
+    } else if (selectedRoomType === "SUITE") {
+      roomPrice = hotel.suite;
+    }
 
-      let roomCount = parseInt(room.rooms);
-
-      if (!isNaN(roomCount)) {
-        total += roomPrice * roomCount;
-      }
-    });
-
-    return total;
+    return roomPrice * roomsBooked;
   };
+
+  const selectedRoom = rooms.find((room) => {
+    console.log(room.roomType);
+
+    return room.roomType.includes(selectedRoomType);
+  });
 
   const createBooking = () => {
     if (!checkIn) {
@@ -108,33 +106,27 @@ const ViewHotel = () => {
       return;
     }
 
-    if (roomTypes.length === 0) {
-      message.error("Please add room type");
+    if (!selectedRoomType) {
+      message.error("Please select Room");
       return;
     }
 
     const bookingData = {
       hotelId: hotel.hotelId,
       hotelName: hotel.hotelName,
-
-      roomType: roomTypes.map((r) => r.type).join(", "),
-
+      roomType: selectedRoomType,
+      roomsBooked: roomsBooked,
       checkInDate: checkIn,
-
       checkOutDate: checkOut,
-
       childCount: children,
-
       adultCount: adults,
-
       totalAmount: calculateBaseAmount(),
-
-      roomId: hotel.hotelId,
-
+      roomId: selectedRoom?.roomId,
       userId: currentUser.user?.userId,
-
       cancellationReason: "",
     };
+
+    console.log(bookingData);
 
     fetch("http://localhost:9090/booking/customer/addBooking", {
       method: "POST",
@@ -150,7 +142,10 @@ const ViewHotel = () => {
 
       .then((res) => {
         console.log(res);
-        nav(`/payment/${res.data.bookingId}`);
+        if (res.status === "202 ACCEPTED")
+          nav(`/payment/${res.data.bookingId}`);
+        else if (res.status === "404 NOT_FOUND")
+          message.error("Select less rooms!!");
       })
 
       .catch((e) => {
@@ -278,52 +273,43 @@ const ViewHotel = () => {
               />
             </div>
 
-            {/* ROOM TYPES */}
-
-            {roomTypes.map((room, index) => (
-              <div className={styles["room-type-card"]} key={index}>
-                <select
-                  onChange={(e) =>
-                    updateRoomType(index, "type", e.target.value)
-                  }
-                >
-                  <option>Select</option>
-
-                  <option>Standard {`₹${hotel.standard}/N`}</option>
-
-                  <option>Deluxe {`₹${hotel.deluxe}/N`}</option>
-
-                  <option>Suite {`₹${hotel.suite}/N`}</option>
-                </select>
+            <div className={styles["single-room-card"]}>
+              <div className={styles["room-select-group"]}>
+                <p>Select Room Type</p>
 
                 <select
-                  onChange={(e) =>
-                    updateRoomType(index, "rooms", e.target.value)
-                  }
+                  className={styles["room-select"]}
+                  value={selectedRoomType}
+                  onChange={(e) => setSelectedRoomType(e.target.value)}
                 >
-                  <option>Select</option>
+                  <option value="">Select</option>
 
-                  <option>1 Room</option>
+                  <option value="STANDARD">Standard ₹{hotel.standard}/N</option>
 
-                  <option>2 Rooms</option>
+                  <option value="DELUXE">Deluxe ₹{hotel.deluxe}/N</option>
 
-                  <option>3 Rooms</option>
-
-                  <option>4 Rooms</option>
+                  <option value="SUITE">Suite ₹{hotel.suite}/N</option>
                 </select>
-
-                <button
-                  className={styles["remove-room-btn"]}
-                  onClick={() => removeRoomType(index)}
-                >
-                  <CloseOutlined />
-                </button>
               </div>
-            ))}
 
-            <button className={styles["add-room-btn"]} onClick={addRoomType}>
-              + Add Room Type
-            </button>
+              <div className={styles["room-select-group"]}>
+                <p>Number of Rooms</p>
+
+                <select
+                  className={styles["room-select"]}
+                  value={roomsBooked}
+                  onChange={(e) => setRoomsBooked(parseInt(e.target.value))}
+                >
+                  <option value={1}>1 Room</option>
+
+                  <option value={2}>2 Rooms</option>
+
+                  <option value={3}>3 Rooms</option>
+
+                  <option value={4}>4 Rooms</option>
+                </select>
+              </div>
+            </div>
 
             <button className={styles["book-btn"]} onClick={createBooking}>
               Book Now

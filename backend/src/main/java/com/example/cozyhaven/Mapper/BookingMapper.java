@@ -21,6 +21,8 @@ public class BookingMapper {
 
         dto.setRoomType(booking.getRoomType());
 
+        dto.setRoomsBooked(booking.getRoomsBooked());
+
         dto.setAdultCount(booking.getAdultCount());
 
         dto.setChildCount(booking.getChildCount());
@@ -71,6 +73,8 @@ public class BookingMapper {
 
         booking.setRoomType(dto.getRoomType());
 
+        booking.setRoomsBooked(dto.getRoomsBooked());
+        
         booking.setAdultCount(dto.getAdultCount());
 
         booking.setChildCount(dto.getChildCount());

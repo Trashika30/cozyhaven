@@ -34,6 +34,7 @@ public class Booking {
     private double totalAmount;
     private String hotelName;
     private String roomType;
+    private int roomsBooked;
     private int userId;
     private int hotelId;
 

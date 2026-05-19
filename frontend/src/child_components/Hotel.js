@@ -1,12 +1,17 @@
 import { Link } from "react-router-dom";
+
 import styles from "../css/Hotel.module.css";
 
-const Hotel = ({ hotel }) => {
-
+const Hotel = ({ hotel, availability, available }) => {
   return (
-
-    <div className={styles["hotel-card"]}>
-
+    <div
+      className={
+        available
+          ? styles.hotelCard
+          : `${styles.hotelCard}
+          ${styles["unavailable-hotel"]}`
+      }
+    >
       <img
         src={hotel.imageUrl}
         alt={hotel.hotelName}
@@ -14,58 +19,70 @@ const Hotel = ({ hotel }) => {
       />
 
       <div className={styles["hotel-content"]}>
-
         <div className={styles["hotel-top"]}>
-
           <div>
             <h1>{hotel.hotelName}</h1>
+
             <p>{hotel.location}</p>
           </div>
 
           <h3 className={styles.rating}>{hotel.ratings}</h3>
-    
+        </div>
+
+        {/* AVAILABILITY BADGE */}
+
+        <div
+          className={
+            available
+              ? styles["available-badge"]
+              : styles["not-available-badge"]
+          }
+        >
+          {available ? "Available" : "Not Available"}
         </div>
 
         <div className={styles.amenities}>
-
-          {
-            hotel.amenities?.map((item, index) => (
-
-              <span key={index}>
-                {item}
-              </span>
-
-            ))
-          }
-     
+          {hotel.amenities?.map((item, index) => (
+            <span key={index}>{item}</span>
+          ))}
         </div>
 
+        <div>
+          <p className={styles["starting-text"]}>Starting From</p>
 
-<div>
+          <h2 className={styles["price"]}>
+            ₹{hotel.standard}
+            <span>/night</span>
+          </h2>
+        </div>
 
-  <p className={styles["starting-text"]}>
-    Starting From
-  </p>
+        {/* ROOM AVAILABILITY */}
 
-  <h2 className={styles["price"]}>
-    ₹{hotel.standard}
-    <span>/night</span>
-  </h2>
+        {availability?.length > 0 && (
+          <div className={styles["availability-box"]}>
+            {availability.map((room, index) => (
+              <div key={index} className={styles["room-availability-row"]}>
+                <span>{room.roomType}</span>
 
-</div>
-        
+                <span>
+                  {room.availableRooms > 0
+                    ? `${room.availableRooms} rooms left`
+                    : "Not Available"}
+                </span>
+              </div>
+            ))}
+          </div>
+        )}
+
         <div className={styles["hotel-bottom"]}>
-
           <Link to={`/viewHotel/${hotel.hotelId}`}>
-            <button>View Details</button>
+            <button disabled={!available}>
+              {available ? "View Details" : "Unavailable"}
+            </button>
           </Link>
-
         </div>
-
       </div>
-
     </div>
-
   );
 };
 
