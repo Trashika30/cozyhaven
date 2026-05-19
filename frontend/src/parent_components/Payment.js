@@ -71,7 +71,7 @@ const Payment = () => {
       .then((data) => {
         const order = JSON.parse(data.data);
         const options = {
-          key: "rzp_test_Sqoy4vJCtp7yOn",
+          key: process.env.REACT_APP_RAZORPAY_KEY,
           amount: order.amount,
           currency: order.currency,
           name: hotel.hotelName,
