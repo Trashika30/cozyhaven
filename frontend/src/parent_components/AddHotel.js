@@ -136,7 +136,6 @@ const AddHotel = () => {
       if (hotelData.suiteRooms > 0) {
         await fetch("http://localhost:9090/room/owner/addRoom", {
           method: "POST",
-
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${storedUser.token}`,

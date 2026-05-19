@@ -3,13 +3,10 @@ import { useParams, useNavigate } from "react-router-dom";
 
 const EditProperty = () => {
   const { hotelId } = useParams();
-  
 
   const nav = useNavigate();
 
-  const storedUser = JSON.parse(
-    sessionStorage.getItem("currentUser"),
-  );
+  const storedUser = JSON.parse(sessionStorage.getItem("currentUser"));
 
   const [loading, setLoading] = useState(true);
 
@@ -102,27 +99,19 @@ const EditProperty = () => {
         contact: hotel.contact || "",
         imageUrl: hotel.imageUrl || "",
 
-        amenities: hotel.amenities
-          ? hotel.amenities.join(",")
-          : "",
+        amenities: hotel.amenities ? hotel.amenities.join(",") : "",
 
-        standardRooms:
-          standardRoom?.totalRooms || "",
+        standardRooms: standardRoom?.totalRooms || "",
 
-        standardFare:
-          standardRoom?.baseFare || "",
+        standardFare: standardRoom?.baseFare || "",
 
-        deluxeRooms:
-          deluxeRoom?.totalRooms || "",
+        deluxeRooms: deluxeRoom?.totalRooms || "",
 
-        deluxeFare:
-          deluxeRoom?.baseFare || "",
+        deluxeFare: deluxeRoom?.baseFare || "",
 
-        suiteRooms:
-          suiteRoom?.totalRooms || "",
+        suiteRooms: suiteRoom?.totalRooms || "",
 
-        suiteFare:
-          suiteRoom?.baseFare || "",
+        suiteFare: suiteRoom?.baseFare || "",
       });
 
       setLoading(false);
@@ -167,25 +156,17 @@ const EditProperty = () => {
 
         imageUrl: hotelData.imageUrl,
 
-        amenities: hotelData.amenities
-          .split(",")
-          .map((a) => a.trim()),
+        amenities: hotelData.amenities.split(",").map((a) => a.trim()),
 
         ownerId: storedUser.user.userId,
 
         ratings: 0.0,
 
-        standard: Number(
-          hotelData.standardFare,
-        ),
+        standard: Number(hotelData.standardFare),
 
-        deluxe: Number(
-          hotelData.deluxeFare,
-        ),
+        deluxe: Number(hotelData.deluxeFare),
 
-        suite: Number(
-          hotelData.suiteFare,
-        ),
+        suite: Number(hotelData.suiteFare),
       };
 
       const hotelResponse = await fetch(
@@ -230,19 +211,13 @@ const EditProperty = () => {
 
               maxOccupy: 2,
 
-              baseFare: Number(
-                hotelData.standardFare,
-              ),
+              baseFare: Number(hotelData.standardFare),
 
               ac: true,
 
-              totalAvailable: Number(
-                hotelData.standardRooms,
-              ),
+              totalAvailable: Number(hotelData.standardRooms),
 
-              totalRooms: Number(
-                hotelData.standardRooms,
-              ),
+              totalRooms: Number(hotelData.standardRooms),
 
               hotelId: Number(hotelId),
             }),
@@ -271,19 +246,13 @@ const EditProperty = () => {
 
               maxOccupy: 3,
 
-              baseFare: Number(
-                hotelData.deluxeFare,
-              ),
+              baseFare: Number(hotelData.deluxeFare),
 
               ac: true,
 
-              totalAvailable: Number(
-                hotelData.deluxeRooms,
-              ),
+              totalAvailable: Number(hotelData.deluxeRooms),
 
-              totalRooms: Number(
-                hotelData.deluxeRooms,
-              ),
+              totalRooms: Number(hotelData.deluxeRooms),
 
               hotelId: Number(hotelId),
             }),
@@ -312,19 +281,13 @@ const EditProperty = () => {
 
               maxOccupy: 5,
 
-              baseFare: Number(
-                hotelData.suiteFare,
-              ),
+              baseFare: Number(hotelData.suiteFare),
 
               ac: true,
 
-              totalAvailable: Number(
-                hotelData.suiteRooms,
-              ),
+              totalAvailable: Number(hotelData.suiteRooms),
 
-              totalRooms: Number(
-                hotelData.suiteRooms,
-              ),
+              totalRooms: Number(hotelData.suiteRooms),
 
               hotelId: Number(hotelId),
             }),
@@ -370,8 +333,7 @@ const EditProperty = () => {
           background: "white",
           padding: "35px",
           borderRadius: "22px",
-          boxShadow:
-            "0 4px 15px rgba(0,0,0,0.08)",
+          boxShadow: "0 4px 15px rgba(0,0,0,0.08)",
         }}
       >
         <h1
