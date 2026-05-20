@@ -3,7 +3,6 @@ import { Link, useNavigate } from "react-router-dom";
 import styles from "../css/Home.module.css";
 
 const Home = () => {
-
   let navigate = useNavigate();
 
   const [guestOpen, setGuestOpen] = useState(false);
@@ -16,7 +15,6 @@ const Home = () => {
   const [rooms, setRooms] = useState(1);
 
   const handleSearch = () => {
-
     navigate("/search", {
       state: {
         location,
@@ -27,7 +25,6 @@ const Home = () => {
         rooms,
       },
     });
-
   };
 
   const offers = [
@@ -83,17 +80,10 @@ const Home = () => {
 
   return (
     <div>
-
-      {/* NAVBAR */}
-
       <div className={styles.navbar}>
-
-        <div className={styles.logo}>
-          CozyHaven
-        </div>
+        <div className={styles.logo}>CozyHaven</div>
 
         <div className={styles["nav-links"]}>
-
           <a href="/">Home</a>
 
           <a href="/search">Hotels</a>
@@ -103,7 +93,6 @@ const Home = () => {
               <Link to="/signIn" className={styles.signin}>
                 Sign In
               </Link>
-
             </>
           ) : (
             <button
@@ -117,23 +106,16 @@ const Home = () => {
               Logout
             </button>
           )}
-
         </div>
-
       </div>
 
-      {/* HERO SECTION */}
-
       <div className={styles.hero}>
-
         <h1>Find your perfect stay anywhere</h1>
 
         <p>Discover amazing hotels at the best prices</p>
 
         <div className={styles["search-box"]}>
-
           <div className={styles["search-field"]}>
-
             <label>Location</label>
 
             <input
@@ -152,13 +134,10 @@ const Home = () => {
               <option value="Mumbai" />
               <option value="Goa" />
             </datalist>
-
           </div>
 
           <div className={styles["date-group"]}>
-
             <div className={styles["search-field"]}>
-
               <label>Check-In</label>
 
               <input
@@ -166,11 +145,9 @@ const Home = () => {
                 value={checkIn}
                 onChange={(e) => setCheckIn(e.target.value)}
               />
-
             </div>
 
             <div className={styles["search-field"]}>
-
               <label>Check-Out</label>
 
               <input
@@ -178,13 +155,10 @@ const Home = () => {
                 value={checkOut}
                 onChange={(e) => setCheckOut(e.target.value)}
               />
-
             </div>
-
           </div>
 
           <div className={styles["guest-container"]}>
-
             <button
               className={styles["guest-btn"]}
               onClick={() => setGuestOpen(!guestOpen)}
@@ -193,11 +167,8 @@ const Home = () => {
             </button>
 
             {guestOpen && (
-
               <div className={styles["guest-dropdown"]}>
-
                 <div className={styles.row}>
-
                   <label>Adults</label>
 
                   <select
@@ -209,11 +180,9 @@ const Home = () => {
                     <option value={3}>3</option>
                     <option value={4}>4</option>
                   </select>
-
                 </div>
 
                 <div className={styles.row}>
-
                   <label>Children</label>
 
                   <select
@@ -225,11 +194,9 @@ const Home = () => {
                     <option value={2}>2</option>
                     <option value={3}>3</option>
                   </select>
-
                 </div>
 
                 <div className={styles.row}>
-
                   <label>Rooms</label>
 
                   <select
@@ -240,38 +207,23 @@ const Home = () => {
                     <option value={2}>2</option>
                     <option value={3}>3</option>
                   </select>
-
                 </div>
-
               </div>
-
             )}
-
           </div>
 
-          <button
-            className={styles["search-btn"]}
-            onClick={handleSearch}
-          >
+          <button className={styles["search-btn"]} onClick={handleSearch}>
             Search
           </button>
-
         </div>
-
       </div>
 
-      {/* OFFERS */}
-
       <div className={styles.section}>
-
         <h2>Special Offers</h2>
 
         <div className={styles.cards}>
-
           {offers.map((offer, index) => (
-
             <div className={styles.card} key={index}>
-
               <img
                 src={`${offer.image}?auto=format&fit=crop&w=800&q=80`}
                 alt=""
@@ -282,44 +234,27 @@ const Home = () => {
                 <br />
                 {offer.subtitle}
               </div>
-
             </div>
-
           ))}
-
         </div>
-
       </div>
 
-      {/* DESTINATIONS */}
-
       <div className={styles.section}>
-
         <h2>Popular Destinations</h2>
 
         <div className={styles.cards}>
-
           {destinations.map((place, index) => (
-
             <div className={styles.card} key={index}>
-
               <img
                 src={`${place.image}?auto=format&fit=crop&w=800&q=80`}
                 alt=""
               />
 
-              <div className={styles["card-text"]}>
-                {place.name}
-              </div>
-
+              <div className={styles["card-text"]}>{place.name}</div>
             </div>
-
           ))}
-
         </div>
-
       </div>
-
     </div>
   );
 };

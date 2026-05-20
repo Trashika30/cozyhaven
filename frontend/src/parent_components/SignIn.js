@@ -5,9 +5,7 @@ import style from "../css/SignIn.module.css";
 const SignIn = () => {
   let [email, setEmail] = useState("");
   let [password, setPassword] = useState("");
-
   let [loading, setLoading] = useState(false);
-
   let nav = useNavigate();
 
   const validate = () => {
@@ -64,10 +62,8 @@ const SignIn = () => {
               },
             },
           });
-          sessionStorage.setItem("currentUser",JSON.stringify(res.data));
-          
-          let cuser = JSON.parse(sessionStorage.getItem("currentUser") );
-          
+          sessionStorage.setItem("currentUser",JSON.stringify(res.data));  
+        let cuser = JSON.parse(sessionStorage.getItem("currentUser") );
           if (cuser.user.role === "OWNER") {
             nav("/ownerdash");
           } else if(cuser.user.role === "ADMIN") {

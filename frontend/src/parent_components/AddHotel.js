@@ -1,10 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 const AddHotel = () => {
+
   const navigate = useNavigate();
-
   const storedUser = JSON.parse(sessionStorage.getItem("currentUser"));
-
   const [hotelData, setHotelData] = useState({
     hotelName: "",
     description: "",
@@ -12,90 +11,64 @@ const AddHotel = () => {
     contact: "",
     imageUrl: "",
     amenities: "",
-
     standardRooms: "",
     standardFare: "",
-
     deluxeRooms: "",
     deluxeFare: "",
-
     suiteRooms: "",
     suiteFare: "",
   });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-
     setHotelData({
       ...hotelData,
       [name]: value,
     });
   };
-
   const addHotel = async (e) => {
     e.preventDefault();
-
     try {
-      // STEP 1 -> ADD HOTEL
       const hotelPayload = {
         hotelName: hotelData.hotelName,
         description: hotelData.description,
         location: hotelData.location,
         contact: hotelData.contact,
         imageUrl: hotelData.imageUrl,
-
         amenities: hotelData.amenities.split(",").map((a) => a.trim()),
-
         ownerId: storedUser.user.userId,
-
         ratings: 0.0,
-
         standard: Number(hotelData.standardFare || 0),
-
         deluxe: Number(hotelData.deluxeFare || 0),
-
         suite: Number(hotelData.suiteFare || 0),
       };
-
       const hotelResponse = await fetch(
         "http://localhost:9090/hotel/owner/addHotel",
         {
           method: "POST",
-
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${storedUser.token}`,
           },
-
           body: JSON.stringify(hotelPayload),
         },
       );
-
       const hotelResult = await hotelResponse.json();
-
       console.log("HOTEL RESPONSE", hotelResult);
       console.log("DATA", hotelResult.data);
-
       if (!hotelResponse.ok) {
         alert("Failed To Add Hotel");
         return;
       }
-
       const createdHotel = hotelResult.data;
-
       const hotelId = createdHotel.hotelId;
-
-      // STEP 2 -> ADD STANDARD ROOM
-
       if (hotelData.standardRooms > 0) {
         await fetch("http://localhost:9090/room/owner/addRoom", {
           method: "POST",
-
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${storedUser.token}`,
           },
-
           body: JSON.stringify({
             roomType: "STANDARD",
             maxOccupy: 2,
@@ -107,18 +80,13 @@ const AddHotel = () => {
           }),
         });
       }
-
-      // STEP 3 -> ADD DELUXE ROOM
-
       if (hotelData.deluxeRooms > 0) {
         await fetch("http://localhost:9090/room/owner/addRoom", {
           method: "POST",
-
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${storedUser.token}`,
           },
-
           body: JSON.stringify({
             roomType: "DELUXE",
             maxOccupy: 3,
@@ -130,9 +98,6 @@ const AddHotel = () => {
           }),
         });
       }
-
-      // STEP 4 -> ADD SUITE ROOM
-
       if (hotelData.suiteRooms > 0) {
         await fetch("http://localhost:9090/room/owner/addRoom", {
           method: "POST",
@@ -140,7 +105,6 @@ const AddHotel = () => {
             "Content-Type": "application/json",
             Authorization: `Bearer ${storedUser.token}`,
           },
-
           body: JSON.stringify({
             roomType: "SUITE",
             maxOccupy: 5,
@@ -152,11 +116,7 @@ const AddHotel = () => {
           }),
         });
       }
-
       alert("Hotel Added Successfully");
-
-      // RESET FORM
-
       setHotelData({
         hotelName: "",
         description: "",
@@ -164,23 +124,18 @@ const AddHotel = () => {
         contact: "",
         imageUrl: "",
         amenities: "",
-
         standardRooms: "",
         standardFare: "",
-
         deluxeRooms: "",
         deluxeFare: "",
-
         suiteRooms: "",
         suiteFare: "",
       });
     } catch (e) {
       console.log(e);
-
       alert("Failed To Add Hotel");
     }
   };
-
   return (
     <div
       style={{
@@ -227,8 +182,6 @@ const AddHotel = () => {
         </h1>
 
         <form onSubmit={addHotel}>
-          {/* HOTEL DETAILS */}
-
           <div
             style={{
               display: "grid",
@@ -298,8 +251,6 @@ const AddHotel = () => {
             />
           </div>
 
-          {/* ROOM DETAILS */}
-
           <h2
             style={{
               marginTop: "35px",
@@ -317,7 +268,6 @@ const AddHotel = () => {
               gap: "20px",
             }}
           >
-            {/* STANDARD */}
 
             <div
               style={{
@@ -358,7 +308,6 @@ const AddHotel = () => {
               />
             </div>
 
-            {/* DELUXE */}
 
             <div
               style={{
@@ -398,8 +347,6 @@ const AddHotel = () => {
                 }}
               />
             </div>
-
-            {/* SUITE */}
 
             <div
               style={{

@@ -135,11 +135,9 @@ const ViewHotel = () => {
         "Content-Type": "application/json",
         Authorization: `Bearer ${currentUser.token}`,
       },
-
       body: JSON.stringify(bookingData),
     })
       .then((res) => res.json())
-
       .then((res) => {
         console.log(res);
         if (res.status === "202 ACCEPTED")
@@ -147,13 +145,10 @@ const ViewHotel = () => {
         else if (res.status === "404 NOT_FOUND")
           message.error("Select less rooms!!");
       })
-
       .catch((e) => {
         console.log(e);
       });
   };
-
-  // IMPORTANT FIX
 
   if (!hotel) {
     return <h1>Loading...</h1>;
@@ -161,16 +156,11 @@ const ViewHotel = () => {
 
   return (
     <div className={styles["hotel-page"]}>
-      {/* NAVBAR */}
-
       <div className={styles["navbar"]}>
         <h2 className={styles["logo"]}>CozyHaven</h2>
-
         <div className={styles["nav-links"]}>
           <a href="/">Home</a>
-
           <a href="/search">Hotels</a>
-
           <button
             className={styles["signin-btn"]}
             onClick={() => nav("/userProfile")}
@@ -180,11 +170,7 @@ const ViewHotel = () => {
         </div>
       </div>
 
-      {/* MAIN */}
-
       <div className={styles["container"]}>
-        {/* HEADER */}
-
         <div className={styles["hotel-header"]}>
           <div>
             <h1>{hotel.hotelName}</h1>
@@ -196,8 +182,6 @@ const ViewHotel = () => {
 
           <div className={styles["rating"]}>{hotel.ratings}</div>
         </div>
-
-        {/* IMAGE + BOOKING */}
 
         <div className={styles["gallery-section"]}>
           <div className={styles["main-image"]}>
@@ -213,8 +197,6 @@ const ViewHotel = () => {
               </div>
             )}
           </div>
-
-          {/* BOOKING CARD */}
 
           <Card className={styles["booking-card"]}>
             <h2>Starting at ₹ {hotel.standard} / night</h2>
@@ -237,8 +219,6 @@ const ViewHotel = () => {
               onChange={(date, dateString) => setCheckOut(dateString)}
             />
 
-            {/* ADULTS */}
-
             <div className={styles["date-picker"]}>
               <div className={styles["label-row"]}>
                 <p>Adults</p>
@@ -254,8 +234,6 @@ const ViewHotel = () => {
                 onChange={(e) => setAdults(parseInt(e.target.value))}
               />
             </div>
-
-            {/* CHILDREN */}
 
             <div className={styles["date-picker"]}>
               <div className={styles["label-row"]}>
@@ -317,15 +295,11 @@ const ViewHotel = () => {
           </Card>
         </div>
 
-        {/* ABOUT */}
-
         <div className={styles["about-section"]}>
           <h2>About this property</h2>
 
           <p>{hotel.description}</p>
         </div>
-
-        {/* TABS */}
 
         <Tabs
           defaultActiveKey="1"
@@ -333,9 +307,7 @@ const ViewHotel = () => {
           items={[
             {
               key: "1",
-
               label: "Amenities",
-
               children: (
                 <ul>
                   {hotel.amenities?.map((item, index) => (
@@ -347,34 +319,25 @@ const ViewHotel = () => {
 
             {
               key: "2",
-
               label: "Location",
-
               children: <p>{hotel.location}</p>,
             },
 
             {
               key: "3",
-
               label: "Contact",
-
               children: <p>📞 {hotel.contact}</p>,
             },
-
             {
               key: "4",
-
               label: "Reviews",
-
               children: (
                 <>
                   {reviews?.length > 0 ? (
                     reviews.map((review, index) => (
                       <div key={index} className={styles["review-card"]}>
                         <h4>Customer {review.customerId}</h4>
-
                         <p>{review.comment}</p>
-
                         <span>⭐ {review.rating}</span>
                       </div>
                     ))

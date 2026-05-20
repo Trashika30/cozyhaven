@@ -23,43 +23,33 @@ const OwnerDash = () => {
       },
     )
       .then((res) => res.json())
-
       .then((data) => {
         console.log(data);
-
         setHotelList(data.data || []);
       })
-
       .catch((e) => console.log(e));
   }, []);
 
   const logout = () => {
     sessionStorage.clear();
-
     navigate("/");
   };
 
   return (
     <div className={styles["ownerdash-container"]}>
-      {/* NAVBAR */}
-
       <div className={styles["owner-navbar"]}>
         <div className={styles["owner-logo"]}>
           CozyHaven
         </div>
-
         <div className={styles["owner-nav-links"]}>
           <Link to="/">Home</Link>
-
           <Link to="/">Hotels</Link>
-
           <button
             className={styles["add-hotel-btn"]}
             onClick={() => navigate("/addHotel")}
           >
             AddHotel
           </button>
-
           <button
             className={styles["logout-btn"]}
             onClick={logout}
@@ -69,8 +59,6 @@ const OwnerDash = () => {
         </div>
       </div>
 
-      {/* CONTENT */}
-
       <div className={styles["owner-content"]}>
         <div className={styles["owner-heading"]}>
           <h1>My Hotels</h1>
@@ -79,8 +67,6 @@ const OwnerDash = () => {
             Manage and edit your listed properties
           </p>
         </div>
-
-        {/* HOTEL GRID */}
 
         <div className={styles["hotel-grid"]}>
           {hotelList.map((hotel) => (
@@ -113,7 +99,6 @@ const OwnerDash = () => {
                   {hotel.description}
                 </p>
 
-                {/* PRICE SECTION */}
 
                 <div
                   className={
@@ -144,8 +129,6 @@ const OwnerDash = () => {
                     </h3>
                   </div>
                 </div>
-
-                {/* BUTTONS */}
 
                 <div
                   className={
@@ -179,7 +162,6 @@ const OwnerDash = () => {
           ))}
         </div>
 
-        {/* EMPTY STATE */}
 
         {hotelList.length === 0 && (
           <div

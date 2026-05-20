@@ -5,33 +5,23 @@ import {
   DownOutlined,
   WalletOutlined,
 } from "@ant-design/icons";
-
 import { Button, Card, Divider, Skeleton, message } from "antd";
-
 import { useEffect, useState } from "react";
-
-import { Link, useParams,useNavigate } from "react-router-dom";
-
+import { Link, useNavigate, useParams } from "react-router-dom";
 import styles from "../css/Payment.module.css";
 
 const Payment = () => {
   const { bookingId } = useParams();
-
   const [loading, setLoading] = useState(true);
-
   const [booking, setBooking] = useState(null);
-
   const [hotel, setHotel] = useState(null);
-
   const [user, setUser] = useState({});
-
   const [selectedPayment, setSelectedPayment] = useState("");
 
-  let nav=useNavigate();
+  let nav = useNavigate();
 
   useEffect(() => {
     const storedUser = JSON.parse(sessionStorage.getItem("currentUser"));
-
     if (storedUser) {
       setUser({
         ...storedUser.user,
@@ -40,38 +30,32 @@ const Payment = () => {
     }
 
     fetch(`http://localhost:9090/booking/all/searchById/${bookingId}`)
-      .then((res) =>{console.log(res);return res.json()})
-
+      .then((res) => {
+        console.log(res);
+        return res.json();
+      })
       .then((response) => {
         console.log(response);
         setBooking(response.data);
-        
-
         fetch(
           `http://localhost:9090/hotel/all/searchById/${response.data.hotelId}`,
         )
           .then((res) => {
-           // console.log(res);
+            // console.log(res);
             return res.json();
           })
-
           .then((hotelRes) => {
-          
             console.log(hotelRes.data);
-            setHotel(hotelRes.data)
+            setHotel(hotelRes.data);
             setLoading(false);
           })
-
           .catch(() => {
             message.error("Unable to fetch hotel details");
-
             setLoading(false);
           });
       })
-
       .catch(() => {
         message.error("Unable to fetch booking details");
-
         setLoading(false);
       });
   }, [bookingId]);
@@ -86,130 +70,92 @@ const Payment = () => {
 
   const handleUPIPayment = () => {
     console.log(user, user.token);
-
     fetch("http://localhost:9090/payment/customer/createOrder", {
       method: "POST",
-
       headers: {
         "Content-Type": "application/json",
-
         Authorization: `Bearer ${user.token}`,
       },
-
       body: JSON.stringify({
         amount: booking.totalAmount,
       }),
     })
       .then((res) => res.json())
-
       .then((data) => {
         const order = JSON.parse(data.data);
-
         const options = {
           key: process.env.REACT_APP_RAZORPAY_KEY,
-
           amount: order.amount,
-
           currency: order.currency,
-
           name: hotel.hotelName,
-
           description: "Hotel Booking Payment",
-
           order_id: order.id,
-
           handler: (res) => {
             const paymentData = {
               amount: booking.totalAmount,
-
               paymentMethod: selectedPayment,
-
               transactionId: res.razorpay_payment_id,
-
               paymentStatus: "SUCCESS",
-
               refundAmount: 0,
-
               refundStatus: "NOT_REQUESTED",
-
               bookingId: booking.bookingId,
             };
 
             fetch("http://localhost:9090/payment/customer/makePayment", {
               method: "POST",
-
               headers: {
                 "Content-Type": "application/json",
-
                 Authorization: `Bearer ${user.token}`,
               },
-
               body: JSON.stringify(paymentData),
             })
               .then((res) => res.json())
-
               .then((data) => {
                 if (data.status === "201 CREATED") {
                   fetch(
                     `http://localhost:9090/booking/all/updateBookingStatus/${bookingId}/CONFIRMED`,
                     {
                       method: "PUT",
-
                       headers: {
                         "Content-Type": "application/json",
-
                         Authorization: `Bearer ${user.token}`,
                       },
                     },
                   )
                     .then((res) => res.json())
-
                     .then((res) => {
                       if (res.status === "200 OK") {
                         message.success("Payment Successful");
-                         nav("/userProfile");
-                    
+                        nav("/userProfile");
                       }
                     });
                 }
               })
-
               .catch((e) => {
                 console.log(e);
-
                 message.error("Payment Save Failed");
               });
           },
 
           prefill: {
             name: user.firstName,
-
             email: user.email,
-
             contact: user.contact,
           },
-
           theme: {
             color: "#9C0A8F",
           },
-
           method: {
             upi: selectedPayment === "UPI",
-
             card: selectedPayment === "CARD",
-
             netbanking: selectedPayment === "NET_BANKING",
           },
         };
-
         const razor = new window.Razorpay(options);
-
         razor.open();
       })
-
       .catch((e) => {
         console.log(e);
-
         message.error("Unable to initiate payment");
       });
   };
@@ -264,13 +210,9 @@ const Payment = () => {
           <Card className={styles["card"]}>
             <h2 className={styles["payment-title"]}>Payment Options</h2>
 
-            {/* UPI */}
-
             <div
               className={`${styles["option"]} ${
-                selectedPayment === "UPI"
-                  ? styles["active-option"]
-                  : ""
+                selectedPayment === "UPI" ? styles["active-option"] : ""
               }`}
               onClick={() => {
                 selectedPayment === "UPI"
@@ -305,13 +247,9 @@ const Payment = () => {
               </div>
             )}
 
-            {/* CARD */}
-
             <div
               className={`${styles["option"]} ${
-                selectedPayment === "CARD"
-                  ? styles["active-option"]
-                  : ""
+                selectedPayment === "CARD" ? styles["active-option"] : ""
               }`}
               onClick={() => {
                 selectedPayment === "CARD"
@@ -320,9 +258,7 @@ const Payment = () => {
               }}
             >
               <div className={styles["option-left"]}>
-                <CreditCardOutlined
-                  className={styles["payment-icon"]}
-                />
+                <CreditCardOutlined className={styles["payment-icon"]} />
 
                 <div>
                   <div className={styles["option-title"]}>
@@ -346,10 +282,7 @@ const Payment = () => {
               <div className={styles["payment-form"]}>
                 <label>Card Number</label>
 
-                <input
-                  type="text"
-                  placeholder="XXXX XXXX XXXX XXXX"
-                />
+                <input type="text" placeholder="XXXX XXXX XXXX XXXX" />
 
                 <label>Card Holder Name</label>
 
@@ -371,13 +304,9 @@ const Payment = () => {
               </div>
             )}
 
-            {/* NET BANKING */}
-
             <div
               className={`${styles["option"]} ${
-                selectedPayment === "NET_BANKING"
-                  ? styles["active-option"]
-                  : ""
+                selectedPayment === "NET_BANKING" ? styles["active-option"] : ""
               }`}
               onClick={() => {
                 selectedPayment === "NET_BANKING"
@@ -389,9 +318,7 @@ const Payment = () => {
                 <BankOutlined className={styles["payment-icon"]} />
 
                 <div>
-                  <div className={styles["option-title"]}>
-                    Net Banking
-                  </div>
+                  <div className={styles["option-title"]}>Net Banking</div>
 
                   <div className={styles["option-sub"]}>
                     40+ Banks Available
@@ -412,13 +339,9 @@ const Payment = () => {
 
                 <select>
                   <option>Select Bank</option>
-
                   <option>SBI</option>
-
                   <option>HDFC</option>
-
                   <option>ICICI</option>
-
                   <option>AXIS</option>
                 </select>
               </div>
@@ -444,9 +367,7 @@ const Payment = () => {
             <div className={styles["price-row"]}>
               <span>Discount</span>
 
-              <span className={styles["discount"]}>
-                - ₹ {booking.discount}
-              </span>
+              <span className={styles["discount"]}>- ₹ {booking.discount}</span>
             </div>
 
             <div className={styles["price-row"]}>

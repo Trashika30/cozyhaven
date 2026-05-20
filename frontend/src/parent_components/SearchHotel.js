@@ -1,40 +1,30 @@
 import Hotel from "../child_components/Hotel";
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import styles from "../css/SearchHotel.module.css";
 import { useNavigate } from "react-router-dom";
 
 const SearchHotel = () => {
   let nav = useNavigate();
+  let loc = useLocation();
 
   const [hotels, setHotels] = useState([]);
-
   const [showProfile, setShowProfile] = useState(false);
-
   const [priceRange, setPriceRange] = useState(10000);
-
   const [selectedAmenities, setSelectedAmenities] = useState([]);
-
   const [guestOpen, setGuestOpen] = useState(false);
-
-  const [location, setLocation] = useState("");
-
-  const [checkInDate, setCheckInDate] = useState("");
-
-  const [checkOutDate, setCheckOutDate] = useState("");
-
+  const [location, setLocation] = useState(loc.state.location);
+  const [checkInDate, setCheckInDate] = useState(loc.state.checkIn);
+  const [checkOutDate, setCheckOutDate] = useState(loc.state.checkOut);
   const [availabilityData, setAvailabilityData] = useState({});
-
   const user = JSON.parse(sessionStorage.getItem("user"));
 
   useEffect(() => {
     fetch("http://localhost:9090/hotel/all/showAll")
       .then((res) => res.json())
-
       .then((response) => {
         setHotels(response.data);
       })
-
       .catch((e) => {
         console.log("Error fetching hotels : ", e);
       });
@@ -44,7 +34,6 @@ const SearchHotel = () => {
     if (!checkInDate || !checkOutDate) {
       return;
     }
-
     hotels.forEach((hotel) => {
       fetch(
         `http://localhost:9090/room/all/availability/${hotel.hotelId}?checkIn=${checkInDate}&checkOut=${checkOutDate}`,
@@ -56,7 +45,6 @@ const SearchHotel = () => {
             [hotel.hotelId]: response.data,
           }));
         })
-
         .catch((e) => {
           console.log(e);
         });
@@ -79,9 +67,7 @@ const SearchHotel = () => {
 
   const clearFilters = () => {
     setPriceRange(10000);
-
     setSelectedAmenities([]);
-
     setLocation("");
   };
 
@@ -101,17 +87,14 @@ const SearchHotel = () => {
 
   const isHotelAvailable = (hotelId) => {
     const rooms = availabilityData[hotelId];
-
     if (!rooms) {
       return true;
     }
-
     return rooms.some((room) => room.availableRooms > 0);
   };
 
   return (
     <>
-      {/* NAVBAR */}
 
       <div className={styles.navbar}>
         <div className={styles.logo}>CozyHaven</div>
@@ -152,7 +135,6 @@ const SearchHotel = () => {
         <div className={styles.filterBox}>
           <h2 className={styles.filterTitle}>Filters</h2>
 
-          {/* PRICE */}
 
           <div>
             <h3 className={styles.sectionTitle}>Price Range</h3>
@@ -171,8 +153,6 @@ const SearchHotel = () => {
               className={styles.rangeInput}
             />
           </div>
-
-          {/* AMENITIES */}
 
           <div className={styles.amenitiesSection}>
             <h3 className={styles.sectionTitle}>Amenities</h3>
@@ -204,11 +184,8 @@ const SearchHotel = () => {
           </button>
         </div>
 
-        {/* HOTELS */}
 
         <div className={styles.hotelsSection}>
-          {/* SEARCH BOX */}
-
           <div className={styles["search-box"]}>
             <div className={styles["search-field"]}>
               <label>Location</label>
@@ -224,11 +201,8 @@ const SearchHotel = () => {
 
               <datalist id="cities">
                 <option value="Chennai" />
-
                 <option value="Delhi" />
-
                 <option value="Kolkata" />
-
                 <option value="Mumbai" />
               </datalist>
             </div>
@@ -270,37 +244,27 @@ const SearchHotel = () => {
 
                     <select>
                       <option>1</option>
-
                       <option>2</option>
-
                       <option>3</option>
-
                       <option>4</option>
                     </select>
                   </div>
 
                   <div className={styles.row}>
                     <label>Children</label>
-
                     <select>
                       <option>0</option>
-
                       <option>1</option>
-
                       <option>2</option>
-
                       <option>3</option>
                     </select>
                   </div>
 
                   <div className={styles.row}>
                     <label>Rooms</label>
-
                     <select>
                       <option>1</option>
-
                       <option>2</option>
-
                       <option>3</option>
                     </select>
                   </div>
@@ -310,13 +274,10 @@ const SearchHotel = () => {
 
             <button className={styles["search-btn"]}>Search</button>
           </div>
-
           <h1 className={styles.hotelHeading}>All Hotels</h1>
-
           <p className={styles.hotelCount}>
             {filteredHotels?.length} properties found
           </p>
-
           {filteredHotels?.length > 0 ? (
             filteredHotels.map((hotel) => (
               <Hotel

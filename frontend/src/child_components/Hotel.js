@@ -29,8 +29,6 @@ const Hotel = ({ hotel, availability, available }) => {
           <h3 className={styles.rating}>{hotel.ratings}</h3>
         </div>
 
-        {/* AVAILABILITY BADGE */}
-
         <div
           className={
             available
@@ -55,8 +53,6 @@ const Hotel = ({ hotel, availability, available }) => {
             <span>/night</span>
           </h2>
         </div>
-
-        {/* ROOM AVAILABILITY */}
 
         {availability?.length > 0 && (
           <div className={styles["availability-box"]}>

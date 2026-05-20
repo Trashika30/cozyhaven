@@ -74,10 +74,8 @@ const UserProfile = () => {
       body: JSON.stringify(user),
     })
       .then((res) => res.json())
-
       .then((data) => {
         alert("Profile Updated Successfully");
-
         sessionStorage.setItem(
           "currentUser",
           JSON.stringify({
@@ -85,13 +83,10 @@ const UserProfile = () => {
             user: data.data,
           }),
         );
-
         setUser(data.data);
       })
-
       .catch((e) => {
         console.log(e);
-
         alert("Update Failed");
       });
   };
@@ -111,7 +106,6 @@ const UserProfile = () => {
       `http://localhost:9090/booking/customer/cancelBooking/${selectedBookingId}/${encodeURIComponent(cancelReason)}`,
       {
         method: "PUT",
-
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${storedUser.token}`,
@@ -119,10 +113,8 @@ const UserProfile = () => {
       },
     )
       .then((res) => res.json())
-
       .then((data) => {
         console.log(data);
-
         Modal.success({
           title: "Cancellation Success",
           content: "Amount will be refunded within 7 business days",
@@ -134,33 +126,25 @@ const UserProfile = () => {
             },
           },
         });
-
         setBookings((prevBookings) =>
           prevBookings.map((booking) =>
             booking.bookingId === selectedBookingId
               ? {
                   ...booking,
-
                   status: "CANCELLED",
-
                   refundStatus: "REFUND_REQUESTED",
-
                   cancellationReason: cancelReason,
                 }
               : booking,
           ),
         );
-
         setIsModalOpen(false);
-
         setCancelReason("");
-
         setSelectedBookingId(null);
       })
 
       .catch((e) => {
         console.log(e);
-
         message.error("Cancellation Failed");
       });
   };
@@ -213,17 +197,13 @@ const UserProfile = () => {
 
   return (
     <div className={styles["hotel-page"]}>
-      {/* NAVBAR */}
       <div className={styles["navbar"]}>
         <h2 className={styles["logo"]}>CozyHaven</h2>
-
         <div className={styles["nav-links"]}>
           <Link to="/">Home</Link>
-
           <Link to="/search">Hotels</Link>
         </div>
       </div>
-      {/* MAIN CONTENT */}
       <div
         style={{
           maxWidth: "1200px",
@@ -231,7 +211,6 @@ const UserProfile = () => {
           padding: "40px",
         }}
       >
-        {/* PROFILE CARD */}
 
         <div
           style={{
@@ -330,8 +309,6 @@ const UserProfile = () => {
             Update Profile
           </button>
         </div>
-
-        {/* BOOKINGS */}
 
         <div>
           <h1

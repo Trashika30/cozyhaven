@@ -2,20 +2,16 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
 const EditProperty = () => {
+
   const { hotelId } = useParams();
-
   const nav = useNavigate();
-
   const storedUser = JSON.parse(sessionStorage.getItem("currentUser"));
-
   const [loading, setLoading] = useState(true);
-
   const [roomIds, setRoomIds] = useState({
     standardId: null,
     deluxeId: null,
     suiteId: null,
   });
-
   const [hotelData, setHotelData] = useState({
     hotelName: "",
     description: "",
@@ -23,18 +19,13 @@ const EditProperty = () => {
     contact: "",
     imageUrl: "",
     amenities: "",
-
     standardRooms: "",
     standardFare: "",
-
     deluxeRooms: "",
     deluxeFare: "",
-
     suiteRooms: "",
     suiteFare: "",
   });
-
-  // FETCH HOTEL + ROOM DETAILS
 
   useEffect(() => {
     fetchHotelDetails();
@@ -42,28 +33,17 @@ const EditProperty = () => {
 
   const fetchHotelDetails = async () => {
     try {
-      // FETCH HOTEL
-
       const hotelResponse = await fetch(
         `http://localhost:9090/hotel/all/searchById/${hotelId}`,
       );
-
       const hotelResult = await hotelResponse.json();
-
       console.log(hotelResult);
-
       const hotel = hotelResult.data;
-
-      // FETCH ROOMS
-
       const roomResponse = await fetch(
         `http://localhost:9090/room/all/getRooms/${hotelId}`,
       );
-
       const roomResult = await roomResponse.json();
-
       console.log(roomResult);
-
       const rooms = roomResult.data;
 
       let standardRoom = null;
@@ -90,41 +70,28 @@ const EditProperty = () => {
         suiteId: suiteRoom?.roomId,
       });
 
-      // PREFILL FORM
-
       setHotelData({
         hotelName: hotel.hotelName || "",
         description: hotel.description || "",
         location: hotel.location || "",
         contact: hotel.contact || "",
         imageUrl: hotel.imageUrl || "",
-
         amenities: hotel.amenities ? hotel.amenities.join(",") : "",
-
         standardRooms: standardRoom?.totalRooms || "",
-
         standardFare: standardRoom?.baseFare || "",
-
         deluxeRooms: deluxeRoom?.totalRooms || "",
-
         deluxeFare: deluxeRoom?.baseFare || "",
-
         suiteRooms: suiteRoom?.totalRooms || "",
-
         suiteFare: suiteRoom?.baseFare || "",
       });
 
       setLoading(false);
     } catch (e) {
       console.log(e);
-
       alert("Failed To Fetch Property");
-
       setLoading(false);
     }
   };
-
-  // HANDLE CHANGE
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -135,37 +102,24 @@ const EditProperty = () => {
     });
   };
 
-  // UPDATE PROPERTY
 
   const updateProperty = async (e) => {
     e.preventDefault();
 
     try {
-      // UPDATE HOTEL
 
       const hotelPayload = {
         hotelId: Number(hotelId),
-
         hotelName: hotelData.hotelName,
-
         description: hotelData.description,
-
         location: hotelData.location,
-
         contact: hotelData.contact,
-
         imageUrl: hotelData.imageUrl,
-
         amenities: hotelData.amenities.split(",").map((a) => a.trim()),
-
         ownerId: storedUser.user.userId,
-
         ratings: 0.0,
-
         standard: Number(hotelData.standardFare),
-
         deluxe: Number(hotelData.deluxeFare),
-
         suite: Number(hotelData.suiteFare),
       };
 
@@ -173,122 +127,83 @@ const EditProperty = () => {
         `http://localhost:9090/hotel/owner/updateById/${hotelId}`,
         {
           method: "PUT",
-
           headers: {
             "Content-Type": "application/json",
-
             Authorization: `Bearer ${storedUser.token}`,
           },
-
           body: JSON.stringify(hotelPayload),
         },
       );
 
       if (!hotelResponse.ok) {
         alert("Failed To Update Hotel");
-
         return;
       }
-
-      // UPDATE STANDARD ROOM
 
       if (roomIds.standardId) {
         await fetch(
           `http://localhost:9090/room/owner/updateRoomById/${roomIds.standardId}`,
           {
             method: "PUT",
-
             headers: {
               "Content-Type": "application/json",
-
               Authorization: `Bearer ${storedUser.token}`,
             },
-
             body: JSON.stringify({
               roomId: roomIds.standardId,
-
               roomType: "STANDARD",
-
               maxOccupy: 2,
-
               baseFare: Number(hotelData.standardFare),
-
               ac: true,
-
               totalAvailable: Number(hotelData.standardRooms),
-
               totalRooms: Number(hotelData.standardRooms),
-
               hotelId: Number(hotelId),
             }),
           },
         );
       }
 
-      // UPDATE DELUXE ROOM
 
       if (roomIds.deluxeId) {
         await fetch(
           `http://localhost:9090/room/owner/updateRoomById/${roomIds.deluxeId}`,
           {
             method: "PUT",
-
             headers: {
               "Content-Type": "application/json",
-
               Authorization: `Bearer ${storedUser.token}`,
             },
-
             body: JSON.stringify({
               roomId: roomIds.deluxeId,
-
               roomType: "DELUXE",
-
               maxOccupy: 3,
-
               baseFare: Number(hotelData.deluxeFare),
-
               ac: true,
-
               totalAvailable: Number(hotelData.deluxeRooms),
-
               totalRooms: Number(hotelData.deluxeRooms),
-
               hotelId: Number(hotelId),
             }),
           },
         );
       }
 
-      // UPDATE SUITE ROOM
-
       if (roomIds.suiteId) {
         await fetch(
           `http://localhost:9090/room/owner/updateRoomById/${roomIds.suiteId}`,
           {
             method: "PUT",
-
             headers: {
               "Content-Type": "application/json",
-
               Authorization: `Bearer ${storedUser.token}`,
             },
-
             body: JSON.stringify({
               roomId: roomIds.suiteId,
-
               roomType: "SUITE",
-
               maxOccupy: 5,
-
               baseFare: Number(hotelData.suiteFare),
-
               ac: true,
-
               totalAvailable: Number(hotelData.suiteRooms),
-
               totalRooms: Number(hotelData.suiteRooms),
-
               hotelId: Number(hotelId),
             }),
           },
@@ -296,11 +211,9 @@ const EditProperty = () => {
       }
 
       alert("Property Updated Successfully");
-
       nav("/ownerdash");
     } catch (e) {
       console.log(e);
-
       alert("Failed To Update Property");
     }
   };
@@ -417,8 +330,6 @@ const EditProperty = () => {
             />
           </div>
 
-          {/* ROOM DETAILS */}
-
           <h2
             style={{
               marginTop: "35px",
@@ -435,7 +346,6 @@ const EditProperty = () => {
               gap: "20px",
             }}
           >
-            {/* STANDARD */}
 
             <div
               style={{
@@ -470,7 +380,6 @@ const EditProperty = () => {
               />
             </div>
 
-            {/* DELUXE */}
 
             <div
               style={{
@@ -505,7 +414,6 @@ const EditProperty = () => {
               />
             </div>
 
-            {/* SUITE */}
 
             <div
               style={{
